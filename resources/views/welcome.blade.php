@@ -162,12 +162,12 @@
         </div>
     </nav>
 
-    {{-- Hero section (manual background slider) --}}
+    {{-- Hero section --}}
     <section class="relative h-[580px] md:h-[620px]" id="beranda">
         <div
             class="relative w-full h-full overflow-hidden shadow-xl shadow-emerald-900/20 rounded-b-3xl md:rounded-b-[2.5rem]">
 
-            <!-- Background container (manual slider) -->
+            <!-- Background container -->
             <div class="absolute inset-0 z-0">
                 <div id="heroBg"
                     class="h-full w-full bg-cover bg-center opacity-100 transition-opacity duration-1000 ease-out">
@@ -221,17 +221,17 @@
                     <span class="hidden sm:inline-block w-px h-4 bg-white/25"></span>
                     <span class="inline-flex items-center gap-1.5">
                         <i class="fa-regular fa-clock text-emerald-300"></i>
-                        <span>Proses maksimal 1x24 jam kerja*</span>
+                        <span>Proses maksimal 1x24 jam kerja</span>
                     </span>
                 </div>
             </div>
 
-            <!-- Pagination dots (manual) -->
+            <!-- Pagination dots -->
             <div id="heroBgPagination"
                 class="flex items-center justify-center gap-1 absolute bottom-6 md:bottom-8 left-1/2 -translate-x-1/2 z-30">
             </div>
 
-            <!-- Prev / Next buttons (manual) -->
+            <!-- Prev / Next buttons -->
             <button
                 class="hero-bg-prev z-30 absolute left-4 md:left-8 top-1/2 -translate-y-1/2 w-10 h-10 md:w-11 md:h-11 rounded-full border border-white/40 bg-white/10 backdrop-blur-md flex items-center justify-center text-white text-lg cursor-pointer hover:bg-white/20 hover:border-white/60 transition">
                 <i class="fa-solid fa-chevron-left"></i>
@@ -338,7 +338,7 @@
     <section class="bg-gradient-to-b from-neutral-50 via-white to-emerald-50/70 py-16 md:py-20" id="lokasi">
         <div class="max-w-6xl mx-auto px-5 md:px-12" data-aos="fade-up">
             <div class="text-center mb-12 md:mb-14">
-                <h2 class="relative inline-block text-2xl md:text-4xl font-extrabold text-emerald-950">
+                <h2 class="relative inline-block text-2xl md:4xl font-extrabold text-emerald-950">
                     Lokasi Kantor Desa Sungai Rebo
                     <span
                         class="absolute -bottom-3 left-1/2 -translate-x-1/2 w-20 h-[3px] rounded-full bg-gradient-to-r from-emerald-600 to-teal-500"></span>
@@ -406,8 +406,52 @@
         </div>
     </section>
 
+    {{-- CTA  --}}
+    <section class="py-10 md:py-14 bg-gradient-to-r from-emerald-700 via-emerald-600 to-teal-500" data-aos="fade-up">
+        <div class="max-w-6xl mx-auto px-5 md:px-12">
+            <div class="flex flex-col md:flex-row items-start md:items-center justify-between gap-6">
+                <div>
+                    <p class="text-xs uppercase tracking-[0.25em] text-emerald-100/80 mb-2">
+                        Layanan Surat Online
+                    </p>
+                    <h3 class="text-2xl md:text-3xl font-extrabold text-white mb-3">
+                        Siap Mengurus Surat Desa Hari Ini?
+                    </h3>
+                    <p class="text-emerald-50/90 text-sm md:text-base max-w-xl">
+                        Ajukan permohonan surat secara online tanpa perlu antre di kantor desa. Cukup isi formulir,
+                        unggah berkas yang dibutuhkan, dan pantau prosesnya dari rumah.
+                    </p>
+                    <div class="mt-4 flex flex-wrap gap-3 text-xs md:text-sm text-emerald-50/90">
+                        <span class="inline-flex items-center gap-1.5">
+                            <i class="fa-solid fa-circle-check text-emerald-200"></i>
+                            Pengajuan surat online 24/7
+                        </span>
+                        <span class="inline-flex items-center gap-1.5">
+                            <i class="fa-solid fa-circle-check text-emerald-200"></i>
+                            Proses maksimal 1x24 jam kerja
+                        </span>
+                    </div>
+                </div>
+                <div class="flex flex-col items-stretch gap-3 w-full md:w-auto">
+                    <button
+                        class="inline-flex items-center justify-center gap-2 px-6 py-3.5 rounded-xl bg-white text-emerald-800 font-semibold text-sm md:text-base shadow-lg shadow-emerald-900/40 hover:bg-emerald-50 hover:-translate-y-0.5 transition"
+                        onclick="document.querySelector('#kontak').scrollIntoView({behavior:'smooth'})">
+                        <i class="fa-solid fa-paper-plane"></i>
+                        Ajukan Surat Sekarang
+                    </button>
+                    <button
+                        class="inline-flex items-center justify-center gap-2 px-5 py-3 rounded-xl border border-emerald-100/70 text-emerald-50 text-xs md:text-sm hover:bg-emerald-800/30 transition"
+                        onclick="document.querySelector('#layanan').scrollIntoView({behavior:'smooth'})">
+                        <i class="fa-solid fa-list-check"></i>
+                        Lihat Jenis Layanan
+                    </button>
+                </div>
+            </div>
+        </div>
+    </section>
+
     {{-- Footer --}}
-    <footer id="kontak" class="bg-emerald-950 text-emerald-50 py-12 mt-8">
+    <footer id="kontak" class="bg-emerald-950 text-emerald-50 py-12">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8" data-aos="fade-up">
             <div class="grid md:grid-cols-4 gap-8">
                 <!-- About -->
@@ -429,9 +473,6 @@
                         </a>
                         <a href="#" class="text-emerald-200/70 hover:text-emerald-400 transition">
                             <i class="fab fa-instagram text-2xl"></i>
-                        </a>
-                        <a href="#" class="text-emerald-200/70 hover:text-emerald-400 transition">
-                            <i class="fab fa-x-twitter text-2xl"></i>
                         </a>
                         <a href="#" class="text-emerald-200/70 hover:text-emerald-400 transition">
                             <i class="fab fa-youtube text-2xl"></i>
@@ -554,7 +595,7 @@
             });
         });
 
-        // Manual hero background slider (smooth fade)
+        // Hero background slider
         const heroImages = [
             'https://images.unsplash.com/photo-1482192596544-9eb780fc7f66?w=1600&h=600&fit=crop',
             'https://images.unsplash.com/photo-1516483638261-f4dbaf036963?w=1600&h=600&fit=crop',
