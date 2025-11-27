@@ -522,7 +522,7 @@
     {{-- Footer --}}
     <footer id="kontak" class="bg-emerald-950 text-emerald-50 py-12">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8" data-aos="fade-up">
-            <div class="grid md:grid-cols-4 gap-8">
+            <div class="grid md:grid-cols-5 gap-8">
                 <!-- About -->
                 <div>
                     <div class="flex items-center mb-4">
@@ -557,11 +557,11 @@
                                 class="text-emerald-100/80 hover:text-emerald-400 transition">Beranda</a></li>
                         <li><a href="#layanan"
                                 class="text-emerald-100/80 hover:text-emerald-400 transition">Layanan</a></li>
+                        <li><a href="#alur-pengajuan"
+                                class="text-emerald-100/80 hover:text-emerald-400 transition">Alur Pengajuan</a></li>
                         <li><a href="#lokasi" class="text-emerald-100/80 hover:text-emerald-400 transition">Lokasi</a>
                         </li>
-                        <li><a href="#kontak" class="text-emerald-100/80 hover:text-emerald-400 transition">Kontak</a>
-                        </li>
-                        <li><a href="#" class="text-emerald-100/80 hover:text-emerald-400 transition">FAQ</a>
+                        <li><a href="#ajukan" class="text-emerald-100/80 hover:text-emerald-400 transition">Ajukan Surat</a>
                         </li>
                     </ul>
                 </div>
@@ -571,21 +571,26 @@
                     <h3 class="font-semibold text-lg mb-4 text-emerald-100">Layanan</h3>
                     <ul class="space-y-2 text-sm">
                         <li><a href="#layanan" class="text-emerald-100/80 hover:text-emerald-400 transition">Surat
-                                Pengantar
-                                Nikah</a></li>
+                                Pengantar Nikah</a></li>
                         <li><a href="#layanan" class="text-emerald-100/80 hover:text-emerald-400 transition">Surat
-                                Keterangan
-                                Tidak Mampu</a></li>
+                                Keterangan Tidak Mampu</a></li>
                         <li><a href="#layanan" class="text-emerald-100/80 hover:text-emerald-400 transition">Surat
-                                Keterangan
-                                Domisili</a></li>
+                                Keterangan Domisili</a></li>
                         <li><a href="#layanan" class="text-emerald-100/80 hover:text-emerald-400 transition">Surat
-                                Keterangan
-                                Usaha</a></li>
+                                Keterangan Usaha</a></li>
                         <li><a href="#layanan" class="text-emerald-100/80 hover:text-emerald-400 transition">Surat
-                                Keterangan
-                                Penghasilan</a></li>
+                                Keterangan Penghasilan</a></li>
                     </ul>
+                </div>
+
+                <!-- Alur Pengajuan -->
+                <div>
+                    <h3 class="font-semibold text-lg mb-4 text-emerald-100">Alur Pengajuan</h3>
+                    <ol class="text-xs md:text-sm text-emerald-100/85 list-decimal list-inside space-y-1">
+                        <li>Isi form pengajuan surat secara online.</li>
+                        <li>Tunggu proses verifikasi maksimal 1x24 jam kerja.</li>
+                        <li>Download surat yang sudah disetujui.</li>
+                    </ol>
                 </div>
 
                 <!-- Kontak -->
@@ -624,6 +629,7 @@
             </div>
         </div>
     </footer>
+
 
     <!-- AOS JS -->
     <script src="https://unpkg.com/aos@2.3.4/dist/aos.js"></script>
