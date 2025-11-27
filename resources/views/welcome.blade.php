@@ -102,9 +102,9 @@
                         class="px-4 py-2 rounded-full text-neutral-700 hover:text-emerald-900 hover:bg-emerald-50 transition">
                         Layanan
                     </a>
-                    <a href="#cara-pengajuan"
+                    <a href="#alur-pengajuan"
                         class="px-4 py-2 rounded-full text-neutral-700 hover:text-emerald-900 hover:bg-emerald-50 transition">
-                        Cara Pengajuan
+                        Alur
                     </a>
                     <a href="#lokasi"
                         class="px-4 py-2 rounded-full text-neutral-700 hover:text-emerald-900 hover:bg-emerald-50 transition">
@@ -142,13 +142,13 @@
                     class="px-3 py-2 rounded-lg text-neutral-800 hover:bg-emerald-50 active:bg-emerald-100">
                     Layanan
                 </a>
+                <a href="#alur-pengajuan"
+                    class="px-3 py-2 rounded-lg text-neutral-800 hover:bg-emerald-50 active:bg-emerald-100">
+                    Alur
+                </a>
                 <a href="#lokasi"
                     class="px-3 py-2 rounded-lg text-neutral-800 hover:bg-emerald-50 active:bg-emerald-100">
                     Lokasi
-                </a>
-                <a href="#kontak"
-                    class="px-3 py-2 rounded-lg text-neutral-800 hover:bg-emerald-50 active:bg-emerald-100">
-                    Kontak
                 </a>
 
                 <!-- CTA Ajukan Surat di mobile -->
@@ -333,12 +333,12 @@
         </div>
     </section>
 
-    {{-- Cara Pengajuan --}}
-    <section class="py-16 md:py-20 bg-gradient-to-b from-emerald-50 via-white to-emerald-50/80" id="cara-pengajuan">
+    {{-- Alur Pengajuan --}}
+    <section class="py-16 md:py-20 bg-gradient-to-b from-emerald-50 via-white to-emerald-50/80" id="alur-pengajuan">
         <div class="max-w-6xl mx-auto px-5 md:px-12" data-aos="fade-up">
             <div class="text-center mb-12 md:mb-14">
                 <h2 class="relative inline-block text-2xl md:text-4xl font-extrabold text-emerald-950">
-                    Cara Pengajuan Surat Online
+                    Alur Pengajuan Surat Online
                     <span
                         class="absolute -bottom-3 left-1/2 -translate-x-1/2 w-20 h-[3px] rounded-full bg-gradient-to-r from-emerald-600 to-teal-500"></span>
                 </h2>
