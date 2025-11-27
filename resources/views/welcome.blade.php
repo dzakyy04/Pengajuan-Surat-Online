@@ -102,13 +102,13 @@
                         class="px-4 py-2 rounded-full text-neutral-700 hover:text-emerald-900 hover:bg-emerald-50 transition">
                         Layanan
                     </a>
+                    <a href="#cara-pengajuan"
+                        class="px-4 py-2 rounded-full text-neutral-700 hover:text-emerald-900 hover:bg-emerald-50 transition">
+                        Cara Pengajuan
+                    </a>
                     <a href="#lokasi"
                         class="px-4 py-2 rounded-full text-neutral-700 hover:text-emerald-900 hover:bg-emerald-50 transition">
                         Lokasi
-                    </a>
-                    <a href="#kontak"
-                        class="px-4 py-2 rounded-full text-neutral-700 hover:text-emerald-900 hover:bg-emerald-50 transition">
-                        Kontak
                     </a>
                 </div>
 
@@ -333,6 +333,75 @@
         </div>
     </section>
 
+    {{-- Cara Pengajuan --}}
+    <section class="py-16 md:py-20 bg-gradient-to-b from-emerald-50 via-white to-emerald-50/80" id="cara-pengajuan">
+        <div class="max-w-6xl mx-auto px-5 md:px-12" data-aos="fade-up">
+            <div class="text-center mb-12 md:mb-14">
+                <h2 class="relative inline-block text-2xl md:text-4xl font-extrabold text-emerald-950">
+                    Cara Pengajuan Surat Online
+                    <span
+                        class="absolute -bottom-3 left-1/2 -translate-x-1/2 w-20 h-[3px] rounded-full bg-gradient-to-r from-emerald-600 to-teal-500"></span>
+                </h2>
+                <p class="mt-6 text-neutral-600 text-base md:text-lg max-w-2xl mx-auto">
+                    Ikuti langkah sederhana berikut untuk mengajukan surat secara online tanpa harus antre di kantor
+                    desa.
+                </p>
+            </div>
+
+            <div class="grid gap-6 md:gap-8 md:grid-cols-3">
+                <!-- Step 1 -->
+                <div
+                    class="relative bg-white/95 border border-emerald-50 rounded-2xl px-6 py-8 shadow-md shadow-black/5 hover:-translate-y-1 hover:shadow-xl hover:shadow-emerald-900/10 transition">
+                    <div
+                        class="w-11 h-11 flex items-center justify-center rounded-full bg-gradient-to-br from-emerald-600 to-teal-500 text-white font-bold text-lg mb-4 shadow-md shadow-emerald-900/30">
+                        1
+                    </div>
+                    <h3 class="text-lg font-bold text-neutral-800 mb-2 flex items-center gap-2">
+                        <i class="fa-solid fa-file-pen text-emerald-600"></i>
+                        Isi Formulir Pengajuan
+                    </h3>
+                    <p class="text-sm text-neutral-600 leading-relaxed">
+                        Pilih jenis surat yang dibutuhkan lalu isi formulir pengajuan secara lengkap dan benar,
+                        sertakan juga dokumen pendukung jika diminta.
+                    </p>
+                </div>
+
+                <!-- Step 2 -->
+                <div
+                    class="relative bg-white/95 border border-emerald-50 rounded-2xl px-6 py-8 shadow-md shadow-black/5 hover:-translate-y-1 hover:shadow-xl hover:shadow-emerald-900/10 transition">
+                    <div
+                        class="w-11 h-11 flex items-center justify-center rounded-full bg-gradient-to-br from-emerald-600 to-teal-500 text-white font-bold text-lg mb-4 shadow-md shadow-emerald-900/30">
+                        2
+                    </div>
+                    <h3 class="text-lg font-bold text-neutral-800 mb-2 flex items-center gap-2">
+                        <i class="fa-solid fa-clock-rotate-left text-emerald-600"></i>
+                        Tunggu Proses Verifikasi
+                    </h3>
+                    <p class="text-sm text-neutral-600 leading-relaxed">
+                        Petugas desa akan memeriksa data dan dokumen pengajuan Anda.
+                        <span class="font-semibold text-emerald-700">Proses maksimal 1x24 jam kerja.</span>
+                    </p>
+                </div>
+
+                <!-- Step 3 -->
+                <div
+                    class="relative bg-white/95 border border-emerald-50 rounded-2xl px-6 py-8 shadow-md shadow-black/5 hover:-translate-y-1 hover:shadow-xl hover:shadow-emerald-900/10 transition">
+                    <div
+                        class="w-11 h-11 flex items-center justify-center rounded-full bg-gradient-to-br from-emerald-600 to-teal-500 text-white font-bold text-lg mb-4 shadow-md shadow-emerald-900/30">
+                        3
+                    </div>
+                    <h3 class="text-lg font-bold text-neutral-800 mb-2 flex items-center gap-2">
+                        <i class="fa-solid fa-download text-emerald-600"></i>
+                        Download Surat Online
+                    </h3>
+                    <p class="text-sm text-neutral-600 leading-relaxed">
+                        Setelah disetujui, surat akan tersedia dalam bentuk digital.
+                        Anda dapat mengunduh dan mencetak surat tersebut kapan saja.
+                    </p>
+                </div>
+            </div>
+        </div>
+    </section>
 
     {{-- Lokasi --}}
     <section class="bg-gradient-to-b from-neutral-50 via-white to-emerald-50/70 py-16 md:py-20" id="lokasi">
