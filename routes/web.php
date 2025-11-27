@@ -39,6 +39,6 @@ Route::prefix('demo/pejabat')->name('demo.pejabat.')->group(function () {
 });
 
 // Redirect root ke demo admin
-Route::get('/', function () {
-    return redirect()->route('demo.admin.dashboard');
-});
+// Route::get('/', function () {
+//     return redirect()->route('demo.admin.dashboard');
+// });
