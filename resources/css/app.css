@@ -31,3 +31,23 @@
   --color-button-primary: #16a34a;
   --color-button-hover: #15803d;
 }
+
+@layer components {
+    .nav-mobile-panel {
+        transition: max-height 0.3s ease, opacity 0.3s ease, transform 0.3s ease;
+        transform-origin: top;
+    }
+
+    .nav-mobile-panel.closed {
+        max-height: 0;
+        opacity: 0;
+        transform: scaleY(0.96);
+        overflow: hidden;
+    }
+
+    .nav-mobile-panel.open {
+        max-height: 260px;
+        opacity: 1;
+        transform: scaleY(1);
+    }
+}

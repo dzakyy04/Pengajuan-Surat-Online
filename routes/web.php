@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\MasyarakatController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -13,6 +14,5 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::get('/', function () {
-    return view('welcome');
-});
+Route::get('/', [MasyarakatController::class, 'index'])->name('beranda');
+Route::get('/form-pengajuan', [MasyarakatController::class, 'form'])->name('pengajuan');
