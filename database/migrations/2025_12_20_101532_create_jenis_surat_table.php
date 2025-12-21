@@ -18,7 +18,7 @@ return new class extends Migration
             $table->string('format_nomor', 100);
             $table->integer('counter_terakhir')->default(0);
             $table->year('tahun_counter');
-            $table->text('template_html')->nullable();
+            $table->text('template_path')->nullable();
             $table->boolean('aktif')->default(true);
             $table->timestamps();
         });

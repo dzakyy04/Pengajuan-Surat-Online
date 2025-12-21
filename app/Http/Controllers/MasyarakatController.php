@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\JenisSurat;
 use Illuminate\Http\Request;
 
 class MasyarakatController extends Controller
@@ -11,6 +12,7 @@ class MasyarakatController extends Controller
     }
 
     public function form() {
-        return view('frontend.form-pengajuan');
+        $jenisSurat = JenisSurat::all();
+        return view('frontend.form-pengajuan', compact('jenisSurat'));
     }
 }
