@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\MasyarakatController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Admin\DashboardController;
 use App\Http\Controllers\Admin\AuthController;
@@ -44,3 +45,5 @@ Route::prefix('demo/pejabat')->name('demo.pejabat.')->group(function () {
 // Route::get('/', function () {
 //     return redirect()->route('demo.admin.dashboard');
 // });
+Route::get('/', [MasyarakatController::class, 'index'])->name('beranda');
+Route::get('/form-pengajuan', [MasyarakatController::class, 'form'])->name('pengajuan');

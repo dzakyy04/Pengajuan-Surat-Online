@@ -1,0 +1,18 @@
+<?php
+
+namespace App\Http\Controllers;
+
+use App\Models\JenisSurat;
+use Illuminate\Http\Request;
+
+class MasyarakatController extends Controller
+{
+    public function index() {
+        return view('frontend.beranda');
+    }
+
+    public function form() {
+        $jenisSurat = JenisSurat::all();
+        return view('frontend.form-pengajuan', compact('jenisSurat'));
+    }
+}

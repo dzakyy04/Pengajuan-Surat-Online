@@ -92,3 +92,48 @@ body {
     font-style: normal;
     font-display: swap;
 }
+  --color-desa-primary: #2d5f3a;      /* Hijau medium, tidak terlalu tua */
+  --color-desa-secondary: #3a7647;    /* Hijau segar */
+  --color-desa-tertiary: #276738;     /* Hijau balanced */
+  --color-desa-accent: #4d9960;       /* Hijau cerah untuk aksen */
+  
+  /* Extended Green Scale - Fresh & Vibrant */
+  --color-desa-green-50: #f0fdf5;
+  --color-desa-green-100: #dcfce8;
+  --color-desa-green-200: #bbf7d5;
+  --color-desa-green-300: #86efb0;    /* Lebih cerah */
+  --color-desa-green-400: #4ade8a;    /* Vibrant */
+  --color-desa-green-500: #22c55e;    /* Fresh green */
+  --color-desa-green-600: #16a34a;    /* Primary green */
+  --color-desa-green-700: #15803d;    /* Medium dark */
+  --color-desa-green-800: #166534;
+  --color-desa-green-900: #14532d;
+  --color-desa-green-950: #052e16;
+  
+  /* Semantic Colors */
+  --color-header-bg-from: #2d5f3a;
+  --color-header-bg-via: #3a7647;
+  --color-header-bg-to: #276738;
+  --color-button-primary: #16a34a;
+  --color-button-hover: #15803d;
+}
+
+@layer components {
+    .nav-mobile-panel {
+        transition: max-height 0.3s ease, opacity 0.3s ease, transform 0.3s ease;
+        transform-origin: top;
+    }
+
+    .nav-mobile-panel.closed {
+        max-height: 0;
+        opacity: 0;
+        transform: scaleY(0.96);
+        overflow: hidden;
+    }
+
+    .nav-mobile-panel.open {
+        max-height: 260px;
+        opacity: 1;
+        transform: scaleY(1);
+    }
+}
