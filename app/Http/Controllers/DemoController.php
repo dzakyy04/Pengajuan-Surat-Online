@@ -4,6 +4,8 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use PhpOffice\PhpWord\TemplateProcessor;
+use PhpOffice\PhpWord\IOFactory;
+
 
 class DemoController extends Controller
 {
@@ -19,11 +21,11 @@ class DemoController extends Controller
         return view('demo.admin.detail');
     }
 
-    // Approve & Generate Surat REAL
+
+
     public function approve(Request $request)
     {
         try {
-            // Data dummy untuk demo
             $data = [
                 'nomor_surat' => '001/SKD/XI/2024',
                 'tanggal_surat' => now()->translatedFormat('d F Y'),
@@ -32,49 +34,111 @@ class DemoController extends Controller
                 'tempat_lahir' => 'Jakarta',
                 'tanggal_lahir' => '15 Januari 1985',
                 'jenis_kelamin' => 'Laki-laki',
-                'bangsa_agama' => 'Indonesia/Islam',
+                'bangsa_agama' => 'Indonesia / Islam',
                 'status_perkawinan' => 'Kawin',
                 'pekerjaan' => 'Buruh Harian',
-                'alamat' => 'Jl. Merdeka No. 123, RT 001/RW 002, Kelurahan Sukamaju, Kecamatan Cikarang Utara',
-                'keperluan' => 'Bantuan Pendidikan Anak',
-                'keterangan' => 'Untuk mengajukan beasiswa pendidikan anak SD',
+                'alamat' => 'Jl. Merdeka No. 123 RT 001/RW 002, Kelurahan Sukamaju Banget, Kecamatan Cikarang Utara, Kabupaten Bekasi, Provinsi Jawa Barat',
+                'keperluan_html' => '
+                <p>Berdasarkan surat pengantar Ketua RT 001 Dusun I No.016/SR/2024 Desa Sungai Rebo. Tertanggal 29 November 2024 benar bahwa nama tersebut adalah penduduk Desa Sungai Rebo. Kecamatan Banyuasin I Kabupaten Banyuasin.</p>
+                <p>Sebagaimana Alamat diatas, Memang benar termasuk keluarga tidak mampu (Miskin).</p>
+                <p>Surat Keterangan ini diberikan : Untuk Pelengkap Administrasi Membuat KIS</p>',
             ];
 
-            // Path template (ambil dari resources)
-            $templatePath = resource_path('files/surat-keterangan-miskin.docx');
-
-            if (!file_exists($templatePath)) {
-                return back()->with('error', 'Template surat tidak ditemukan di resources/files/surat-keterangan-miskin.docx');
-            }
-
-            // Load template
+            $templatePath = resource_path('files/surat-keterangan-miskin-2.docx');
             $templateProcessor = new TemplateProcessor($templatePath);
 
-            // Replace semua placeholder
+            // ========================================
+            // 1️⃣ SET SEMUA VALUE KECUALI KEPERLUAN
+            // ========================================
             foreach ($data as $key => $value) {
-                $templateProcessor->setValue($key, $value);
+                if ($key !== 'keperluan_html') {
+                    $templateProcessor->setValue($key, $value);
+                }
             }
 
-            // Generate filename
+            // ========================================
+            // 2️⃣ SET KEPERLUAN DENGAN FORMAT PARAGRAF
+            // ========================================
+            if (!empty($data['keperluan_html'])) {
+                $paragraphs = $this->convertHtmlToParagraphs($data['keperluan_html']);
+                $templateProcessor->setComplexBlock('keperluan', $paragraphs);
+            }
+
+            // ========================================
+            // 3️⃣ CLONE ROW UNTUK NAMA & NIK (OPSIONAL)
+            // Kalau di template ada ${nama} dan ${nik} di bawah keperluan
+            // ========================================
+            // $templateProcessor->setValue('nama', $data['nama']);
+            // $templateProcessor->setValue('nik', $data['nik']);
+
+            // Save file
             $filename = 'SKTM_' . time() . '.docx';
             $outputPath = public_path('downloads/' . $filename);
 
-            // Pastikan folder downloads ada
             if (!file_exists(public_path('downloads'))) {
                 mkdir(public_path('downloads'), 0755, true);
             }
 
-            // Save dokumen
             $templateProcessor->saveAs($outputPath);
-
-            // Redirect ke halaman success dengan link download
-            return redirect()->route('demo.admin.success', ['file' => $filename])
-                ->with('success', 'Surat berhasil dibuat!');
+            return response()->download($outputPath);
 
         } catch (\Exception $e) {
-            return back()->with('error', 'Terjadi kesalahan: ' . $e->getMessage());
+            return back()->with('error', $e->getMessage());
         }
     }
+
+    /**
+     * 🔥 FIXED: Font + Spacing + Line Breaks
+     */
+    private function convertHtmlToParagraphs(string $html)
+    {
+        $textRun = new \PhpOffice\PhpWord\Element\TextRun();
+
+        // Parse HTML ke array paragraf
+        $html = str_replace(['<br>', '<br/>', '<br />'], '</p><p>', $html);
+        preg_match_all('/<p[^>]*>(.*?)<\/p>/s', $html, $matches);
+
+        // 🔥 FONT STYLE (SESUAIKAN DENGAN TEMPLATE WORD ANDA)
+        $fontStyle = [
+            'name' => 'Arial', // Ganti sesuai template
+            'size' => 12,                 // Ganti sesuai template
+        ];
+
+        $counter = 1;
+        $totalParagraphs = count($matches[1]);
+
+        foreach ($matches[1] as $index => $paragraph) {
+            $text = strip_tags($paragraph);
+            $text = html_entity_decode($text, ENT_QUOTES, 'UTF-8');
+            $text = trim($text);
+
+            if (empty($text))
+                continue;
+
+            // Handle <li> jika ada
+            if (strpos($paragraph, '<li>') !== false) {
+                preg_match_all('/<li>(.*?)<\/li>/s', $paragraph, $items);
+                foreach ($items[1] as $item) {
+                    $itemText = strip_tags($item);
+                    $itemText = html_entity_decode($itemText, ENT_QUOTES, 'UTF-8');
+                    $textRun->addText($counter . '. ' . trim($itemText), $fontStyle);
+                    $textRun->addTextBreak(); // 1 baris baru
+                    $counter++;
+                }
+            } else {
+                // 🔥 TAMBAHKAN TEXT DENGAN FONT STYLE
+                $textRun->addText($text, $fontStyle);
+
+                // 🔥 HANYA TAMBAH 1 BARIS JIKA BUKAN PARAGRAF TERAKHIR
+                if ($index < $totalParagraphs - 1) {
+                    $textRun->addTextBreak(1); // Cukup 1x saja
+                }
+            }
+        }
+
+        return $textRun;
+    }
+
 
     // Reject (dummy)
     public function reject(Request $request)

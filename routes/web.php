@@ -2,6 +2,7 @@
 
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Admin\DashboardController;
+use App\Http\Controllers\Admin\AuthController;
 use App\Http\Controllers\DemoController;
 
 /*
@@ -20,6 +21,7 @@ Route::get('/', function () {
 });
 
 Route::get('/admin/dashboard', [DashboardController::class, 'index'])->name('admin.dashboard');
+Route::get('/admin/login', [AuthController::class, 'index'])->name('admin.dashboard');
 
 Route::prefix('demo/admin')->name('demo.admin.')->group(function () {
     Route::get('/dashboard', [DemoController::class, 'dashboard'])->name('dashboard');
