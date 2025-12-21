@@ -19,7 +19,7 @@
                     <p class="text-gray-500 text-sm">Lanjutkan dengan salah satu opsi berikut</p>
                 </div>
 
-                <form action="#" method="POST">
+                <form method="POST" action="{{ route('admin.login') }}">
                     @csrf
 
                     <!-- Email Input -->
@@ -34,22 +34,23 @@
                     <div class="mb-3">
                         <label for="password" class="block text-sm font-medium text-gray-700 mb-2">Kata Sandi</label>
                         <div class="relative">
-                            <input type="password" id="passwordField" name="password" placeholder="Kata Sandi 8-16 karakter"
+                            <input type="password" id="passwordField" name="password"
+                                placeholder="Kata Sandi 8-16 karakter"
                                 class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-transparent transition"
                                 required>
                             <button type="button" id="togglePasswordBtn"
                                 class="absolute cursor-pointer right-3 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-gray-600 focus:outline-none">
                                 <!-- Eye Icon (Show) -->
-                                <svg id="eyeIconShow" xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20"
-                                    fill="currentColor">
+                                <svg id="eyeIconShow" xmlns="http://www.w3.org/2000/svg" class="h-5 w-5"
+                                    viewBox="0 0 20 20" fill="currentColor">
                                     <path d="M10 12a2 2 0 100-4 2 2 0 000 4z" />
                                     <path fill-rule="evenodd"
                                         d="M.458 10C1.732 5.943 5.522 3 10 3s8.268 2.943 9.542 7c-1.274 4.057-5.064 7-9.542 7S1.732 14.057.458 10zM14 10a4 4 0 11-8 0 4 4 0 018 0z"
                                         clip-rule="evenodd" />
                                 </svg>
                                 <!-- Eye Slash Icon (Hide) - Hidden by default -->
-                                <svg id="eyeIconHide" xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 hidden" viewBox="0 0 20 20"
-                                    fill="currentColor">
+                                <svg id="eyeIconHide" xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 hidden"
+                                    viewBox="0 0 20 20" fill="currentColor">
                                     <path fill-rule="evenodd"
                                         d="M3.707 2.293a1 1 0 00-1.414 1.414l14 14a1 1 0 001.414-1.414l-1.473-1.473A10.014 10.014 0 0019.542 10C18.268 5.943 14.478 3 10 3a9.958 9.958 0 00-4.512 1.074l-1.78-1.781zm4.261 4.26l1.514 1.515a2.003 2.003 0 012.45 2.45l1.514 1.514a4 4 0 00-5.478-5.478z"
                                         clip-rule="evenodd" />
@@ -77,7 +78,8 @@
 
                     <!-- Register Link -->
                     <p class="text-center text-sm text-gray-600 mt-2">
-                        Belum punya akun? <a href="#" class="text-gray-800 font-medium hover:underline">Daftar Sekarang</a>
+                        Belum punya akun? <a href="#" class="text-gray-800 font-medium hover:underline">Daftar
+                            Sekarang</a>
                     </p>
                 </form>
             </div>
@@ -85,29 +87,36 @@
 
         <!-- Right Section - Splash Screen -->
         <div class="w-1/2 flex items-center justify-center p-2">
-            <div class="bg-gradient-to-br from-emerald-900 to-emerald-950 backdrop-blur-md border border-slate-200 shadow-sm rounded-xl w-full h-full flex items-center justify-center relative overflow-hidden">
+            <div
+                class="bg-gradient-to-br from-emerald-900 to-emerald-950 backdrop-blur-md border border-slate-200 shadow-sm rounded-xl w-full h-full flex items-center justify-center relative overflow-hidden">
 
                 <div class="orbit-container">
                     <!-- Blob 1 -->
                     <div class="orbit-blob blob-1">
-                        <div class="w-36 h-36 bg-emerald-900 rounded-full mix-blend-multiply filter blur-xl opacity-80"></div>
+                        <div class="w-36 h-36 bg-emerald-900 rounded-full mix-blend-multiply filter blur-xl opacity-80">
+                        </div>
                     </div>
                     <!-- Blob 2 -->
                     <div class="orbit-blob blob-2">
-                        <div class="w-32 h-32 bg-emerald-800 rounded-full mix-blend-multiply filter blur-xl opacity-80"></div>
+                        <div class="w-32 h-32 bg-emerald-800 rounded-full mix-blend-multiply filter blur-xl opacity-80">
+                        </div>
                     </div>
                     <!-- Blob 3 -->
                     <div class="orbit-blob blob-3">
-                        <div class="w-30 h-20 bg-lime-800 rounded-full mix-blend-multiply filter blur-xl opacity-80"></div>
+                        <div class="w-30 h-20 bg-lime-800 rounded-full mix-blend-multiply filter blur-xl opacity-80">
+                        </div>
                     </div>
                     <!-- Blob 4 -->
                     <div class="orbit-blob blob-4">
-                        <div class="w-28 h-28 bg-green-800 rounded-full mix-blend-multiply filter blur-xl opacity-80"></div>
+                        <div class="w-28 h-28 bg-green-800 rounded-full mix-blend-multiply filter blur-xl opacity-80">
+                        </div>
                     </div>
                 </div>
 
-                <div class="absolute top-4 right-4 z-20 bg-white backdrop-blur-lg rounded-2xl p-3 shadow-sm border border-white/30">
-                    <img src="{{ asset('assets/img/banyuasin.png') }}" alt="Logo Desa" class="relative z-10 w-10 h-auto drop-shadow-2xl">
+                <div
+                    class="absolute top-4 right-4 z-20 bg-white backdrop-blur-lg rounded-2xl p-3 shadow-sm border border-white/30">
+                    <img src="{{ asset('assets/img/banyuasin.png') }}" alt="Logo Desa"
+                        class="relative z-10 w-10 h-auto drop-shadow-2xl">
                 </div>
 
                 <!-- Splash Screen Carousel -->
@@ -116,11 +125,13 @@
                     <div class="splash-slide active">
                         <div class="flex flex-col items-center text-center">
                             <div class="mb-6 bg-white/10 backdrop-blur-md rounded-full p-8 border border-white/20">
-                                <img src="{{ asset('assets/img/login.png') }}" alt="Layanan Surat" class="w-32 h-32 object-contain">
+                                <img src="{{ asset('assets/img/login.png') }}" alt="Layanan Surat"
+                                    class="w-32 h-32 object-contain">
                             </div>
                             <h3 class="text-3xl font-bold text-white mb-4">Layanan Surat Digital</h3>
                             <p class="text-white/80 text-lg leading-relaxed">
-                                Buat surat keterangan tidak mampu, domisili, dan berbagai surat administratif lainnya dengan mudah dan cepat secara online
+                                Buat surat keterangan tidak mampu, domisili, dan berbagai surat administratif lainnya
+                                dengan mudah dan cepat secara online
                             </p>
                         </div>
                     </div>
@@ -128,11 +139,13 @@
                     <div class="splash-slide">
                         <div class="flex flex-col items-center text-center">
                             <div class="mb-6 bg-white/10 backdrop-blur-md rounded-full p-8 border border-white/20">
-                                <img src="{{ asset('assets/img/login-2.png') }}" alt="Proses Cepat" class="w-32 h-32 object-contain">
+                                <img src="{{ asset('assets/img/login-2.png') }}" alt="Proses Cepat"
+                                    class="w-32 h-32 object-contain">
                             </div>
                             <h3 class="text-3xl font-bold text-white mb-4">Proses Cepat & Mudah</h3>
                             <p class="text-white/80 text-lg leading-relaxed">
-                                Tidak perlu antri! Ajukan permohonan surat dari rumah dan dapatkan hasilnya dalam hitungan menit
+                                Tidak perlu antri! Ajukan permohonan surat dari rumah dan dapatkan hasilnya dalam
+                                hitungan menit
                             </p>
                         </div>
                     </div>
@@ -140,11 +153,13 @@
                     <div class="splash-slide">
                         <div class="flex flex-col items-center text-center">
                             <div class="mb-6 bg-white/10 backdrop-blur-md rounded-full p-8 border border-white/20">
-                                <img src="{{ asset('assets/img/login-3.png') }}" alt="Aman Terpercaya" class="w-32 h-32 object-contain">
+                                <img src="{{ asset('assets/img/login-3.png') }}" alt="Aman Terpercaya"
+                                    class="w-32 h-32 object-contain">
                             </div>
                             <h3 class="text-3xl font-bold text-white mb-4">Aman & Terpercaya</h3>
                             <p class="text-white/80 text-lg leading-relaxed">
-                                Data Anda terlindungi dengan sistem keamanan tinggi. Semua surat memiliki validasi resmi dari kelurahan
+                                Data Anda terlindungi dengan sistem keamanan tinggi. Semua surat memiliki validasi resmi
+                                dari kelurahan
                             </p>
                         </div>
                     </div>
@@ -180,29 +195,60 @@
             transform-origin: center center;
         }
 
-        .blob-1 { animation: orbit-large 15s linear infinite; }
-        .blob-2 { animation: orbit-medium 12s linear infinite reverse; }
-        .blob-3 { animation: orbit-small 10s linear infinite; }
-        .blob-4 { animation: orbit-extra 18s linear infinite reverse; }
+        .blob-1 {
+            animation: orbit-large 15s linear infinite;
+        }
+
+        .blob-2 {
+            animation: orbit-medium 12s linear infinite reverse;
+        }
+
+        .blob-3 {
+            animation: orbit-small 10s linear infinite;
+        }
+
+        .blob-4 {
+            animation: orbit-extra 18s linear infinite reverse;
+        }
 
         @keyframes orbit-large {
-            0% { transform: translate(-50%, -50%) rotate(0deg) translateX(280px) rotate(0deg); }
-            100% { transform: translate(-50%, -50%) rotate(360deg) translateX(280px) rotate(-360deg); }
+            0% {
+                transform: translate(-50%, -50%) rotate(0deg) translateX(280px) rotate(0deg);
+            }
+
+            100% {
+                transform: translate(-50%, -50%) rotate(360deg) translateX(280px) rotate(-360deg);
+            }
         }
 
         @keyframes orbit-medium {
-            0% { transform: translate(-50%, -50%) rotate(0deg) translateX(220px) rotate(0deg); }
-            100% { transform: translate(-50%, -50%) rotate(360deg) translateX(220px) rotate(-360deg); }
+            0% {
+                transform: translate(-50%, -50%) rotate(0deg) translateX(220px) rotate(0deg);
+            }
+
+            100% {
+                transform: translate(-50%, -50%) rotate(360deg) translateX(220px) rotate(-360deg);
+            }
         }
 
         @keyframes orbit-small {
-            0% { transform: translate(-50%, -50%) rotate(0deg) translateX(160px) rotate(0deg); }
-            100% { transform: translate(-50%, -50%) rotate(360deg) translateX(160px) rotate(-360deg); }
+            0% {
+                transform: translate(-50%, -50%) rotate(0deg) translateX(160px) rotate(0deg);
+            }
+
+            100% {
+                transform: translate(-50%, -50%) rotate(360deg) translateX(160px) rotate(-360deg);
+            }
         }
 
         @keyframes orbit-extra {
-            0% { transform: translate(-50%, -50%) rotate(0deg) translateX(320px) rotate(0deg); }
-            100% { transform: translate(-50%, -50%) rotate(360deg) translateX(320px) rotate(-360deg); }
+            0% {
+                transform: translate(-50%, -50%) rotate(0deg) translateX(320px) rotate(0deg);
+            }
+
+            100% {
+                transform: translate(-50%, -50%) rotate(360deg) translateX(320px) rotate(-360deg);
+            }
         }
 
         .splash-carousel {

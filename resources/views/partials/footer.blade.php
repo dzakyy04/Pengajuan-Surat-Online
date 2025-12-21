@@ -2,7 +2,7 @@
     <div class="flex flex-col md:flex-row justify-between items-center text-sm text-gray-600">
         <!-- Copyright -->
         <div class="mb-2 md:mb-0">
-            &copy; {{ date('Y') }} <span class="font-semibold text-emerald-600">HiveQ</span>. All rights reserved.
+            &copy; {{ date('Y') }} <span class="font-semibold text-emerald-600">DESA SUNGAI REBO</span>. All rights reserved.
         </div>
 
         <!-- Links -->

@@ -16,7 +16,7 @@
         </div>
 
         <!-- Right: User Actions -->
-        <div class="flex items-center space-x-2">
+        {{-- <div class="flex items-center space-x-2">
             <!-- Date Range Picker -->
             <button class="hidden md:flex items-center space-x-2 px-3 py-2 text-sm text-gray-700 hover:bg-gray-50 rounded-lg border border-gray-200 transition-colors">
                 <svg class="w-4 h-4 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -72,6 +72,6 @@
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 5v.01M12 12v.01M12 19v.01M12 6a1 1 0 110-2 1 1 0 010 2zm0 7a1 1 0 110-2 1 1 0 010 2zm0 7a1 1 0 110-2 1 1 0 010 2z"></path>
                 </svg>
             </button>
-        </div>
+        </div> --}}
     </div>
 </header>
