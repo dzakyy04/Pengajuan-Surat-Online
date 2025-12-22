@@ -10,7 +10,7 @@
             <div class="bg-white rounded-2xl shadow-xl overflow-hidden animate-slide-in">
 
                 <!-- Header -->
-                <div class="px-8 py-6 bg-gradient-to-r from-emerald-600 to-green-700 text-white text-center">
+                <div class="px-8 py-6 bg-gradient-to-r from-emerald-600 to-emerald-500 text-white text-center">
                     <div class="mx-auto mb-4 w-16 h-16 flex items-center justify-center rounded-full bg-white/20">
                         <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5"
@@ -53,7 +53,7 @@
                     <!-- Actions -->
                     <div class="flex flex-col sm:flex-row gap-4 justify-center mb-10">
                         <a href="{{ route('admin.sktm.download', $file) }}"
-                            class="group inline-flex items-center justify-center px-6 py-3 rounded-xl bg-gradient-to-r from-green-600 to-emerald-600 hover:from-green-700 hover:to-emerald-700 text-white font-bold shadow-lg hover:shadow-xl transition">
+                            class="group inline-flex items-center justify-center px-6 py-3 rounded-xl bg-gradient-to-r from-emerald-600 to-emerald-500 hover:from-emerald-700 hover:to-emerald-700 text-white font-bold shadow-lg hover:shadow-xl transition">
                             <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                                     d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />

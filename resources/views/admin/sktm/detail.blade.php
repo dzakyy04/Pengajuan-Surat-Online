@@ -11,27 +11,13 @@
         .section-card {
             transition: all 0.3s ease;
             border-left: 4px solid transparent;
+            border-left-color: #15a776;
+
         }
 
         .section-card:hover {
             transform: translateY(-2px);
             box-shadow: 0 12px 28px rgba(0, 0, 0, 0.12);
-        }
-
-        .section-card.data-pemohon {
-            border-left-color: #10b981;
-        }
-
-        .section-card.surat-rt {
-            border-left-color: #73a9ff;
-        }
-
-        .section-card.keperluan {
-            border-left-color: #8b5cf6;
-        }
-
-        .section-card.anggota {
-            border-left-color: #f59e0b;
         }
 
         .input-group {
@@ -43,6 +29,11 @@
         .input-group textarea:focus {
             transform: translateY(-1px);
             box-shadow: 0 4px 12px rgba(59, 130, 246, 0.15);
+        }
+
+        .icon-wrapper {
+            background: linear-gradient(135deg, #15a776 0%, #0d8a5f 100%);
+            box-shadow: 0 4px 12px rgba(21, 167, 118, 0.3);
         }
 
         .sticky-action {
@@ -70,16 +61,23 @@
 @endpush
 
 @section('content')
-    <div class="container mx-auto py-8 px-2">
+    <div class="container mx-auto py-8 px-2 max-w-full">
         <!-- Header -->
         <div class="mb-8 animate-slide-in">
-            <div class="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
-                <div>
-                    <h1 class="text-2xl font-bold text-gray-800 mb-2">Detail Pengajuan Surat Keterangan Tidak Mampu</h1>
-                    <div class="flex items-center gap-3">
+            <div class="flex flex-col md:flex-row md:items-center md:justify-between gap-6">
+                <div class="flex items-start gap-4">
+                    <div class="icon-wrapper p-3 rounded-2xl">
+                        <svg class="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+                        </svg>
+                    </div>
+                    <div>
+                        <h1 class="text-3xl font-extrabold text-gray-900 mb-2 tracking-tight">Detail Pengajuan SKTM</h1>
+                        <p class="text-sm text-gray-500 mb-3">Kelola dan verifikasi data pengajuan surat keterangan</p>
                         <span
-                            class="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium bg-emerald-100 text-emerald-800">
-                            <svg class="w-4 h-4 mr-1" fill="currentColor" viewBox="0 0 20 20">
+                            class="inline-flex items-center px-5 py-2.5 rounded-full text-xs bg-gradient-to-r from-emerald-600 to-emerald-500 text-white font-bold shadow-lg hover:shadow-xl transition-all duration-300">
+                            <svg class="w-4 h-4 mr-2" fill="currentColor" viewBox="0 0 20 20">
                                 <path fill-rule="evenodd"
                                     d="M6 2a1 1 0 00-1 1v1H4a2 2 0 00-2 2v10a2 2 0 002 2h12a2 2 0 002-2V6a2 2 0 00-2-2h-1V3a1 1 0 10-2 0v1H7V3a1 1 0 00-1-1zm0 5a1 1 0 000 2h8a1 1 0 100-2H6z"
                                     clip-rule="evenodd" />
@@ -89,8 +87,8 @@
                     </div>
                 </div>
                 <a href="{{ route('admin.sktm.index') }}"
-                    class="inline-flex items-center px-6 py-3 bg-gradient-to-r from-emerald-600 to-emerald-700 hover:from-emerald-700 hover:to-emerald-800 text-white rounded-xl transition-all duration-200 shadow-sm hover:shadow-xl font-medium">
-                    <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    class="inline-flex items-center px-4 py-2 bg-gradient-to-r from-emerald-600 to-emerald-500 hover:from-emerald-700 hover:to-emerald-600 text-white rounded-full transition-all duration-200 shadow-sm hover:shadow-xl font-semibold text-xs">
+                    <svg class="w-3 h-3 mr-2 font-semibold" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                             d="M10 19l-7-7m0 0l7-7m-7 7h18" />
                     </svg>
@@ -135,7 +133,7 @@
         <!-- UNIFIED FORM -->
 
 
-        <div class="grid grid-cols-1 md:grid-cols-4 gap-6">
+        <div class="grid grid-cols-1 lg:grid-cols-4 gap-6">
             <!-- Main Content -->
             <div class="lg:col-span-3 ">
                 <form action="{{ route('admin.sktm.update', $pengajuan->id) }}" method="POST" id="formUnified"
@@ -144,11 +142,11 @@
                     @method('PUT')
 
                     <!-- Data Pemohon -->
-                    <div class="bg-white rounded-xl shadow-sm p-6 section-card data-pemohon animate-slide-in">
+                    <div class="bg-white rounded-xl shadow-xs p-6 section-card  animate-slide-in">
                         <div class="mb-6">
                             <div class="flex items-center gap-3 mb-2">
-                                <div class="p-2 bg-emerald-100 rounded-full">
-                                    <svg class="w-6 h-6 text-emerald-600" fill="none" stroke="currentColor"
+                                <div class="p-2 bg-gradient-to-r from-emerald-600 to-emerald-500 rounded-full">
+                                    <svg class="w-5 h-5 text-white" fill="none" stroke="currentColor"
                                         viewBox="0 0 24 24">
                                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                                             d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
@@ -272,11 +270,11 @@
                     </div>
 
                     <!-- Surat RT -->
-                    <div class="bg-white rounded-xl shadow-sm p-6 section-card surat-rt animate-slide-in">
+                    <div class="bg-white rounded-xl shadow-sm p-6 section-card animate-slide-in">
                         <div class="mb-6">
                             <div class="flex items-center gap-3 mb-2">
-                                <div class="p-2 bg-blue-100 rounded-lg">
-                                    <svg class="w-6 h-6 text-blue-400" fill="none" stroke="currentColor"
+                                <div class="p-2 bg-gradient-to-r from-emerald-600 to-emerald-500 rounded-lg">
+                                    <svg class="w-5 h-5 text-white" fill="none" stroke="currentColor"
                                         viewBox="0 0 24 24">
                                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                                             d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
@@ -311,8 +309,8 @@
                     <div class="bg-white rounded-xl shadow-sm p-6 section-card keperluan animate-slide-in">
                         <div class="mb-6">
                             <div class="flex items-center gap-3 mb-2">
-                                <div class="p-2 bg-purple-100 rounded-lg">
-                                    <svg class="w-6 h-6 text-purple-600" fill="none" stroke="currentColor"
+                                <div class="p-2 bg-gradient-to-r from-emerald-600 to-emerald-500 rounded-lg">
+                                    <svg class="w-5 h-5 text-white" fill="none" stroke="currentColor"
                                         viewBox="0 0 24 24">
                                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                                             d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
@@ -335,8 +333,8 @@
                         <div class="bg-white rounded-xl shadow-sm p-6 section-card anggota animate-slide-in">
                             <div class="mb-6">
                                 <div class="flex items-center gap-3 mb-2">
-                                    <div class="p-2 bg-orange-100 rounded-lg">
-                                        <svg class="w-6 h-6 text-orange-600" fill="none" stroke="currentColor"
+                                    <div class="p-2 bg-gradient-to-r from-emerald-600 to-emerald-500 rounded-lg">
+                                        <svg class="w-5 h-5 text-white" fill="none" stroke="currentColor"
                                             viewBox="0 0 24 24">
                                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                                                 d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z" />
@@ -351,7 +349,7 @@
 
                             <div class="overflow-hidden rounded-lg border-2 border-gray-200">
                                 <table class="min-w-full divide-y divide-gray-200">
-                                    <thead class="bg-gradient-to-r from-orange-50 to-orange-100">
+                                    <thead class="bg-gradient-to-r from-emerald-50 to-green-100">
                                         <tr>
                                             <th
                                                 class="px-6 py-4 text-left text-xs font-bold text-gray-700 uppercase tracking-wider">
@@ -363,7 +361,7 @@
                                     </thead>
                                     <tbody class="bg-white divide-y divide-gray-200">
                                         @foreach ($anggotaKeluarga as $anggota)
-                                            <tr class="hover:bg-orange-50 transition-colors">
+                                            <tr class="hover:bg-emerald-50 transition-colors">
                                                 <td class="px-6 py-4 text-sm font-medium text-gray-900">
                                                     {{ $anggota['nama'] ?? '-' }}</td>
                                                 <td class="px-6 py-4 text-sm text-gray-700">{{ $anggota['nik'] ?? '-' }}
@@ -377,7 +375,7 @@
                     @endif
 
                     <button type="submit"
-                        class="w-full inline-flex items-center justify-center px-4 py-3 bg-gradient-to-r from-emerald-600 to-emerald-700 hover:scale-105 border border-emerald-200 text-white rounded-2xl font-black transition-all duration-200 shadow-sm hover:shadow-xl text-base">
+                        class="w-full inline-flex items-center justify-center px-4 py-3 bg-gradient-to-r from-emerald-600 to-emerald-500 hover:scale-105 border border-emerald-600 text-white rounded-2xl font-semibold transition-all duration-200 shadow-xs hover:shadow-xl text-base">
                         Simpan Perubahan
                     </button>
                 </form>
@@ -388,26 +386,13 @@
             <div class="space-y-6">
 
                 <!-- Status Card -->
-                <div
-                    class="bg-gradient-to-br from-white to-gray-50 rounded-2xl shadow-sm hover:shadow-xl transition-all duration-300 p-6 section-card animate-slide-in border border-gray-100">
-                    <h6
-                        class="text-base font-bold bg-gradient-to-r from-gray-800 to-gray-600 bg-clip-text text-transparent mb-6 flex items-center">
-                        <div
-                            class="w-8 h-8 bg-gradient-to-br from-emerald-600 to-green-700 rounded-full flex items-center justify-center mr-3 shadow-md">
-                            <svg class="w-4 h-4 text-white" fill="currentColor" viewBox="0 0 20 20">
-                                <path fill-rule="evenodd"
-                                    d="M6 2a1 1 0 00-1 1v1H4a2 2 0 00-2 2v10a2 2 0 002 2h12a2 2 0 002-2V6a2 2 0 00-2-2h-1V3a1 1 0 10-2 0v1H7V3a1 1 0 00-1-1zm0 5a1 1 0 000 2h8a1 1 0 100-2H6z"
-                                    clip-rule="evenodd" />
-                            </svg>
-                        </div>
-                        Informasi Status
-                    </h6>
+                <div class="">
                     <div class="space-y-4">
                         <div
-                            class="p-4 bg-white rounded-xl border-l-4 border-blue-500 shadow-sm hover:shadow-md transition-all duration-200">
+                            class="p-4 bg-white rounded-xl border-l-4 border-emerald-600 shadow-sm hover:shadow-md transition-all duration-200">
                             <label
                                 class="text-xs font-bold text-gray-500 uppercase tracking-wider mb-2 block flex items-center">
-                                <span class="w-2 h-2 bg-blue-500 rounded-full mr-2 animate-pulse"></span>
+                                <span class="w-2 h-2 bg-emerald-500 rounded-full mr-2 animate-pulse"></span>
                                 Status Saat Ini
                             </label>
                             <div class="mt-2">
@@ -416,10 +401,10 @@
                         </div>
 
                         <div
-                            class="p-4 bg-white rounded-xl border-l-4 border-purple-500 shadow-sm hover:shadow-md transition-all duration-200">
+                            class="p-4 bg-white rounded-xl border-l-4 border-emerald-600 shadow-sm hover:shadow-md transition-all duration-200">
                             <label
                                 class="text-xs font-bold text-gray-500 uppercase tracking-wider mb-2 block flex items-center">
-                                <svg class="w-4 h-4 text-purple-500 mr-2" fill="none" stroke="currentColor"
+                                <svg class="w-4 h-4 text-emerald-600 mr-2" fill="none" stroke="currentColor"
                                     viewBox="0 0 24 24">
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                                         d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
@@ -434,17 +419,17 @@
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                                         d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
                                 </svg>
-                                <p class="text-gray-500 text-sm font-medium">
+                                <p class="text-gray-400 text-xs font-normal">
                                     {{ $pengajuan->created_at->translatedFormat('H:i') }} WIB</p>
                             </div>
                         </div>
 
                         @if ($pengajuan->admin)
                             <div
-                                class="p-4 bg-white rounded-xl border-l-4 border-emerald-500 shadow-sm hover:shadow-md transition-all duration-200">
+                                class="p-4 bg-white rounded-xl border-l-4 border-emerald-600 shadow-sm hover:shadow-md transition-all duration-200">
                                 <label
                                     class="text-xs font-bold text-gray-500 uppercase tracking-wider mb-2 block flex items-center">
-                                    <svg class="w-4 h-4 text-emerald-500 mr-2" fill="none" stroke="currentColor"
+                                    <svg class="w-4 h-4 text-emerald-600 mr-2" fill="none" stroke="currentColor"
                                         viewBox="0 0 24 24">
                                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                                             d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
@@ -465,45 +450,32 @@
 
                 <!-- Action Buttons -->
                 @if ($pengajuan->status == 'pending')
-                    <div
-                        class="bg-gradient-to-br from-white to-gray-50 rounded-2xl shadow-sm hover:shadow-xl transition-all duration-300 p-6 section-card border border-gray-100">
-                        <h3
-                            class="text-base font-bold bg-gradient-to-r from-gray-800 to-gray-600 bg-clip-text text-transparent mb-5 flex items-center">
-                            <div
-                                class="w-8 h-8 bg-gradient-to-br from-green-600 to-emerald-700 rounded-full flex items-center justify-center mr-2 shadow-md">
-                                <svg class="w-4 h-4 text-white" fill="none" stroke="currentColor"
-                                    viewBox="0 0 24 24">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                        d="M13 10V3L4 14h7v7l9-11h-7z" />
-                                </svg>
-                            </div>
-                            Tindakan
-                        </h3>
+                    <div class="">
 
                         <button type="button"
                             onclick="document.getElementById('modalApprove').classList.remove('hidden')"
-                            class="group w-full inline-flex items-center justify-center px-4 py-3 bg-gradient-to-r from-green-600 to-emerald-600 hover:from-green-700 hover:to-emerald-700 text-white rounded-2xl font-bold transition-all duration-300 shadow-lg hover:shadow-xl hover:scale-[1.02] active:scale-[0.98] relative overflow-hidden mb-1.5">
+                            class="group w-full inline-flex items-center justify-center px-4 py-3 bg-gradient-to-r from-emerald-600 to-emerald-500 hover:from-emerald-700 hover:to-emerald-600 text-white rounded-full font-semibold text-sm transition-all duration-300 shadow-lg hover:shadow-xl hover:scale-[1.02] active:scale-[0.98] relative overflow-hidden mb-1.5">
 
                             <div
                                 class="absolute inset-0 bg-white opacity-0 group-hover:opacity-20 transition-opacity duration-300">
                             </div>
                             <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5"
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                                     d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
                             </svg>
-                            <span class="text-base ml-1.5">Menyetujui Pengajuan</span>
+                            <span class="ml-1.5">Setuju</span>
                         </button>
 
                         <button type="button" onclick="document.getElementById('modalReject').classList.remove('hidden')"
-                            class="group w-full inline-flex items-center justify-center px-4 py-3 bg-gradient-to-r from-red-600 to-rose-600 hover:from-red-700 hover:to-rose-700 text-white rounded-2xl font-bold transition-all duration-300 shadow-lg hover:shadow-xl hover:scale-[1.02] active:scale-[0.98] relative overflow-hidden">
+                            class="group w-full inline-flex items-center justify-center px-4 py-3 bg-gradient-to-r from-rose-600 to-rose-500 hover:from-rose-700 hover:to-rose-600 text-white rounded-full font-semibold text-sm transition-all duration-300 shadow-lg hover:shadow-xl hover:scale-[1.02] active:scale-[0.98] relative overflow-hidden">
                             <div
                                 class="absolute inset-0 bg-white opacity-0 group-hover:opacity-20 transition-opacity duration-300">
                             </div>
                             <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5"
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                                     d="M10 14l2-2m0 0l2-2m-2 2l-2-2m2 2l2 2m7-2a9 9 0 11-18 0 9 9 0 0118 0z" />
                             </svg>
-                            <span class="text-base ml-1.5">Tolak Pengajuan</span>
+                            <span class="ml-1.5">Tolak</span>
                         </button>
                     </div>
                 @elseif($pengajuan->status == 'diproses' && $pengajuan->file_surat_cetak)
@@ -512,7 +484,7 @@
                         <h3
                             class="text-lg font-bold bg-gradient-to-r from-gray-800 to-gray-600 bg-clip-text text-transparent mb-5 flex items-center">
                             <div
-                                class="w-8 h-8 bg-gradient-to-br from-blue-500 to-indigo-600 rounded-lg flex items-center justify-center mr-2 shadow-md">
+                                class="w-8 h-8 bg-gradient-to-br from-emerald-600 to-emerald-500 rounded-full flex items-center justify-center mr-2 shadow-md">
                                 <svg class="w-4 h-4 text-white" fill="none" stroke="currentColor"
                                     viewBox="0 0 24 24">
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
@@ -522,11 +494,11 @@
                             File Surat
                         </h3>
                         <a href="{{ route('admin.sktm.download', $pengajuan->file_surat_cetak) }}"
-                            class="group w-full inline-flex items-center justify-center px-5 py-4 bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-700 hover:to-teal-700 text-white rounded-xl font-bold transition-all duration-300 shadow-lg hover:shadow-xl hover:scale-[1.02] active:scale-[0.98] relative overflow-hidden">
+                            class="group w-full inline-flex items-center justify-center px-4 py-2.5 bg-gradient-to-r from-emerald-600 to-emerald-500 hover:from-emerald-700 hover:to-emerald-600 text-white rounded-full font-semibold text-sm transition-all duration-300 shadow-lg hover:shadow-xl hover:scale-[1.02] active:scale-[0.98] relative overflow-hidden">
                             <div
                                 class="absolute inset-0 bg-white opacity-0 group-hover:opacity-20 transition-opacity duration-300">
                             </div>
-                            <div class="w-6 h-6 bg-white/20 rounded-lg flex items-center justify-center mr-3">
+                            <div class="w-6 h-6 bg-white/20 rounded-full flex items-center justify-center mr-3">
                                 <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5"
                                         d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
@@ -547,21 +519,20 @@
     </div>
 
     <!-- Modal Approve -->
-    <!-- Modal Approve -->
     <div id="modalApprove"
         class="hidden fixed inset-0 z-50 flex items-center justify-center backdrop-brightness-50 backdrop-blur-sm">
 
-        <div class="w-full max-w-md mx-auto bg-white rounded-2xl shadow-2xl overflow-hidden animate-slide-in">
+        <div class="w-full max-w-md mx-auto bg-white rounded-3xl shadow-xs overflow-hidden animate-slide-in">
 
             <!-- Header -->
-            <div class="flex items-center gap-3 px-6 py-4 bg-gradient-to-r from-emerald-600 to-green-700 text-white">
+            <div class="flex items-center gap-3 px-6 py-4 bg-gradient-to-r from-emerald-600 to-emerald-500 text-white">
                 <div class="w-12 h-12 rounded-full bg-white/20 flex items-center justify-center">
                     <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M9 12l2 2 4-4" />
                     </svg>
                 </div>
                 <div>
-                    <h3 class="text-lg font-bold">Setujui Pengajuan</h3>
+                    <h3 class="text-base font-bold">Setujui Pengajuan</h3>
                     <p class="text-xs text-emerald-100">Pengajuan akan diproses dan surat dibuat</p>
                 </div>
             </div>
@@ -580,12 +551,12 @@
                     <!-- Actions -->
                     <div class="flex gap-3">
                         <button type="button" onclick="document.getElementById('modalApprove').classList.add('hidden')"
-                            class="flex-1 px-4 py-2.5 rounded-xl bg-gray-200 hover:bg-gray-300 text-gray-800 font-semibold transition">
+                            class="flex-1 px-4 py-2.5 rounded-xl bg-gray-200 hover:bg-gray-300 text-gray-800 font-semibold transition text-sm">
                             Batal
                         </button>
 
                         <button type="submit"
-                            class="flex-1 px-4 py-2.5 rounded-xl bg-gradient-to-r from-emerald-600 to-green-700 hover:from-emerald-700 hover:to-green-800 text-white font-bold shadow-lg hover:shadow-xl transition">
+                            class="flex-1 px-4 py-2.5 rounded-xl bg-gradient-to-r from-emerald-600 to-emerald-500 hover:from-emerald-700 hover:to-emerald-600 text-white font-bold shadow-lg hover:shadow-xl transition text-sm">
                             Ya, Setujui
                         </button>
                     </div>
@@ -601,10 +572,10 @@
     <div id="modalReject"
         class="hidden fixed inset-0 z-50 flex items-center justify-center backdrop-brightness-50 backdrop-blur-sm">
 
-        <div class="w-full max-w-md mx-auto bg-white rounded-2xl shadow-2xl overflow-hidden animate-slide-in">
+        <div class="w-full max-w-md mx-auto bg-white rounded-3xl shadow-xs overflow-hidden animate-slide-in">
 
             <!-- Header -->
-            <div class="flex items-center gap-3 px-6 py-4 bg-gradient-to-r from-red-600 to-rose-600 text-white">
+            <div class="flex items-center gap-3 px-6 py-4 bg-gradient-to-r from-rose-600 to-rose-500 text-white">
                 <div class="w-12 h-12 rounded-full bg-white/20 flex items-center justify-center">
                     <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5"
@@ -612,8 +583,8 @@
                     </svg>
                 </div>
                 <div>
-                    <h3 class="text-lg font-bold">Tolak Pengajuan</h3>
-                    <p class="text-xs text-red-100">Tindakan ini bersifat final</p>
+                    <h3 class="text-base font-bold">Tolak Pengajuan</h3>
+                    <p class="text-xs text-rose-100">Tindakan ini bersifat final</p>
                 </div>
             </div>
 
@@ -640,12 +611,12 @@
                     <!-- Actions -->
                     <div class="flex gap-3 mt-6">
                         <button type="button" onclick="document.getElementById('modalReject').classList.add('hidden')"
-                            class="flex-1 px-4 py-2.5 rounded-xl bg-gray-200 hover:bg-gray-300 text-gray-800 font-semibold transition">
+                            class="flex-1 px-4 py-2.5 rounded-full bg-gray-200 hover:bg-gray-300 text-gray-800 font-semibold transition text-sm">
                             Batal
                         </button>
 
                         <button type="submit"
-                            class="flex-1 px-4 py-2.5 rounded-xl bg-gradient-to-r from-red-600 to-rose-600 hover:from-red-700 hover:to-rose-700 text-white font-bold shadow-lg hover:shadow-xl transition">
+                            class="flex-1 px-4 py-2.5 rounded-full bg-gradient-to-r from-rose-600 to-rose-500 hover:from-rose-700 hover:to-rose-00 text-white font-semibold shadow-lg hover:shadow-xl transition text-sm">
                             Tolak Pengajuan
                         </button>
                     </div>
