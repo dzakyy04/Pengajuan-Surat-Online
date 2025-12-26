@@ -60,7 +60,7 @@
     </style>
 @endpush
 
-@section('content')
+@section('content')        
     <div class="container mx-auto py-8 px-2 max-w-full">
         <!-- Header -->
         <div class="mb-8 animate-slide-in">
@@ -429,7 +429,7 @@
                                             @if ($isImage($doc['path']))
                                                 <img src="{{ asset('storage/' . $doc['path']) }}"
                                                     alt="Preview {{ $doc['label'] }}"
-                                                    class="w-full rounded-xl border border-gray-200">
+                                                    class="rounded-xl border border-gray-200" height="300">
                                             @elseif ($isPdf($doc['path']))
                                                 <div class="rounded-xl border border-gray-200 overflow-hidden">
                                                     <iframe src="{{ asset('storage/' . $doc['path']) }}" class="w-full"

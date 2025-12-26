@@ -48,7 +48,8 @@
                     </div>
                 </div>
 
-                <form method="POST" action="{{ route('pengajuan.submit') }}" enctype="multipart/form-data" id="formPengajuan" class="space-y-6">
+                <form method="POST" action="{{ route('pengajuan.submit') }}" enctype="multipart/form-data"
+                    id="formPengajuan" class="space-y-6">
                     @csrf
 
                     {{-- STEP 1: Jenis Surat --}}
@@ -1157,6 +1158,115 @@
 
                 // Initialize
                 showStep(1);
+            });
+
+            document.getElementById('formPengajuan').addEventListener('submit', function(e) {
+                e.preventDefault();
+
+                // Tampilkan loading overlay
+                Swal.fire({
+                    title: 'Mengirim Pengajuan...',
+                    html: 'Mohon tunggu, data Anda sedang diproses',
+                    allowOutsideClick: false,
+                    allowEscapeKey: false,
+                    didOpen: () => {
+                        Swal.showLoading();
+                    }
+                });
+
+                // Submit form menggunakan FormData
+                const formData = new FormData(this);
+
+                fetch(this.action, {
+                        method: 'POST',
+                        body: formData,
+                        headers: {
+                            'X-Requested-With': 'XMLHttpRequest'
+                        }
+                    })
+                    .then(response => response.json())
+                    .then(data => {
+                        // Tutup loading
+                        Swal.close();
+
+                        if (data.success) {
+                            // Tampilkan alert sukses
+                            Swal.fire({
+                                icon: 'success',
+                                title: 'Pengajuan Berhasil!',
+                                html: `
+                    <div class="text-left">
+                        <p class="mb-2">Pengajuan surat Anda telah diterima dengan nomor:</p>
+                        <p class="font-bold text-emerald-600 text-lg mb-3">${data.no_pengajuan || '-'}</p>
+                        <p class="text-sm text-gray-600">Notifikasi status pengajuan akan dikirim ke:</p>
+                        <p class="text-sm"><i class="fa-solid fa-envelope mr-2"></i>${data.email || '-'}</p>
+                        <p class="text-sm"><i class="fa-solid fa-phone mr-2"></i>${data.no_hp || '-'}</p>
+                        <div class="mt-4 p-3 bg-blue-50 rounded-lg">
+                            <p class="text-xs text-blue-800">
+                                <i class="fa-solid fa-info-circle mr-1"></i>
+                                Pengajuan akan diproses maksimal 1x24 jam kerja
+                            </p>
+                        </div>
+                    </div>
+                `,
+                                confirmButtonText: 'OK, Mengerti',
+                                confirmButtonColor: '#059669',
+                                customClass: {
+                                    popup: 'rounded-2xl',
+                                    confirmButton: 'rounded-xl px-6 py-2.5'
+                                }
+                            }).then(() => {
+                                // Redirect atau reset form
+                                if (data.redirect) {
+                                    window.location.href = data.redirect;
+                                } else {
+                                    // Reset form dan kembali ke step 1
+                                    document.getElementById('formPengajuan').reset();
+                                    showStep(1);
+                                    window.scrollTo({
+                                        top: 0,
+                                        behavior: 'smooth'
+                                    });
+                                }
+                            });
+                        } else {
+                            // Tampilkan alert error
+                            Swal.fire({
+                                icon: 'error',
+                                title: 'Pengajuan Gagal',
+                                text: data.message ||
+                                    'Terjadi kesalahan saat memproses pengajuan. Silakan coba lagi.',
+                                confirmButtonText: 'OK',
+                                confirmButtonColor: '#dc2626',
+                                customClass: {
+                                    popup: 'rounded-2xl',
+                                    confirmButton: 'rounded-xl px-6 py-2.5'
+                                }
+                            });
+                        }
+                    })
+                    .catch(error => {
+                        // Tutup loading
+                        Swal.close();
+
+                        // Tampilkan alert error
+                        Swal.fire({
+                            icon: 'error',
+                            title: 'Terjadi Kesalahan',
+                            html: `
+                <p class="mb-2">Tidak dapat menghubungi server.</p>
+                <p class="text-sm text-gray-600">Silakan periksa koneksi internet Anda dan coba lagi.</p>
+            `,
+                            confirmButtonText: 'OK',
+                            confirmButtonColor: '#dc2626',
+                            customClass: {
+                                popup: 'rounded-2xl',
+                                confirmButton: 'rounded-xl px-6 py-2.5'
+                            }
+                        });
+
+                        console.error('Error:', error);
+                    });
             });
         </script>
     @endpush

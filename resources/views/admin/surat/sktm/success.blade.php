@@ -94,13 +94,13 @@
                                 Surat akan dilanjutkan ke proses penandatanganan Kepala Desa
                             </li>
 
-                            <li class="flex items-start gap-3">
+                            {{-- <li class="flex items-start gap-3">
                                 <span
                                     class="w-6 h-6 flex items-center justify-center rounded-full bg-yellow-100 text-yellow-600">
                                     !
                                 </span>
                                 Lorem ipsum dolor sit amet consectetur adipisicing elit. Omnis labore accusantium accusamus!
-                            </li>
+                            </li> --}}
                         </ul>
                     </div>
 

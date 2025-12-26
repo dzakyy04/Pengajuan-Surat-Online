@@ -7,6 +7,8 @@ use App\Models\PengajuanSurat;
 use App\Models\SuratTidakMampu;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Auth;
+use PhpOffice\PhpWord\Element\TextRun;
+use PhpOffice\PhpWord\TemplateProcessor;
 
 class SktmController extends Controller
 {
@@ -147,7 +149,7 @@ class SktmController extends Controller
                 'keperluan_html' => $sktm->keperluan,
             ];
 
-            $templatePath = resource_path('files/surat-keterangan-miskin-2.docx');
+            $templatePath = resource_path('files/surat-keterangan-miskin.docx');
 
             if (!file_exists($templatePath)) {
                 throw new \Exception('Template DOCX tidak ditemukan di: ' . $templatePath);
@@ -217,7 +219,7 @@ class SktmController extends Controller
     public function reject(Request $request, $id)
     {
         $request->validate([
-            'catatan_admin' => 'required|string|min:10',
+            'catatan_admin' => 'required|string',
         ]);
 
         try {
@@ -233,6 +235,7 @@ class SktmController extends Controller
             return redirect()->route('admin.sktm.index')
                 ->with('success', 'Pengajuan berhasil ditolak. Notifikasi telah dikirim ke pemohon.');
         } catch (\Exception $e) {
+            dd($e->getMessage());
             return back()->with('error', 'Terjadi kesalahan: ' . $e->getMessage());
         }
     }

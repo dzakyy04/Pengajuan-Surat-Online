@@ -122,185 +122,221 @@ class MasyarakatController extends Controller
             }
         }
 
-        $validated = $request->validate($rules);
+        try {
+            $validated = $request->validate($rules);
 
-        return DB::transaction(function () use ($request, $jenis, $kode) {
+            $result = DB::transaction(function () use ($request, $jenis, $kode) {
 
-            // Nomor pengajuan unik
-            $nomorPengajuan = 'PGJ-' . now()->format('YmdHis') . '-' . Str::upper(Str::random(6));
+                // Nomor pengajuan unik
+                $nomorPengajuan = 'PGJ-' . now()->format('YmdHis') . '-' . Str::upper(Str::random(6));
 
-            // Upload dokumen
-            $baseDir = "pengajuan/{$nomorPengajuan}";
-            $pathKtp = $request->file('dokumen_ktp')->store($baseDir, 'public');
-            $pathKk  = $request->file('dokumen_kk')->store($baseDir, 'public');
-            $pathRt  = $request->file('dokumen_surat_rt')->store($baseDir, 'public');
+                // Upload dokumen
+                $baseDir = "pengajuan/{$nomorPengajuan}";
+                $pathKtp = $request->file('dokumen_ktp')->store($baseDir, 'public');
+                $pathKk  = $request->file('dokumen_kk')->store($baseDir, 'public');
+                $pathRt  = $request->file('dokumen_surat_rt')->store($baseDir, 'public');
 
-            // Simpan ke pengajuan_surat
-            $pengajuan = PengajuanSurat::create([
-                'nomor_pengajuan' => $nomorPengajuan,
-                'jenis_surat_id'  => $jenis->id,
+                // Simpan ke pengajuan_surat
+                $pengajuan = PengajuanSurat::create([
+                    'nomor_pengajuan' => $nomorPengajuan,
+                    'jenis_surat_id'  => $jenis->id,
+                    'nama_pemohon'    => $request->nama,
+                    'email_pemohon'   => $request->email_pemohon,
+                    'no_hp_pemohon'   => $request->no_hp_pemohon,
+                    'dokumen_ktp'     => $pathKtp,
+                    'dokumen_kk'      => $pathKk,
+                    'dokumen_surat_rt' => $pathRt,
+                ]);
 
-                // Untuk tabel pengajuan, "nama_pemohon" tetap kita ambil dari input "nama"
-                // (untuk SKMT: itu nama almarhum)
-                'nama_pemohon'    => $request->nama,
-                'email_pemohon'   => $request->email_pemohon,
-                'no_hp_pemohon'   => $request->no_hp_pemohon,
+                // Simpan detail sesuai kode
+                switch ($kode) {
+                    case 'SKTM':
+                        $anggota = null;
+                        $namaArr = $request->input('anggota_nama', []);
+                        $nikArr  = $request->input('anggota_nik', []);
 
-                // butuh kolom ini di DB (lihat bagian migration)
-                'dokumen_ktp'     => $pathKtp,
-                'dokumen_kk'      => $pathKk,
-                'dokumen_surat_rt' => $pathRt,
-            ]);
-
-            // Simpan detail sesuai kode
-            switch ($kode) {
-                case 'SKTM':
-                    $anggota = null;
-                    $namaArr = $request->input('anggota_nama', []);
-                    $nikArr  = $request->input('anggota_nik', []);
-
-                    // gabungkan jadi json array of objects (opsional)
-                    $temp = [];
-                    for ($i = 0; $i < count($namaArr); $i++) {
-                        $n = trim((string)($namaArr[$i] ?? ''));
-                        $k = trim((string)($nikArr[$i] ?? ''));
-                        if ($n !== '' && $k !== '') {
-                            $temp[] = ['nama' => $n, 'nik' => $k];
+                        $temp = [];
+                        for ($i = 0; $i < count($namaArr); $i++) {
+                            $n = trim((string)($namaArr[$i] ?? ''));
+                            $k = trim((string)($nikArr[$i] ?? ''));
+                            if ($n !== '' && $k !== '') {
+                                $temp[] = ['nama' => $n, 'nik' => $k];
+                            }
                         }
-                    }
-                    if (count($temp) > 0) $anggota = $temp;
+                        if (count($temp) > 0) $anggota = $temp;
 
-                    SuratTidakMampu::create([
-                        'pengajuan_surat_id' => $pengajuan->id,
-                        'nama'               => $request->nama,
-                        'nik'                => $request->nik,
-                        'tempat_lahir'       => $request->tempat_lahir,
-                        'tanggal_lahir'      => $request->tanggal_lahir,
-                        'jenis_kelamin'      => $request->jenis_kelamin,
-                        'status_perkawinan'  => $request->status_perkawinan,
-                        'agama'              => $request->agama,
-                        'pekerjaan'          => $request->pekerjaan,
-                        'alamat'             => $request->alamat,
-                        'rt'                 => $request->rt,
-                        'rw'                 => $request->rw,
-                        'dusun'              => $request->dusun,
-                        'no_surat_rt'        => $request->no_surat_rt,
-                        'tanggal_surat_rt'   => $request->tanggal_surat_rt,
-                        'keperluan'          => $request->keperluan,
-                        'anggota_keluarga'   => $anggota, // json column
-                    ]);
-                    break;
+                        SuratTidakMampu::create([
+                            'pengajuan_surat_id' => $pengajuan->id,
+                            'nama'               => $request->nama,
+                            'nik'                => $request->nik,
+                            'tempat_lahir'       => $request->tempat_lahir,
+                            'tanggal_lahir'      => $request->tanggal_lahir,
+                            'jenis_kelamin'      => $request->jenis_kelamin,
+                            'status_perkawinan'  => $request->status_perkawinan,
+                            'agama'              => $request->agama,
+                            'pekerjaan'          => $request->pekerjaan,
+                            'alamat'             => $request->alamat,
+                            'rt'                 => $request->rt,
+                            'rw'                 => $request->rw,
+                            'dusun'              => $request->dusun,
+                            'no_surat_rt'        => $request->no_surat_rt,
+                            'tanggal_surat_rt'   => $request->tanggal_surat_rt,
+                            'keperluan'          => $request->keperluan,
+                            'anggota_keluarga'   => $anggota,
+                        ]);
+                        break;
 
-                case 'SKD':
-                    SuratDomisili::create([
-                        'pengajuan_surat_id' => $pengajuan->id,
-                        'nama'               => $request->nama,
-                        'nik'                => $request->nik,
-                        'tempat_lahir'       => $request->tempat_lahir,
-                        'tanggal_lahir'      => $request->tanggal_lahir,
-                        'jenis_kelamin'      => $request->jenis_kelamin,
-                        'status_perkawinan'  => $request->status_perkawinan,
-                        'agama'              => $request->agama,
-                        'pekerjaan'          => $request->pekerjaan,
-                        'alamat'             => $request->alamat,
-                        'rt'                 => $request->rt,
-                        'rw'                 => $request->rw,
-                        'dusun'              => $request->dusun,
-                        'no_surat_rt'        => $request->no_surat_rt,
-                        'tanggal_surat_rt'   => $request->tanggal_surat_rt,
-                        'keperluan'          => $request->keperluan,
-                    ]);
-                    break;
+                    case 'SKD':
+                        SuratDomisili::create([
+                            'pengajuan_surat_id' => $pengajuan->id,
+                            'nama'               => $request->nama,
+                            'nik'                => $request->nik,
+                            'tempat_lahir'       => $request->tempat_lahir,
+                            'tanggal_lahir'      => $request->tanggal_lahir,
+                            'jenis_kelamin'      => $request->jenis_kelamin,
+                            'status_perkawinan'  => $request->status_perkawinan,
+                            'agama'              => $request->agama,
+                            'pekerjaan'          => $request->pekerjaan,
+                            'alamat'             => $request->alamat,
+                            'rt'                 => $request->rt,
+                            'rw'                 => $request->rw,
+                            'dusun'              => $request->dusun,
+                            'no_surat_rt'        => $request->no_surat_rt,
+                            'tanggal_surat_rt'   => $request->tanggal_surat_rt,
+                            'keperluan'          => $request->keperluan,
+                        ]);
+                        break;
 
-                case 'SKU':
-                    SuratUsaha::create([
-                        'pengajuan_surat_id' => $pengajuan->id,
-                        'nama'               => $request->nama,
-                        'nik'                => $request->nik,
-                        'tempat_lahir'       => $request->tempat_lahir,
-                        'tanggal_lahir'      => $request->tanggal_lahir,
-                        'jenis_kelamin'      => $request->jenis_kelamin,
-                        'status_perkawinan'  => $request->status_perkawinan,
-                        'agama'              => $request->agama,
-                        'pekerjaan'          => $request->pekerjaan,
-                        'alamat'             => $request->alamat,
-                        'rt'                 => $request->rt,
-                        'rw'                 => $request->rw,
-                        'dusun'              => $request->dusun,
-                        'no_surat_rt'        => $request->no_surat_rt,
-                        'tanggal_surat_rt'   => $request->tanggal_surat_rt,
+                    case 'SKU':
+                        SuratUsaha::create([
+                            'pengajuan_surat_id' => $pengajuan->id,
+                            'nama'               => $request->nama,
+                            'nik'                => $request->nik,
+                            'tempat_lahir'       => $request->tempat_lahir,
+                            'tanggal_lahir'      => $request->tanggal_lahir,
+                            'jenis_kelamin'      => $request->jenis_kelamin,
+                            'status_perkawinan'  => $request->status_perkawinan,
+                            'agama'              => $request->agama,
+                            'pekerjaan'          => $request->pekerjaan,
+                            'alamat'             => $request->alamat,
+                            'rt'                 => $request->rt,
+                            'rw'                 => $request->rw,
+                            'dusun'              => $request->dusun,
+                            'no_surat_rt'        => $request->no_surat_rt,
+                            'tanggal_surat_rt'   => $request->tanggal_surat_rt,
+                            'nama_usaha'         => $request->nama_usaha,
+                            'jenis_usaha'        => $request->jenis_usaha,
+                            'alamat_usaha'       => $request->alamat_usaha,
+                            'keterangan_usaha'   => $request->keterangan_usaha,
+                        ]);
+                        break;
 
-                        'nama_usaha'         => $request->nama_usaha,
-                        'jenis_usaha'        => $request->jenis_usaha,
-                        'alamat_usaha'       => $request->alamat_usaha,
-                        'keterangan_usaha'   => $request->keterangan_usaha,
-                    ]);
-                    break;
+                    case 'SKP':
+                        SuratPenghasilan::create([
+                            'pengajuan_surat_id'    => $pengajuan->id,
+                            'nama'                  => $request->nama,
+                            'nik'                   => $request->nik,
+                            'tempat_lahir'          => $request->tempat_lahir,
+                            'tanggal_lahir'         => $request->tanggal_lahir,
+                            'jenis_kelamin'         => $request->jenis_kelamin,
+                            'status_perkawinan'     => $request->status_perkawinan,
+                            'agama'                 => $request->agama,
+                            'pekerjaan'             => $request->pekerjaan,
+                            'alamat'                => $request->alamat,
+                            'rt'                    => $request->rt,
+                            'rw'                    => $request->rw,
+                            'dusun'                 => $request->dusun,
+                            'no_surat_rt'           => $request->no_surat_rt,
+                            'tanggal_surat_rt'      => $request->tanggal_surat_rt,
+                            'penghasilan_perbulan'  => $request->penghasilan_perbulan,
+                            'nama_anak'             => $request->nama_anak,
+                            'keterangan_tambahan'   => $request->keterangan_tambahan,
+                        ]);
+                        break;
 
-                case 'SKP':
-                    SuratPenghasilan::create([
-                        'pengajuan_surat_id'    => $pengajuan->id,
-                        'nama'                  => $request->nama,
-                        'nik'                   => $request->nik,
-                        'tempat_lahir'          => $request->tempat_lahir,
-                        'tanggal_lahir'         => $request->tanggal_lahir,
-                        'jenis_kelamin'         => $request->jenis_kelamin,
-                        'status_perkawinan'     => $request->status_perkawinan,
-                        'agama'                 => $request->agama,
-                        'pekerjaan'             => $request->pekerjaan,
-                        'alamat'                => $request->alamat,
-                        'rt'                    => $request->rt,
-                        'rw'                    => $request->rw,
-                        'dusun'                 => $request->dusun,
-                        'no_surat_rt'           => $request->no_surat_rt,
-                        'tanggal_surat_rt'      => $request->tanggal_surat_rt,
-                        'penghasilan_perbulan'  => $request->penghasilan_perbulan,
-                        'nama_anak'             => $request->nama_anak,
-                        'keterangan_tambahan'   => $request->keterangan_tambahan,
-                    ]);
-                    break;
+                    case 'SKMT':
+                        SuratKematian::create([
+                            'pengajuan_surat_id' => $pengajuan->id,
+                            'nama_almarhum'      => $request->nama,
+                            'jenis_kelamin'      => $request->jenis_kelamin,
+                            'umur'               => $request->umur,
+                            'alamat'             => $request->alamat,
+                            'rt'                 => $request->rt,
+                            'rw'                 => $request->rw,
+                            'dusun'              => $request->dusun,
+                            'tanggal_meninggal'  => $request->tanggal_meninggal,
+                            'jam_meninggal'      => $request->jam_meninggal,
+                            'hari_meninggal'     => $request->hari_meninggal,
+                            'tempat_meninggal'   => $request->tempat_meninggal,
+                            'sebab_meninggal'    => $request->sebab_meninggal,
+                            'nama_pelapor'            => $request->nama_pelapor,
+                            'nik_pelapor'             => $request->nik_pelapor,
+                            'jenis_kelamin_pelapor'   => $request->jenis_kelamin_pelapor,
+                            'tempat_lahir_pelapor'    => $request->tempat_lahir_pelapor,
+                            'tanggal_lahir_pelapor'   => $request->tanggal_lahir_pelapor,
+                            'agama_pelapor'           => $request->agama_pelapor,
+                            'pekerjaan_pelapor'       => $request->pekerjaan_pelapor,
+                            'alamat_pelapor'          => $request->alamat_pelapor,
+                            'rt_pelapor'              => $request->rt_pelapor,
+                            'rw_pelapor'              => $request->rw_pelapor,
+                            'hubungan_pelapor'        => $request->hubungan_pelapor,
+                        ]);
+                        break;
 
-                case 'SKMT':
-                    SuratKematian::create([
-                        'pengajuan_surat_id' => $pengajuan->id,
+                    default:
+                        throw new \Exception("Kode jenis surat tidak dikenali: {$kode}");
+                }
 
-                        'nama_almarhum'      => $request->nama,
-                        'jenis_kelamin'      => $request->jenis_kelamin,
-                        'umur'               => $request->umur,
+                return [
+                    'nomor_pengajuan' => $nomorPengajuan,
+                    'email' => $request->email_pemohon,
+                    'no_hp' => $request->no_hp_pemohon,
+                    'nama' => $request->nama,
+                ];
+            });
 
-                        'alamat'             => $request->alamat,
-                        'rt'                 => $request->rt,
-                        'rw'                 => $request->rw,
-                        'dusun'              => $request->dusun,
+            // Return JSON untuk AJAX request
+            if ($request->ajax() || $request->wantsJson()) {
+                return response()->json([
+                    'success' => true,
+                    'message' => 'Pengajuan berhasil dikirim',
+                    'no_pengajuan' => $result['nomor_pengajuan'],
+                    'email' => $result['email'],
+                    'no_hp' => $result['no_hp'],
+                    'nama' => $result['nama'],
+                    'redirect' => route('pengajuan') // optional: bisa diganti dengan route('pengajuan.cek')
+                ]);
+            }
 
-                        'tanggal_meninggal'  => $request->tanggal_meninggal,
-                        'jam_meninggal'      => $request->jam_meninggal,
-                        'hari_meninggal'     => $request->hari_meninggal,
-                        'tempat_meninggal'   => $request->tempat_meninggal,
-                        'sebab_meninggal'    => $request->sebab_meninggal,
+            // Redirect biasa untuk non-AJAX
+            return redirect()
+                ->route('pengajuan')
+                ->with('success', "Pengajuan berhasil dikirim. Nomor pengajuan: {$result['nomor_pengajuan']}");
+        } catch (\Illuminate\Validation\ValidationException $e) {
+            // Handle validation error
+            if ($request->ajax() || $request->wantsJson()) {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'Data yang Anda masukkan tidak valid',
+                    'errors' => $e->errors()
+                ], 422);
+            }
+            throw $e;
+        } catch (\Exception $e) {
+            // Handle other errors
+            \Log::error('Error saat submit pengajuan: ' . $e->getMessage());
 
-                        'nama_pelapor'            => $request->nama_pelapor,
-                        'nik_pelapor'             => $request->nik_pelapor,
-                        'jenis_kelamin_pelapor'   => $request->jenis_kelamin_pelapor,
-                        'tempat_lahir_pelapor'    => $request->tempat_lahir_pelapor,
-                        'tanggal_lahir_pelapor'   => $request->tanggal_lahir_pelapor,
-                        'agama_pelapor'           => $request->agama_pelapor,
-                        'pekerjaan_pelapor'       => $request->pekerjaan_pelapor,
-                        'alamat_pelapor'          => $request->alamat_pelapor,
-                        'rt_pelapor'              => $request->rt_pelapor,
-                        'rw_pelapor'              => $request->rw_pelapor,
-                        'hubungan_pelapor'        => $request->hubungan_pelapor,
-                    ]);
-                    break;
-
-                default:
-                    // kalau ada kode lain, rollback biar aman
-                    throw new \Exception("Kode jenis surat tidak dikenali: {$kode}");
+            if ($request->ajax() || $request->wantsJson()) {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'Terjadi kesalahan saat memproses pengajuan. Silakan coba lagi.'
+                ], 500);
             }
 
             return redirect()
-                ->route('pengajuan')
-                ->with('success', "Pengajuan berhasil dikirim. Nomor pengajuan: {$nomorPengajuan}");
-        });
+                ->back()
+                ->with('error', 'Terjadi kesalahan saat memproses pengajuan')
+                ->withInput();
+        }
     }
 }
