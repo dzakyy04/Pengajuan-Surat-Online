@@ -12,12 +12,12 @@
 <body class="bg-gray-50 font-manrope">
     <div class="flex h-screen overflow-hidden">
         <!-- Sidebar -->
-        @include('partials.sidebar')
+        @include('admin.partials.sidebar')
 
         <!-- Main Content Area -->
         <div class="flex-1 flex flex-col overflow-hidden">
             <!-- Header -->
-            @include('partials.header')
+            @include('admin.partials.header')
 
             <!-- Page Content -->
             <main class="flex-1 overflow-y-auto p-8">
@@ -25,7 +25,7 @@
             </main>
 
             <!-- Footer -->
-            @include('partials.footer')
+            @include('admin.partials.footer')
         </div>
     </div>
 

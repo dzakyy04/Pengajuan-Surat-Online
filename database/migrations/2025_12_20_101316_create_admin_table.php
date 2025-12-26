@@ -18,9 +18,6 @@ return new class extends Migration
             $table->string('email')->unique();
             $table->string('no_hp', 20);
             $table->string('password');
-            $table->enum('role', ['admin', 'super_admin'])->default('admin');
-            $table->boolean('aktif')->default(true);
-            $table->timestamp('last_login')->nullable();
             $table->timestamps();
         });
     }

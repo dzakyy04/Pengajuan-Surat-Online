@@ -96,7 +96,7 @@
                 @endphp
 
                 <!-- SKTM -->
-                <a href="{{ route('admin.sktm.index') }}"
+                <a href=""
                     class="flex items-center justify-between px-3 py-2 rounded-lg hover:bg-gray-50 transition-colors duration-200 group {{ $isSktmActive ? 'text-emerald-600' : 'text-gray-400' }}">
                     <div class="flex items-center">
                         <svg class="w-4 h-4 mr-2 flex-shrink-0 {{ $isSktmActive ? 'text-emerald-600' : 'text-gray-400 group-hover:text-gray-600' }}"

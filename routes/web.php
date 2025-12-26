@@ -18,7 +18,7 @@ use Illuminate\Support\Facades\Route;
 Route::get('/', [MasyarakatController::class, 'index'])->name('beranda');
 Route::get('/form-pengajuan', [MasyarakatController::class, 'form'])->name('pengajuan');
 
-// Admin auth + dashboard
+// Admin auth
 Route::prefix('admin')->group(function () {
     Route::get('/login', [AdminAuthController::class, 'showLoginForm'])->name('admin.login');
     Route::post('/login', [AdminAuthController::class, 'login'])->name('admin.login.submit');
