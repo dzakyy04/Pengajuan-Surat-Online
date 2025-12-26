@@ -22,6 +22,9 @@ return new class extends Migration
             $table->enum('status', ['pending', 'diproses', 'siap_ttd_kades', 'siap_diambil', 'selesai', 'ditolak'])->default('pending');
             $table->foreignId('admin_id')->nullable()->constrained('admin')->onDelete('set null');
             $table->text('catatan_admin')->nullable();
+            $table->string('dokumen_ktp')->nullable();
+            $table->string('dokumen_kk')->nullable();
+            $table->string('dokumen_surat_rt')->nullable();
             $table->timestamp('tanggal_diproses')->nullable();
             $table->string('file_surat_cetak')->nullable();
             $table->timestamp('tanggal_cetak')->nullable();

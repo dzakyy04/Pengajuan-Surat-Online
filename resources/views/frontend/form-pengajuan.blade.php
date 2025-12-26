@@ -48,7 +48,7 @@
                     </div>
                 </div>
 
-                <form method="POST" action="" enctype="multipart/form-data" id="formPengajuan" class="space-y-6">
+                <form method="POST" action="{{ route('pengajuan.submit') }}" enctype="multipart/form-data" id="formPengajuan" class="space-y-6">
                     @csrf
 
                     {{-- STEP 1: Jenis Surat --}}
@@ -87,7 +87,7 @@
                                 </label>
                                 <input type="email" name="email_pemohon" id="email_pemohon" required
                                     class="w-full rounded-xl border border-emerald-100 px-3 py-2.5 text-sm focus:ring-2 focus:ring-emerald-500/70 focus:border-emerald-500 outline-none"
-                                    placeholder="email@example.com">
+                                    placeholder="Contoh: masyarakat@gmail.com">
                                 <p class="text-[11px] text-neutral-500">
                                     Email untuk menerima notifikasi status pengajuan surat
                                 </p>
@@ -99,7 +99,7 @@
                                 </label>
                                 <input type="tel" name="no_hp_pemohon" id="no_hp_pemohon" required
                                     class="w-full rounded-xl border border-emerald-100 px-3 py-2.5 text-sm focus:ring-2 focus:ring-emerald-500/70 focus:border-emerald-500 outline-none"
-                                    placeholder="Contoh: 0812xxxxxxx">
+                                    placeholder="Contoh: 081234567890">
                             </div>
                         </div>
 
@@ -422,14 +422,14 @@
     @push('scripts')
         <script>
             document.addEventListener('DOMContentLoaded', function() {
-    let currentStep = 1;
-    const totalSteps = 4;
-    let anggotaKeluargaCounter = 0;
+                let currentStep = 1;
+                const totalSteps = 4;
+                let anggotaKeluargaCounter = 0;
 
-    // Field templates untuk setiap jenis surat
-    const suratFields = {
-        'SKTM': {
-            fields: `
+                // Field templates untuk setiap jenis surat
+                const suratFields = {
+                    'SKTM': {
+                        fields: `
                 <div class="space-y-1.5">
                     <label class="block text-sm font-semibold text-neutral-800">
                         Keperluan <span class="text-red-500">*</span>
@@ -461,17 +461,17 @@
                     </div>
                 </div>
             `,
-            pribadiConfig: {
-                showNIK: true,
-                showTTL: true,
-                showUmur: false,
-                showStatusPerkawinan: true,
-                showAgama: true,
-                showPekerjaan: true
-            }
-        },
-        'SKD': {
-            fields: `
+                        pribadiConfig: {
+                            showNIK: true,
+                            showTTL: true,
+                            showUmur: false,
+                            showStatusPerkawinan: true,
+                            showAgama: true,
+                            showPekerjaan: true
+                        }
+                    },
+                    'SKD': {
+                        fields: `
                 <div class="space-y-1.5">
                     <label class="block text-sm font-semibold text-neutral-800">
                         Keperluan
@@ -482,17 +482,17 @@
                     <p class="text-[11px] text-neutral-500">Opsional. Jelaskan untuk keperluan apa surat domisili ini</p>
                 </div>
             `,
-            pribadiConfig: {
-                showNIK: true,
-                showTTL: true,
-                showUmur: false,
-                showStatusPerkawinan: true,
-                showAgama: true,
-                showPekerjaan: true
-            }
-        },
-        'SKU': {
-            fields: `
+                        pribadiConfig: {
+                            showNIK: true,
+                            showTTL: true,
+                            showUmur: false,
+                            showStatusPerkawinan: true,
+                            showAgama: true,
+                            showPekerjaan: true
+                        }
+                    },
+                    'SKU': {
+                        fields: `
                 <div class="space-y-1.5">
                     <label class="block text-sm font-semibold text-neutral-800">
                         Nama Usaha <span class="text-red-500">*</span>
@@ -526,17 +526,17 @@
                         placeholder="Informasi tambahan tentang usaha (opsional)"></textarea>
                 </div>
             `,
-            pribadiConfig: {
-                showNIK: true,
-                showTTL: true,
-                showUmur: false,
-                showStatusPerkawinan: true,
-                showAgama: true,
-                showPekerjaan: true
-            }
-        },
-        'SKP': {
-            fields: `
+                        pribadiConfig: {
+                            showNIK: true,
+                            showTTL: true,
+                            showUmur: false,
+                            showStatusPerkawinan: true,
+                            showAgama: true,
+                            showPekerjaan: true
+                        }
+                    },
+                    'SKP': {
+                        fields: `
                 <div class="space-y-1.5">
                     <label class="block text-sm font-semibold text-neutral-800">
                         Penghasilan per Bulan <span class="text-red-500">*</span>
@@ -563,17 +563,17 @@
                         placeholder="Contoh: Orang tua dari..."></textarea>
                 </div>
             `,
-            pribadiConfig: {
-                showNIK: true,
-                showTTL: true,
-                showUmur: false,
-                showStatusPerkawinan: true,
-                showAgama: true,
-                showPekerjaan: true
-            }
-        },
-        'SKMT': {
-            fields: `
+                        pribadiConfig: {
+                            showNIK: true,
+                            showTTL: true,
+                            showUmur: false,
+                            showStatusPerkawinan: true,
+                            showAgama: true,
+                            showPekerjaan: true
+                        }
+                    },
+                    'SKMT': {
+                        fields: `
                 <h5 class="text-sm font-semibold text-emerald-900 mt-6 mb-3">Data Kematian</h5>
                 <div class="grid md:grid-cols-2 gap-4">
                     <div class="space-y-1.5">
@@ -724,29 +724,29 @@
                     </div>
                 </div>
             `,
-            pribadiConfig: {
-                showNIK: false,
-                showTTL: false,
-                showUmur: true,
-                showStatusPerkawinan: false,
-                showAgama: false,
-                showPekerjaan: false
-            }
-        }
-    };
+                        pribadiConfig: {
+                            showNIK: false,
+                            showTTL: false,
+                            showUmur: true,
+                            showStatusPerkawinan: false,
+                            showAgama: false,
+                            showPekerjaan: false
+                        }
+                    }
+                };
 
-    // Fungsi untuk menambah form anggota keluarga
-    function tambahAnggotaKeluarga() {
-        anggotaKeluargaCounter++;
-        const container = document.getElementById('containerAnggotaKeluarga');
-        
-        if (!container) return;
-        
-        const div = document.createElement('div');
-        div.className = 'anggota-item bg-white border border-blue-200 rounded-lg p-3';
-        div.setAttribute('data-anggota-id', anggotaKeluargaCounter);
-        
-        div.innerHTML = `
+                // Fungsi untuk menambah form anggota keluarga
+                function tambahAnggotaKeluarga() {
+                    anggotaKeluargaCounter++;
+                    const container = document.getElementById('containerAnggotaKeluarga');
+
+                    if (!container) return;
+
+                    const div = document.createElement('div');
+                    div.className = 'anggota-item bg-white border border-blue-200 rounded-lg p-3';
+                    div.setAttribute('data-anggota-id', anggotaKeluargaCounter);
+
+                    div.innerHTML = `
             <div class="flex items-center justify-between mb-2">
                 <span class="text-xs font-semibold text-blue-800">Anggota #${anggotaKeluargaCounter}</span>
                 <button type="button" class="btnHapusAnggota text-red-500 hover:text-red-700 text-xs" data-id="${anggotaKeluargaCounter}">
@@ -772,179 +772,192 @@
                 </div>
             </div>
         `;
-        
-        container.appendChild(div);
-        
-        // Event listener untuk tombol hapus
-        div.querySelector('.btnHapusAnggota').addEventListener('click', function() {
-            div.remove();
-            updateNomorAnggota();
-        });
-    }
 
-    // Fungsi untuk update nomor urut anggota setelah ada yang dihapus
-    function updateNomorAnggota() {
-        const items = document.querySelectorAll('.anggota-item');
-        items.forEach((item, index) => {
-            const span = item.querySelector('span');
-            if (span) {
-                span.textContent = `Anggota #${index + 1}`;
-            }
-        });
-    }
+                    container.appendChild(div);
 
-    // Event listener untuk tombol tambah anggota (menggunakan event delegation)
-    document.addEventListener('click', function(e) {
-        const target = e.target;
-        // Check if clicked element or its parent is the button
-        if (target.id === 'btnTambahAnggota' || target.closest('#btnTambahAnggota')) {
-            e.preventDefault();
-            e.stopPropagation();
-            
-            // Pastikan container sudah ada
-            const container = document.getElementById('containerAnggotaKeluarga');
-            if (container) {
-                tambahAnggotaKeluarga();
-            }
-        }
-    });
+                    // Event listener untuk tombol hapus
+                    div.querySelector('.btnHapusAnggota').addEventListener('click', function() {
+                        div.remove();
+                        updateNomorAnggota();
+                    });
+                }
 
-    // Handle jenis surat change
-    document.getElementById('jenis_surat').addEventListener('change', function() {
-        const selectedOption = this.options[this.selectedIndex];
-        const kode = selectedOption.getAttribute('data-kode');
+                // Fungsi untuk update nomor urut anggota setelah ada yang dihapus
+                function updateNomorAnggota() {
+                    const items = document.querySelectorAll('.anggota-item');
+                    items.forEach((item, index) => {
+                        const span = item.querySelector('span');
+                        if (span) {
+                            span.textContent = `Anggota #${index + 1}`;
+                        }
+                    });
+                }
 
-        // Update label di step 2
-        if (kode === 'SKMT') {
-            document.getElementById('label_subjek').textContent = 'Almarhum/Almarhumah';
-            document.getElementById('nama').placeholder = 'Nama almarhum/almarhumah';
-        } else {
-            document.getElementById('label_subjek').textContent = 'Pemohon';
-            document.getElementById('nama').placeholder = 'Nama sesuai KTP';
-        }
-    });
+                // Event listener untuk tombol tambah anggota (menggunakan event delegation)
+                document.addEventListener('click', function(e) {
+                    const target = e.target;
+                    // Check if clicked element or its parent is the button
+                    if (target.id === 'btnTambahAnggota' || target.closest('#btnTambahAnggota')) {
+                        e.preventDefault();
+                        e.stopPropagation();
 
-    // Navigation functions
-    function showStep(step) {
-        document.querySelectorAll('[data-step]').forEach(el => el.classList.add('hidden'));
-        const stepEl = document.querySelector(`[data-step="${step}"]`);
-        if (stepEl) {
-            stepEl.classList.remove('hidden');
-        }
-
-        document.querySelectorAll('[data-step-indicator]').forEach(el => {
-            const indicatorStep = parseInt(el.getAttribute('data-step-indicator'));
-            const circleEl = el.querySelector('div');
-            
-            if (indicatorStep === step) {
-                el.classList.remove('opacity-60');
-                circleEl.classList.add('bg-emerald-600', 'text-white');
-                circleEl.classList.remove('bg-white', 'text-emerald-700', 'bg-emerald-100');
-            } else if (indicatorStep < step) {
-                el.classList.remove('opacity-60');
-                circleEl.classList.add('bg-emerald-100', 'text-emerald-700');
-                circleEl.classList.remove('bg-emerald-600', 'text-white', 'bg-white');
-            } else {
-                el.classList.add('opacity-60');
-                circleEl.classList.add('bg-white', 'text-emerald-700');
-                circleEl.classList.remove('bg-emerald-600', 'text-white', 'bg-emerald-100');
-            }
-        });
-
-        currentStep = step;
-    }
-
-    // Next button handlers
-    document.querySelectorAll('[data-next]').forEach(btn => {
-        btn.addEventListener('click', function() {
-            if (currentStep === 1) {
-                const jenisSurat = document.getElementById('jenis_surat').value;
-                const errorStep1 = document.getElementById('error_step1');
-                
-                if (!jenisSurat) {
-                    if (errorStep1) {
-                        errorStep1.classList.remove('hidden');
+                        // Pastikan container sudah ada
+                        const container = document.getElementById('containerAnggotaKeluarga');
+                        if (container) {
+                            tambahAnggotaKeluarga();
+                        }
                     }
-                    return;
-                }
-                if (errorStep1) {
-                    errorStep1.classList.add('hidden');
-                }
+                });
 
-                // Load dynamic fields for step 2
-                const selectedOption = document.getElementById('jenis_surat').options[
-                    document.getElementById('jenis_surat').selectedIndex];
-                const kode = selectedOption.getAttribute('data-kode');
-                const config = suratFields[kode];
+                // Handle jenis surat change
+                document.getElementById('jenis_surat').addEventListener('change', function() {
+                    const selectedOption = this.options[this.selectedIndex];
+                    const kode = selectedOption.getAttribute('data-kode');
 
-                if (config) {
-                    // Configure step 2 fields
-                    const fieldNik = document.getElementById('field_nik');
-                    const fieldTtl = document.getElementById('field_ttl');
-                    const fieldUmur = document.getElementById('field_umur');
-                    const fieldStatusPerkawinan = document.getElementById('field_status_perkawinan');
-                    const fieldAgama = document.getElementById('field_agama');
-                    const fieldPekerjaan = document.getElementById('field_pekerjaan');
-
-                    if (fieldNik) fieldNik.style.display = config.pribadiConfig.showNIK ? 'block' : 'none';
-                    if (fieldTtl) fieldTtl.style.display = config.pribadiConfig.showTTL ? 'block' : 'none';
-                    if (fieldUmur) fieldUmur.style.display = config.pribadiConfig.showUmur ? 'block' : 'none';
-                    if (fieldStatusPerkawinan) fieldStatusPerkawinan.style.display = config.pribadiConfig.showStatusPerkawinan ? 'block' : 'none';
-                    if (fieldAgama) fieldAgama.style.display = config.pribadiConfig.showAgama ? 'block' : 'none';
-                    if (fieldPekerjaan) fieldPekerjaan.style.display = config.pribadiConfig.showPekerjaan ? 'block' : 'none';
-
-                    // Set required attributes
-                    document.getElementById('nik').required = config.pribadiConfig.showNIK;
-                    document.getElementById('tempat_lahir').required = config.pribadiConfig.showTTL;
-                    document.getElementById('tanggal_lahir').required = config.pribadiConfig.showTTL;
-                    const umurField = document.getElementById('umur');
-                    if (umurField) umurField.required = config.pribadiConfig.showUmur;
-                    document.getElementById('status_perkawinan').required = config.pribadiConfig.showStatusPerkawinan;
-                    document.getElementById('agama').required = config.pribadiConfig.showAgama;
-                    document.getElementById('pekerjaan').required = config.pribadiConfig.showPekerjaan;
-                }
-            }
-
-            if (currentStep === 2) {
-                // Load dynamic fields for step 3
-                const selectedOption = document.getElementById('jenis_surat').options[
-                    document.getElementById('jenis_surat').selectedIndex];
-                const kode = selectedOption.getAttribute('data-kode');
-                const config = suratFields[kode];
-
-                if (config) {
-                    const dynamicFields = document.getElementById('dynamic-fields');
-                    if (dynamicFields) {
-                        dynamicFields.innerHTML = config.fields;
+                    // Update label di step 2
+                    if (kode === 'SKMT') {
+                        document.getElementById('label_subjek').textContent = 'Almarhum/Almarhumah';
+                        document.getElementById('nama').placeholder = 'Nama almarhum/almarhumah';
+                    } else {
+                        document.getElementById('label_subjek').textContent = 'Pemohon';
+                        document.getElementById('nama').placeholder = 'Nama sesuai KTP';
                     }
+                });
+
+                // Navigation functions
+                function showStep(step) {
+                    document.querySelectorAll('[data-step]').forEach(el => el.classList.add('hidden'));
+                    const stepEl = document.querySelector(`[data-step="${step}"]`);
+                    if (stepEl) {
+                        stepEl.classList.remove('hidden');
+                    }
+
+                    document.querySelectorAll('[data-step-indicator]').forEach(el => {
+                        const indicatorStep = parseInt(el.getAttribute('data-step-indicator'));
+                        const circleEl = el.querySelector('div');
+
+                        if (indicatorStep === step) {
+                            el.classList.remove('opacity-60');
+                            circleEl.classList.add('bg-emerald-600', 'text-white');
+                            circleEl.classList.remove('bg-white', 'text-emerald-700', 'bg-emerald-100');
+                        } else if (indicatorStep < step) {
+                            el.classList.remove('opacity-60');
+                            circleEl.classList.add('bg-emerald-100', 'text-emerald-700');
+                            circleEl.classList.remove('bg-emerald-600', 'text-white', 'bg-white');
+                        } else {
+                            el.classList.add('opacity-60');
+                            circleEl.classList.add('bg-white', 'text-emerald-700');
+                            circleEl.classList.remove('bg-emerald-600', 'text-white', 'bg-emerald-100');
+                        }
+                    });
+
+                    currentStep = step;
                 }
-            }
 
-            if (currentStep === 3) {
-                // Build confirmation summary
-                buildConfirmationSummary();
-            }
+                // Next button handlers
+                document.querySelectorAll('[data-next]').forEach(btn => {
+                    btn.addEventListener('click', function() {
+                        if (currentStep === 1) {
+                            const jenisSurat = document.getElementById('jenis_surat').value;
+                            const errorStep1 = document.getElementById('error_step1');
 
-            if (currentStep < totalSteps) {
-                showStep(currentStep + 1);
-            }
-        });
-    });
+                            if (!jenisSurat) {
+                                if (errorStep1) {
+                                    errorStep1.classList.remove('hidden');
+                                }
+                                return;
+                            }
+                            if (errorStep1) {
+                                errorStep1.classList.add('hidden');
+                            }
 
-    // Previous button handlers
-    document.querySelectorAll('[data-prev]').forEach(btn => {
-        btn.addEventListener('click', function() {
-            if (currentStep > 1) {
-                showStep(currentStep - 1);
-            }
-        });
-    });
+                            // Load dynamic fields for step 2
+                            const selectedOption = document.getElementById('jenis_surat').options[
+                                document.getElementById('jenis_surat').selectedIndex];
+                            const kode = selectedOption.getAttribute('data-kode');
+                            const config = suratFields[kode];
 
-    function buildConfirmationSummary() {
-        const formData = new FormData(document.getElementById('formPengajuan'));
-        const jenisSuratText = document.getElementById('jenis_surat').options[document.getElementById('jenis_surat').selectedIndex].text;
+                            if (config) {
+                                // Configure step 2 fields
+                                const fieldNik = document.getElementById('field_nik');
+                                const fieldTtl = document.getElementById('field_ttl');
+                                const fieldUmur = document.getElementById('field_umur');
+                                const fieldStatusPerkawinan = document.getElementById(
+                                    'field_status_perkawinan');
+                                const fieldAgama = document.getElementById('field_agama');
+                                const fieldPekerjaan = document.getElementById('field_pekerjaan');
 
-        let html = `
+                                if (fieldNik) fieldNik.style.display = config.pribadiConfig.showNIK ?
+                                    'block' : 'none';
+                                if (fieldTtl) fieldTtl.style.display = config.pribadiConfig.showTTL ?
+                                    'block' : 'none';
+                                if (fieldUmur) fieldUmur.style.display = config.pribadiConfig.showUmur ?
+                                    'block' : 'none';
+                                if (fieldStatusPerkawinan) fieldStatusPerkawinan.style.display = config
+                                    .pribadiConfig.showStatusPerkawinan ? 'block' : 'none';
+                                if (fieldAgama) fieldAgama.style.display = config.pribadiConfig
+                                    .showAgama ? 'block' : 'none';
+                                if (fieldPekerjaan) fieldPekerjaan.style.display = config.pribadiConfig
+                                    .showPekerjaan ? 'block' : 'none';
+
+                                // Set required attributes
+                                document.getElementById('nik').required = config.pribadiConfig.showNIK;
+                                document.getElementById('tempat_lahir').required = config.pribadiConfig
+                                    .showTTL;
+                                document.getElementById('tanggal_lahir').required = config.pribadiConfig
+                                    .showTTL;
+                                const umurField = document.getElementById('umur');
+                                if (umurField) umurField.required = config.pribadiConfig.showUmur;
+                                document.getElementById('status_perkawinan').required = config
+                                    .pribadiConfig.showStatusPerkawinan;
+                                document.getElementById('agama').required = config.pribadiConfig
+                                    .showAgama;
+                                document.getElementById('pekerjaan').required = config.pribadiConfig
+                                    .showPekerjaan;
+                            }
+                        }
+
+                        if (currentStep === 2) {
+                            // Load dynamic fields for step 3
+                            const selectedOption = document.getElementById('jenis_surat').options[
+                                document.getElementById('jenis_surat').selectedIndex];
+                            const kode = selectedOption.getAttribute('data-kode');
+                            const config = suratFields[kode];
+
+                            if (config) {
+                                const dynamicFields = document.getElementById('dynamic-fields');
+                                if (dynamicFields) {
+                                    dynamicFields.innerHTML = config.fields;
+                                }
+                            }
+                        }
+
+                        if (currentStep === 3) {
+                            // Build confirmation summary
+                            buildConfirmationSummary();
+                        }
+
+                        if (currentStep < totalSteps) {
+                            showStep(currentStep + 1);
+                        }
+                    });
+                });
+
+                // Previous button handlers
+                document.querySelectorAll('[data-prev]').forEach(btn => {
+                    btn.addEventListener('click', function() {
+                        if (currentStep > 1) {
+                            showStep(currentStep - 1);
+                        }
+                    });
+                });
+
+                function buildConfirmationSummary() {
+                    const formData = new FormData(document.getElementById('formPengajuan'));
+                    const jenisSuratText = document.getElementById('jenis_surat').options[document.getElementById(
+                        'jenis_surat').selectedIndex].text;
+
+                    let html = `
             <div class="bg-emerald-50/70 border border-emerald-100 rounded-xl p-4">
                 <h5 class="font-semibold text-emerald-900 mb-2 flex items-center gap-2">
                     <i class="fa-solid fa-list-check text-emerald-600"></i>
@@ -970,103 +983,118 @@
                 <p><span class="text-neutral-500">Nama:</span> <span class="font-medium">${formData.get('nama') || '-'}</span></p>
         `;
 
-        if (formData.get('nik')) {
-            html += `<p><span class="text-neutral-500">NIK:</span> <span class="font-medium">${formData.get('nik')}</span></p>`;
-        }
-        if (formData.get('tempat_lahir')) {
-            html += `<p><span class="text-neutral-500">Tempat/Tgl Lahir:</span> <span class="font-medium">${formData.get('tempat_lahir')}, ${formData.get('tanggal_lahir')}</span></p>`;
-        }
-        if (formData.get('umur')) {
-            html += `<p><span class="text-neutral-500">Umur:</span> <span class="font-medium">${formData.get('umur')} tahun</span></p>`;
-        }
+                    if (formData.get('nik')) {
+                        html +=
+                            `<p><span class="text-neutral-500">NIK:</span> <span class="font-medium">${formData.get('nik')}</span></p>`;
+                    }
+                    if (formData.get('tempat_lahir')) {
+                        html +=
+                            `<p><span class="text-neutral-500">Tempat/Tgl Lahir:</span> <span class="font-medium">${formData.get('tempat_lahir')}, ${formData.get('tanggal_lahir')}</span></p>`;
+                    }
+                    if (formData.get('umur')) {
+                        html +=
+                            `<p><span class="text-neutral-500">Umur:</span> <span class="font-medium">${formData.get('umur')} tahun</span></p>`;
+                    }
 
-        html += `<p><span class="text-neutral-500">Jenis Kelamin:</span> <span class="font-medium">${formData.get('jenis_kelamin') || '-'}</span></p>`;
+                    html +=
+                        `<p><span class="text-neutral-500">Jenis Kelamin:</span> <span class="font-medium">${formData.get('jenis_kelamin') || '-'}</span></p>`;
 
-        if (formData.get('status_perkawinan')) {
-            html += `<p><span class="text-neutral-500">Status Perkawinan:</span> <span class="font-medium">${formData.get('status_perkawinan')}</span></p>`;
-        }
-        if (formData.get('agama')) {
-            html += `<p><span class="text-neutral-500">Agama:</span> <span class="font-medium">${formData.get('agama')}</span></p>`;
-        }
-        if (formData.get('pekerjaan')) {
-            html += `<p><span class="text-neutral-500">Pekerjaan:</span> <span class="font-medium">${formData.get('pekerjaan')}</span></p>`;
-        }
+                    if (formData.get('status_perkawinan')) {
+                        html +=
+                            `<p><span class="text-neutral-500">Status Perkawinan:</span> <span class="font-medium">${formData.get('status_perkawinan')}</span></p>`;
+                    }
+                    if (formData.get('agama')) {
+                        html +=
+                            `<p><span class="text-neutral-500">Agama:</span> <span class="font-medium">${formData.get('agama')}</span></p>`;
+                    }
+                    if (formData.get('pekerjaan')) {
+                        html +=
+                            `<p><span class="text-neutral-500">Pekerjaan:</span> <span class="font-medium">${formData.get('pekerjaan')}</span></p>`;
+                    }
 
-        html += `
+                    html += `
                 <p><span class="text-neutral-500">Alamat:</span> <span class="font-medium">${formData.get('alamat') || '-'}</span></p>
                 <p><span class="text-neutral-500">RT/RW:</span> <span class="font-medium">${formData.get('rt')}/${formData.get('rw')}</span></p>
         `;
 
-        if (formData.get('dusun')) {
-            html += `<p><span class="text-neutral-500">Dusun:</span> <span class="font-medium">${formData.get('dusun')}</span></p>`;
-        }
+                    if (formData.get('dusun')) {
+                        html +=
+                            `<p><span class="text-neutral-500">Dusun:</span> <span class="font-medium">${formData.get('dusun')}</span></p>`;
+                    }
 
-        html += `</div>`;
+                    html += `</div>`;
 
-        // Dynamic fields based on jenis surat
-        const selectedOption = document.getElementById('jenis_surat').options[document.getElementById('jenis_surat').selectedIndex];
-        const kode = selectedOption.getAttribute('data-kode');
+                    // Dynamic fields based on jenis surat
+                    const selectedOption = document.getElementById('jenis_surat').options[document.getElementById(
+                        'jenis_surat').selectedIndex];
+                    const kode = selectedOption.getAttribute('data-kode');
 
-        html += `<div class="bg-neutral-50 border border-neutral-200 rounded-xl p-4 space-y-1.5">
+                    html += `<div class="bg-neutral-50 border border-neutral-200 rounded-xl p-4 space-y-1.5">
             <h5 class="font-semibold text-emerald-900 mb-2 flex items-center gap-2">
                 <i class="fa-solid fa-file-lines text-emerald-600"></i>
                 Detail Keperluan
             </h5>`;
 
-        if (kode === 'SKTM') {
-            html += `<p><span class="text-neutral-500">Keperluan:</span> <span class="font-medium">${formData.get('keperluan') || '-'}</span></p>`;
-            
-            // Tampilkan anggota keluarga jika ada
-            const anggotaNama = formData.getAll('anggota_nama[]');
-            const anggotaNIK = formData.getAll('anggota_nik[]');
-            
-            if (anggotaNama.length > 0 && anggotaNama[0] !== '') {
-                html += `
+                    if (kode === 'SKTM') {
+                        html +=
+                            `<p><span class="text-neutral-500">Keperluan:</span> <span class="font-medium">${formData.get('keperluan') || '-'}</span></p>`;
+
+                        // Tampilkan anggota keluarga jika ada
+                        const anggotaNama = formData.getAll('anggota_nama[]');
+                        const anggotaNIK = formData.getAll('anggota_nik[]');
+
+                        if (anggotaNama.length > 0 && anggotaNama[0] !== '') {
+                            html += `
                     <div class="mt-2 pt-2 border-t border-neutral-200">
                         <p class="font-semibold text-emerald-800 mb-2">Anggota Keluarga:</p>
                         <div class="space-y-1 pl-4">
                 `;
-                
-                anggotaNama.forEach((nama, index) => {
-                    if (nama && anggotaNIK[index]) {
-                        html += `
+
+                            anggotaNama.forEach((nama, index) => {
+                                if (nama && anggotaNIK[index]) {
+                                    html += `
                             <p class="text-sm">
                                 <i class="fa-solid fa-user text-emerald-600 mr-1"></i>
                                 <span class="font-medium">${nama}</span> 
                                 <span class="text-neutral-500 text-xs">(NIK: ${anggotaNIK[index]})</span>
                             </p>
                         `;
-                    }
-                });
-                
-                html += `
+                                }
+                            });
+
+                            html += `
                         </div>
                     </div>
                 `;
-            }
-        } else if (kode === 'SKD') {
-            if (formData.get('keperluan')) {
-                html += `<p><span class="text-neutral-500">Keperluan:</span> <span class="font-medium">${formData.get('keperluan')}</span></p>`;
-            }
-        } else if (kode === 'SKU') {
-            html += `
+                        }
+                    } else if (kode === 'SKD') {
+                        if (formData.get('keperluan')) {
+                            html +=
+                                `<p><span class="text-neutral-500">Keperluan:</span> <span class="font-medium">${formData.get('keperluan')}</span></p>`;
+                        }
+                    } else if (kode === 'SKU') {
+                        html += `
                 <p><span class="text-neutral-500">Nama Usaha:</span> <span class="font-medium">${formData.get('nama_usaha') || '-'}</span></p>
                 <p><span class="text-neutral-500">Jenis Usaha:</span> <span class="font-medium">${formData.get('jenis_usaha') || '-'}</span></p>
                 <p><span class="text-neutral-500">Alamat Usaha:</span> <span class="font-medium">${formData.get('alamat_usaha') || '-'}</span></p>
             `;
-            if (formData.get('keterangan_usaha')) {
-                html += `<p><span class="text-neutral-500">Keterangan:</span> <span class="font-medium">${formData.get('keterangan_usaha')}</span></p>`;
-            }
-        } else if (kode === 'SKP') {
-            html += `<p><span class="text-neutral-500">Penghasilan per Bulan:</span> <span class="font-medium">Rp ${parseInt(formData.get('penghasilan_perbulan') || 0).toLocaleString('id-ID')}</span></p>`;
-            if (formData.get('nama_anak')) {
-                html += `<p><span class="text-neutral-500">Nama Anak:</span> <span class="font-medium">${formData.get('nama_anak')}</span></p>`;
-            }
-            if (formData.get('keterangan_tambahan')) {
-                html += `<p><span class="text-neutral-500">Keterangan:</span> <span class="font-medium">${formData.get('keterangan_tambahan')}</span></p>`;
-            }
-        } else if (kode === 'SKMT') {
-            html += `
+                        if (formData.get('keterangan_usaha')) {
+                            html +=
+                                `<p><span class="text-neutral-500">Keterangan:</span> <span class="font-medium">${formData.get('keterangan_usaha')}</span></p>`;
+                        }
+                    } else if (kode === 'SKP') {
+                        html +=
+                            `<p><span class="text-neutral-500">Penghasilan per Bulan:</span> <span class="font-medium">Rp ${parseInt(formData.get('penghasilan_perbulan') || 0).toLocaleString('id-ID')}</span></p>`;
+                        if (formData.get('nama_anak')) {
+                            html +=
+                                `<p><span class="text-neutral-500">Nama Anak:</span> <span class="font-medium">${formData.get('nama_anak')}</span></p>`;
+                        }
+                        if (formData.get('keterangan_tambahan')) {
+                            html +=
+                                `<p><span class="text-neutral-500">Keterangan:</span> <span class="font-medium">${formData.get('keterangan_tambahan')}</span></p>`;
+                        }
+                    } else if (kode === 'SKMT') {
+                        html += `
                 <p><span class="text-neutral-500">Tanggal Meninggal:</span> <span class="font-medium">${formData.get('hari_meninggal')}, ${formData.get('tanggal_meninggal')}</span></p>
                 <p><span class="text-neutral-500">Jam:</span> <span class="font-medium">${formData.get('jam_meninggal')}</span></p>
                 <p><span class="text-neutral-500">Tempat:</span> <span class="font-medium">${formData.get('tempat_meninggal') || '-'}</span></p>
@@ -1077,12 +1105,12 @@
                 <p><span class="text-neutral-500">NIK:</span> <span class="font-medium">${formData.get('nik_pelapor') || '-'}</span></p>
                 <p><span class="text-neutral-500">Hubungan:</span> <span class="font-medium">${formData.get('hubungan_pelapor') || '-'}</span></p>
             `;
-        }
+                    }
 
-        html += `</div>`;
+                    html += `</div>`;
 
-        // Surat RT info
-        html += `
+                    // Surat RT info
+                    html += `
             <div class="bg-neutral-50 border border-neutral-200 rounded-xl p-4 space-y-1.5">
                 <h5 class="font-semibold text-emerald-900 mb-2 flex items-center gap-2">
                     <i class="fa-solid fa-note-sticky text-emerald-600"></i>
@@ -1093,8 +1121,8 @@
             </div>
         `;
 
-        // Documents uploaded
-        html += `
+                    // Documents uploaded
+                    html += `
             <div class="bg-neutral-50 border border-neutral-200 rounded-xl p-4 space-y-1.5">
                 <h5 class="font-semibold text-emerald-900 mb-2 flex items-center gap-2">
                     <i class="fa-solid fa-paperclip text-emerald-600"></i>
@@ -1102,31 +1130,34 @@
                 </h5>
         `;
 
-        const dokKtp = document.getElementById('dokumen_ktp').files[0];
-        const dokKk = document.getElementById('dokumen_kk').files[0];
-        const dokSuratRt = document.getElementById('dokumen_surat_rt').files[0];
+                    const dokKtp = document.getElementById('dokumen_ktp').files[0];
+                    const dokKk = document.getElementById('dokumen_kk').files[0];
+                    const dokSuratRt = document.getElementById('dokumen_surat_rt').files[0];
 
-        if (dokKtp) {
-            html += `<p><i class="fa-solid fa-check text-emerald-600 mr-2"></i><span class="text-neutral-700">KTP: ${dokKtp.name} (${(dokKtp.size/1024).toFixed(1)} KB)</span></p>`;
-        }
-        if (dokKk) {
-            html += `<p><i class="fa-solid fa-check text-emerald-600 mr-2"></i><span class="text-neutral-700">KK: ${dokKk.name} (${(dokKk.size/1024).toFixed(1)} KB)</span></p>`;
-        }
-        if (dokSuratRt) {
-            html += `<p><i class="fa-solid fa-check text-emerald-600 mr-2"></i><span class="text-neutral-700">Surat RT: ${dokSuratRt.name} (${(dokSuratRt.size/1024).toFixed(1)} KB)</span></p>`;
-        }
+                    if (dokKtp) {
+                        html +=
+                            `<p><i class="fa-solid fa-check text-emerald-600 mr-2"></i><span class="text-neutral-700">KTP: ${dokKtp.name} (${(dokKtp.size/1024).toFixed(1)} KB)</span></p>`;
+                    }
+                    if (dokKk) {
+                        html +=
+                            `<p><i class="fa-solid fa-check text-emerald-600 mr-2"></i><span class="text-neutral-700">KK: ${dokKk.name} (${(dokKk.size/1024).toFixed(1)} KB)</span></p>`;
+                    }
+                    if (dokSuratRt) {
+                        html +=
+                            `<p><i class="fa-solid fa-check text-emerald-600 mr-2"></i><span class="text-neutral-700">Surat RT: ${dokSuratRt.name} (${(dokSuratRt.size/1024).toFixed(1)} KB)</span></p>`;
+                    }
 
-        html += `</div>`;
+                    html += `</div>`;
 
-        const confirmationEl = document.getElementById('confirmation-summary');
-        if (confirmationEl) {
-            confirmationEl.innerHTML = html;
-        }
-    }
+                    const confirmationEl = document.getElementById('confirmation-summary');
+                    if (confirmationEl) {
+                        confirmationEl.innerHTML = html;
+                    }
+                }
 
-    // Initialize
-    showStep(1);
-});
+                // Initialize
+                showStep(1);
+            });
         </script>
     @endpush
 @endsection
