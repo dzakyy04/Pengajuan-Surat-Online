@@ -171,10 +171,13 @@ class SkpController extends Controller
      */
     private function regenerateFile($pengajuan, $skp)
     {
+        $tanggalBerlaku = now()->addDays(90);
+
         $data = [
             'nomor_surat' => $pengajuan->nomor_surat,
-            'tanggal_surat' => now()->translatedFormat('d F Y'),
-            'hari_ini' => now()->translatedFormat('d F Y'),
+            'tanggal_surat' => now()->format('d-m-Y'),
+            'tanggal_berlaku' => $tanggalBerlaku->format('d-m-Y'),
+            'hari_ini' => now()->format('d-m-Y'),
             'nama' => $skp->nama,
             'nik' => $skp->nik,
             'tempat_lahir' => $skp->tempat_lahir,
@@ -240,10 +243,13 @@ class SkpController extends Controller
 
             $nomorSurat = $this->generateNomorSurat($jenisSurat);
 
+            $tanggalBerlaku = now()->addDays(90);
+
             $data = [
                 'nomor_surat' => $nomorSurat,
-                'tanggal_surat' => now()->translatedFormat('d F Y'),
-                'hari_ini' => now()->translatedFormat('d F Y'),
+                'tanggal_surat' => now()->format('d-m-Y'),
+                'tanggal_berlaku' => $tanggalBerlaku->format('d-m-Y'),
+                'hari_ini' => now()->format('d-m-Y'),
                 'nama' => $skp->nama,
                 'nik' => $skp->nik,
                 'tempat_lahir' => $skp->tempat_lahir,

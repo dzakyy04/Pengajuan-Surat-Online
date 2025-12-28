@@ -158,62 +158,6 @@ class SkdController extends Controller
         }
     }
 
-    private function regenerateFile($pengajuan, $skd)
-    {
-        $data = [
-            'nomor_surat' => $pengajuan->nomor_surat,
-            'tanggal_surat' => now()->translatedFormat('d F Y'),
-            'hari_ini' => now()->translatedFormat('d F Y'),
-            'nama' => $skd->nama,
-            'nik' => $skd->nik,
-            'tempat_lahir' => $skd->tempat_lahir,
-            'tanggal_lahir' => \Carbon\Carbon::parse($skd->tanggal_lahir)->translatedFormat('d F Y'),
-            'jenis_kelamin' => $skd->jenis_kelamin,
-            'bangsa_agama' => 'Indonesia / ' . $skd->agama,
-            'status_perkawinan' => $skd->status_perkawinan,
-            'pekerjaan' => $skd->pekerjaan,
-            'rt' => $skd->rt,
-            'rw' => $skd->rw,
-            'dusun' => $skd->dusun,
-            'alamat' => $skd->alamat . ' RT ' . $skd->rt . '/RW ' . $skd->rw .
-                ($skd->dusun ? ', Dusun ' . $skd->dusun : '') .
-                ', Desa Sungai Rebo, Kecamatan Banyuasin I, Kabupaten Banyuasin, Provinsi Sumatera Selatan',
-            'no_surat_rt' => $skd->no_surat_rt,
-            'tanggal_surat_rt' => \Carbon\Carbon::parse($skd->tanggal_surat_rt)->translatedFormat('d F Y'),
-            'keperluan_html' => $skd->keperluan,
-        ];
-
-        $templatePath = resource_path('files/surat-domisili.docx');
-
-        if (!file_exists($templatePath)) {
-            throw new \Exception('Template DOCX tidak ditemukan');
-        }
-
-        $templateProcessor = new TemplateProcessor($templatePath);
-
-        foreach ($data as $key => $value) {
-            if ($key !== 'keperluan_html') {
-                $templateProcessor->setValue($key, $value);
-            }
-        }
-
-        if (!empty($data['keperluan_html'])) {
-            $keperluanInline = trim(
-                preg_replace('/\s+/', ' ', strip_tags($data['keperluan_html']))
-            );
-            $templateProcessor->setValue('keperluan', $keperluanInline);
-        } else {
-            $templateProcessor->setValue('keperluan', '-');
-        }
-
-        $outputPath = public_path('downloads/' . $pengajuan->file_surat_cetak);
-        $templateProcessor->saveAs($outputPath);
-
-        $pengajuan->update([
-            'tanggal_cetak' => now(),
-        ]);
-    }
-
     public function approve(Request $request, $id)
     {
         try {
@@ -225,14 +169,18 @@ class SkdController extends Controller
 
             $nomorSurat = $this->generateNomorSurat($jenisSurat);
 
+            // Tanggal berlaku = 90 hari ke depan
+            $tanggalBerlaku = now()->addDays(90);
+
             $data = [
                 'nomor_surat' => $nomorSurat,
-                'tanggal_surat' => now()->translatedFormat('d F Y'),
-                'hari_ini' => now()->translatedFormat('d F Y'),
+                'tanggal_surat' => now()->format('d-m-Y'),
+                'tanggal_berlaku' => $tanggalBerlaku->format('d-m-Y'),
+                'hari_ini' => now()->format('d-m-Y'),
                 'nama' => $skd->nama,
                 'nik' => $skd->nik,
                 'tempat_lahir' => $skd->tempat_lahir,
-                'tanggal_lahir' => \Carbon\Carbon::parse($skd->tanggal_lahir)->translatedFormat('d F Y'),
+                'tanggal_lahir' => \Carbon\Carbon::parse($skd->tanggal_lahir)->format('d-m-Y'),
                 'jenis_kelamin' => $skd->jenis_kelamin,
                 'bangsa_agama' => 'Indonesia / ' . $skd->agama,
                 'status_perkawinan' => $skd->status_perkawinan,
@@ -244,7 +192,7 @@ class SkdController extends Controller
                     ($skd->dusun ? ', Dusun ' . $skd->dusun : '') .
                     ', Desa Sungai Rebo, Kecamatan Banyuasin I, Kabupaten Banyuasin, Provinsi Sumatera Selatan',
                 'no_surat_rt' => $skd->no_surat_rt,
-                'tanggal_surat_rt' => \Carbon\Carbon::parse($skd->tanggal_surat_rt)->translatedFormat('d F Y'),
+                'tanggal_surat_rt' => \Carbon\Carbon::parse($skd->tanggal_surat_rt)->format('d-m-Y'),
                 'keperluan_html' => $skd->keperluan,
             ];
 
@@ -297,6 +245,66 @@ class SkdController extends Controller
             Log::error('Error approve SKD: ' . $e->getMessage());
             return back()->with('error', 'Terjadi kesalahan: ' . $e->getMessage());
         }
+    }
+
+    private function regenerateFile($pengajuan, $skd)
+    {
+        // Tanggal berlaku = 90 hari ke depan
+        $tanggalBerlaku = now()->addDays(90);
+
+        $data = [
+            'nomor_surat' => $pengajuan->nomor_surat,
+            'tanggal_surat' => now()->format('d-m-Y'),
+            'tanggal_berlaku' => $tanggalBerlaku->format('d-m-Y'),
+            'hari_ini' => now()->format('d-m-Y'),
+            'nama' => $skd->nama,
+            'nik' => $skd->nik,
+            'tempat_lahir' => $skd->tempat_lahir,
+            'tanggal_lahir' => \Carbon\Carbon::parse($skd->tanggal_lahir)->format('d-m-Y'),
+            'jenis_kelamin' => $skd->jenis_kelamin,
+            'bangsa_agama' => 'Indonesia / ' . $skd->agama,
+            'status_perkawinan' => $skd->status_perkawinan,
+            'pekerjaan' => $skd->pekerjaan,
+            'rt' => $skd->rt,
+            'rw' => $skd->rw,
+            'dusun' => $skd->dusun,
+            'alamat' => $skd->alamat . ' RT ' . $skd->rt . '/RW ' . $skd->rw .
+                ($skd->dusun ? ', Dusun ' . $skd->dusun : '') .
+                ', Desa Sungai Rebo, Kecamatan Banyuasin I, Kabupaten Banyuasin, Provinsi Sumatera Selatan',
+            'no_surat_rt' => $skd->no_surat_rt,
+            'tanggal_surat_rt' => \Carbon\Carbon::parse($skd->tanggal_surat_rt)->format('d-m-Y'),
+            'keperluan_html' => $skd->keperluan,
+        ];
+
+        $templatePath = resource_path('files/surat-domisili.docx');
+
+        if (!file_exists($templatePath)) {
+            throw new \Exception('Template DOCX tidak ditemukan');
+        }
+
+        $templateProcessor = new TemplateProcessor($templatePath);
+
+        foreach ($data as $key => $value) {
+            if ($key !== 'keperluan_html') {
+                $templateProcessor->setValue($key, $value);
+            }
+        }
+
+        if (!empty($data['keperluan_html'])) {
+            $keperluanInline = trim(
+                preg_replace('/\s+/', ' ', strip_tags($data['keperluan_html']))
+            );
+            $templateProcessor->setValue('keperluan', $keperluanInline);
+        } else {
+            $templateProcessor->setValue('keperluan', '-');
+        }
+
+        $outputPath = public_path('downloads/' . $pengajuan->file_surat_cetak);
+        $templateProcessor->saveAs($outputPath);
+
+        $pengajuan->update([
+            'tanggal_cetak' => now(),
+        ]);
     }
 
     public function reject(Request $request, $id)
