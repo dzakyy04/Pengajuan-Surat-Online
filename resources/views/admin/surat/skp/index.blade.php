@@ -1,6 +1,6 @@
 @extends('admin.layout.app')
 
-@section('title', 'Kelola Pengajuan Surat Keterangan Usaha')
+@section('title', 'Kelola Pengajuan Surat Keterangan Penghasilan')
 
 @push('styles')
     <!-- DataTables CSS -->
@@ -97,7 +97,7 @@
             <div class="flex flex-col md:flex-row items-center justify-between gap-2">
                 <div>
                     <h1 class="text-3xl font-bold text-gray-800">Kelola Pengajuan Surat</h1>
-                    <p class="text-gray-600 mt-2">Surat Keterangan Usaha (SKU)</p>
+                    <p class="text-gray-600 mt-2">Surat Keterangan Penghasilan (SKP)</p>
                 </div>
                 <div class="flex gap-2 items-center">
                                         <div class="relative" x-data="{ open: false }">
@@ -129,7 +129,7 @@
                         <div x-show="open" @click.away="open = false" x-transition
                             class="absolute right-0 mt-2 w-56 bg-white rounded-lg shadow-lg border border-gray-200 z-10">
                             <div class="py-1">
-                                <a href="{{ route('admin.sku.index') }}"
+                                <a href="{{ route('admin.skp.index') }}"
                                     class="flex items-center px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 transition {{ request()->get('status') == null ? 'bg-emerald-50 text-emerald-700 font-semibold' : '' }}">
                                     <svg class="w-4 h-4 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
@@ -137,7 +137,7 @@
                                     </svg>
                                     Semua Status
                                 </a>
-                                <a href="{{ route('admin.sku.index', ['status' => 'pending']) }}"
+                                <a href="{{ route('admin.skp.index', ['status' => 'pending']) }}"
                                     class="flex items-center px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 transition {{ request()->get('status') == 'pending' ? 'bg-yellow-50 text-yellow-700 font-semibold' : '' }}">
                                     <svg class="w-4 h-4 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
@@ -145,7 +145,7 @@
                                     </svg>
                                     Menunggu
                                 </a>
-                                <a href="{{ route('admin.sku.index', ['status' => 'diproses']) }}"
+                                <a href="{{ route('admin.skp.index', ['status' => 'diproses']) }}"
                                     class="flex items-center px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 transition {{ request()->get('status') == 'diproses' ? 'bg-emerald-50 text-emerald-700 font-semibold' : '' }}">
                                     <svg class="w-4 h-4 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
@@ -153,7 +153,7 @@
                                     </svg>
                                     Diproses
                                 </a>
-                                <a href="{{ route('admin.sku.index', ['status' => 'ditolak']) }}"
+                                <a href="{{ route('admin.skp.index', ['status' => 'ditolak']) }}"
                                     class="flex items-center px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 transition {{ request()->get('status') == 'ditolak' ? 'bg-red-50 text-red-700 font-semibold' : '' }}">
                                     <svg class="w-4 h-4 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
@@ -228,7 +228,7 @@
                 <div class="flex items-center justify-between">
                     <div>
                         <p class="text-sm font-semibold">Menunggu</p>
-                        <h3 class="text-3xl font-bold mt-2">{{ $pendingSku }}</h3>
+                        <h3 class="text-3xl font-bold mt-2">{{ $pendingSkp }}</h3>
                     </div>
                     <div class="bg-orange-200 bg-opacity-30 rounded-full p-3">
                         <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -245,7 +245,7 @@
                 <div class="flex items-center justify-between">
                     <div>
                         <p class="text-sm font-semibold">Diproses</p>
-                        <h3 class="text-3xl font-bold mt-2">{{ $diprosesSku }}</h3>
+                        <h3 class="text-3xl font-bold mt-2">{{ $diprosesSkp }}</h3>
                     </div>
                     <div class="bg-blue-200 bg-opacity-30 rounded-full p-3">
                         <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -262,7 +262,7 @@
                 <div class="flex items-center justify-between">
                     <div>
                         <p class="text-sm font-semibold">Ditolak</p>
-                        <h3 class="text-3xl font-bold mt-2">{{ $ditolakSku }}</h3>
+                        <h3 class="text-3xl font-bold mt-2">{{ $ditolakSkp }}</h3>
                     </div>
                     <div class="bg-red-200 bg-opacity-30 rounded-full p-3">
                         <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -284,7 +284,7 @@
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                                 d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2" />
                         </svg>
-                        Daftar Pengajuan Surat Keterangan Usaha
+                        Daftar Pengajuan Surat Keterangan Penghasilan
                     </h2>
                     <input type="text" id="searchInput" value="{{ request('search') }}"
                         placeholder="Cari nama, nomor pengajuan, email..."
@@ -377,7 +377,7 @@
                     </button>
 
                     <div id="dropdown-{{ $pengajuan->id }}" class="dropdown-menu">
-                        <a href="{{ route('admin.sku.detail', $pengajuan->id) }}" class="dropdown-item">
+                        <a href="{{ route('admin.skp.detail', $pengajuan->id) }}" class="dropdown-item">
                             <svg class="w-4 h-4 text-emerald-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                                     d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
@@ -391,7 +391,7 @@
                             <div class="dropdown-divider"></div>
 
                             @if ($pengajuan->file_surat_ttd)
-                                <a href="{{ route('admin.sku.download-ttd', $pengajuan->id) }}" class="dropdown-item">
+                                <a href="{{ route('admin.skp.download-ttd', $pengajuan->id) }}" class="dropdown-item">
                                     <svg class="w-4 h-4 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                                             d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
@@ -478,7 +478,7 @@
                             @endif
 
                             @if(request()->get('status'))
-                                <a href="{{ route('admin.sku.index') }}"
+                                <a href="{{ route('admin.skp.index') }}"
                                     class="inline-flex items-center px-5 py-2.5 bg-emerald-600 hover:bg-emerald-700 text-white font-semibold rounded-xl transition shadow-sm">
                                     <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
@@ -660,7 +660,7 @@
         // Upload Modal Functions
         function openUploadModal(id) {
             document.getElementById('uploadModal').classList.remove('hidden');
-            document.getElementById('uploadForm').action = `/admin/sku/${id}/upload-ttd`;
+            document.getElementById('uploadForm').action = `/admin/skp/${id}/upload-ttd`;
 
             // Close dropdown when opening modal
             document.querySelectorAll('.dropdown-menu').forEach(menu => {

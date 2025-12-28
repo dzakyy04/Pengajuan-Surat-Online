@@ -49,8 +49,7 @@
             // Rute spesifik untuk Kelola Surat
             $isKelolaSuratActive =
                 request()->routeIs('admin.sktm.*') ||
-                request()->routeIs('admin.sktm.*') ||
-                request()->routeIs('admin.skck.*') ||
+                request()->routeIs('admin.skp.*') ||
                 request()->routeIs('admin.skd.*') ||
                 request()->routeIs('admin.sku.*');
 
@@ -90,7 +89,7 @@
 
                 @php
                     $isSktmActive = request()->routeIs('admin.sktm.*');
-                    $isSkckActive = request()->routeIs('admin.skck.*');
+                    $isSkpActive = request()->routeIs('admin.skp.*');
                     $isSkdActive = request()->routeIs('admin.skd.*');
                     $isSkuActive = request()->routeIs('admin.sku.*');
                 @endphp
@@ -150,6 +149,25 @@
                         <span
                             class="inline-flex items-center justify-center ml-2 w-5 h-5 text-xs font-bold leading-none text-white bg-amber-500 rounded-full">
                             {{ $pendingSku }}
+                        </span>
+                    @endif
+                </a>
+
+                 <a href="{{ route('admin.skp.index') }}"
+                    class="flex items-center justify-between px-3 py-2 rounded-lg hover:bg-gray-50 transition-colors duration-200 group {{ $isSkpActive ? 'text-emerald-600' : 'text-gray-400' }}">
+                    <div class="flex items-center">
+                        <svg class="w-4 h-4 mr-2 flex-shrink-0 {{ $isSkpActive ? 'text-emerald-600' : 'text-gray-400 group-hover:text-gray-600' }}"
+                            fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z">
+                            </path>
+                        </svg>
+                        <span class="text-xs {{ $isSkpActive ? 'font-semibold' : '' }}">Surat Keterangan Penghasilan</span>
+                    </div>
+                    @if (isset($pendingSkp) && $pendingSkp > 0)
+                        <span
+                            class="inline-flex items-center justify-center ml-2 w-5 h-5 text-xs font-bold leading-none text-white bg-amber-500 rounded-full">
+                            {{ $pendingSkp }}
                         </span>
                     @endif
                 </a>

@@ -1,6 +1,6 @@
 @extends('admin.layout.app')
 
-@section('title', 'Detail Pengajuan SKD')
+@section('title', 'Detail Pengajuan Surat Keterangan Usaha')
 
 @push('styles')
     <style>

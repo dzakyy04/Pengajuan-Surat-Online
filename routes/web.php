@@ -6,6 +6,7 @@ use App\Http\Controllers\SktmController;
 use App\Http\Controllers\AdminAuthController;
 use App\Http\Controllers\MasyarakatController;
 use App\Http\Controllers\PengajuanDokumenController;
+use App\Http\Controllers\SkpController;
 use App\Http\Controllers\SkuController;
 
 /*
@@ -62,7 +63,7 @@ Route::prefix('admin')->name('admin.')->group(function () {
             Route::get('/{id}/print', [SkdController::class, 'print'])->name('print');
         });
 
-        // Surat Keterangan sku (SKU)
+        // Surat Keterangan Usaha (SKU)
         Route::prefix('sku')->name('sku.')->group(function () {
             Route::get('/', [SkuController::class, 'index'])->name('index');
             Route::get('/success/{file}', [SkuController::class, 'success'])->name('success');
@@ -75,6 +76,21 @@ Route::prefix('admin')->name('admin.')->group(function () {
             Route::post('/{id}/upload-ttd', [SkuController::class, 'uploadTtd'])->name('upload-ttd');
             Route::get('/{id}/download-ttd', [SkuController::class, 'downloadTtd'])->name('download-ttd');
             Route::get('/{id}/print', [SkuController::class, 'print'])->name('print');
+        });
+
+        // Surat Keterangan Penghasilan (SKU)
+        Route::prefix('skp')->name('skp.')->group(function () {
+            Route::get('/', [SkpController::class, 'index'])->name('index');
+            Route::get('/success/{file}', action: [SkpController::class, 'success'])->name('success');
+            Route::get('/download/{file}', [SkpController::class, 'download'])->name('download');
+
+            Route::get('/{id}', [SkpController::class, 'detail'])->name('detail');
+            Route::put('/{id}', [SkpController::class, 'update'])->name('update');
+            Route::post('/{id}/approve', [SkpController::class, 'approve'])->name('approve');
+            Route::put('/{id}/reject', [SkpController::class, 'reject'])->name('reject');
+            Route::post('/{id}/upload-ttd', [SkpController::class, 'uploadTtd'])->name('upload-ttd');
+            Route::get('/{id}/download-ttd', [SkpController::class, 'downloadTtd'])->name('download-ttd');
+            Route::get('/{id}/print', [SkpController::class, 'print'])->name('print');
         });
 
         Route::get('/pengajuan/{pengajuan}/dokumen/view', [PengajuanDokumenController::class, 'view'])

@@ -1,6 +1,6 @@
 @extends('admin.layout.app')
 
-@section('title', 'Kelola Pengajuan SKTM')
+@section('title', 'Kelola Pengajuan Surat Keterangan Domisili')
 
 @push('styles')
     <!-- DataTables CSS -->
@@ -42,7 +42,6 @@
             animation: slideDown 0.2s ease-out;
         }
 
-        /* Prevent table overflow from hiding dropdown */
         .table-wrapper {
             position: relative;
         }
@@ -97,9 +96,74 @@
             <div class="flex flex-col md:flex-row items-center justify-between gap-2">
                 <div>
                     <h1 class="text-3xl font-bold text-gray-800">Kelola Pengajuan Surat</h1>
-                    <p class="text-gray-600 mt-2">Surat Keterangan Tidak Mampu (SKTM)</p>
+                    <p class="text-gray-600 mt-2">Surat Keterangan Domisili (SKD)</p>
                 </div>
                 <div class="flex gap-2 items-center">
+
+                    <div class="relative" x-data="{ open: false }">
+                        <button @click="open = !open" type="button"
+                            class="inline-flex items-center px-4 py-2 bg-white border border-gray-300 rounded-lg shadow-sm hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-emerald-500 transition">
+                            <svg class="w-5 h-5 mr-2 text-gray-600" fill="none" stroke="currentColor"
+                                viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                    d="M3 4a1 1 0 011-1h16a1 1 0 011 1v2.586a1 1 0 01-.293.707l-6.414 6.414a1 1 0 00-.293.707V17l-4 4v-6.586a1 1 0 00-.293-.707L3.293 7.293A1 1 0 013 6.586V4z" />
+                            </svg>
+                            <span class="text-sm font-medium text-gray-700">
+                                @if (request()->get('status') == 'pending')
+                                    Menunggu
+                                @elseif(request()->get('status') == 'diproses')
+                                    Diproses
+                                @elseif(request()->get('status') == 'ditolak')
+                                    Ditolak
+                                @else
+                                    Semua Status
+                                @endif
+                            </span>
+                            <svg class="w-4 h-4 ml-2 text-gray-600" fill="none" stroke="currentColor"
+                                viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
+                            </svg>
+                        </button>
+
+                        <!-- Dropdown Menu -->
+                        <div x-show="open" @click.away="open = false" x-transition
+                            class="absolute right-0 mt-2 w-56 bg-white rounded-lg shadow-lg border border-gray-200 z-10">
+                            <div class="py-1">
+                                <a href="{{ route('admin.skd.index') }}"
+                                    class="flex items-center px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 transition {{ request()->get('status') == null ? 'bg-emerald-50 text-emerald-700 font-semibold' : '' }}">
+                                    <svg class="w-4 h-4 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                            d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+                                    </svg>
+                                    Semua Status
+                                </a>
+                                <a href="{{ route('admin.skd.index', ['status' => 'pending']) }}"
+                                    class="flex items-center px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 transition {{ request()->get('status') == 'pending' ? 'bg-yellow-50 text-yellow-700 font-semibold' : '' }}">
+                                    <svg class="w-4 h-4 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                            d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+                                    </svg>
+                                    Menunggu
+                                </a>
+                                <a href="{{ route('admin.skd.index', ['status' => 'diproses']) }}"
+                                    class="flex items-center px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 transition {{ request()->get('status') == 'diproses' ? 'bg-emerald-50 text-emerald-700 font-semibold' : '' }}">
+                                    <svg class="w-4 h-4 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                            d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+                                    </svg>
+                                    Diproses
+                                </a>
+                                <a href="{{ route('admin.skd.index', ['status' => 'ditolak']) }}"
+                                    class="flex items-center px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 transition {{ request()->get('status') == 'ditolak' ? 'bg-red-50 text-red-700 font-semibold' : '' }}">
+                                    <svg class="w-4 h-4 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                            d="M10 14l2-2m0 0l2-2m-2 2l-2-2m2 2l2 2m7-2a9 9 0 11-18 0 9 9 0 0118 0z" />
+                                    </svg>
+                                    Ditolak
+                                </a>
+                            </div>
+                        </div>
+                    </div>
                     <!-- Refresh Button -->
                     <button onclick="window.location.reload()"
                         class="inline-flex items-center px-4 py-2 bg-gray-600 hover:bg-gray-700 text-white rounded-lg shadow-sm transition">
@@ -220,7 +284,7 @@
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                                 d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2" />
                         </svg>
-                        Daftar Pengajuan Surat Keterangan Tidak Mampu
+                        Daftar Pengajuan Surat Keterangan Domisili
                     </h2>
                     <input type="text" id="searchInput" value="{{ request('search') }}"
                         placeholder="Cari nama, nomor pengajuan, email..."
@@ -255,8 +319,10 @@
                             </th>
                         </tr>
                     </thead>
+                    <!-- Ganti bagian tbody table Anda dengan kode ini -->
+
                     <tbody class="bg-white divide-y divide-gray-200">
-                        @foreach ($pengajuanList as $pengajuan)
+                        @forelse ($pengajuanList as $pengajuan)
                             <tr class="hover:bg-emerald-50 transition">
                                 <td class="px-6 py-4">
                                     <div class="flex items-center">
@@ -308,7 +374,6 @@
                                 </td>
                                 <td class="px-6 py-4 text-center">
                                     <div class="relative inline-block text-left">
-                                        <!-- Dropdown Button -->
                                         <button onclick="toggleDropdown({{ $pengajuan->id }})"
                                             class="inline-flex items-center justify-center w-10 h-10 rounded-full bg-gradient-to-r from-emerald-100 to-emerald-200 hover:from-emerald-200 hover:to-emerald-300 text-emerald-700 shadow-xs border border-emerald-300/70 hover:shadow-lg transition-all">
                                             <svg class="w-5 h-5" fill="none" stroke="currentColor"
@@ -318,9 +383,7 @@
                                             </svg>
                                         </button>
 
-                                        <!-- Dropdown Menu -->
                                         <div id="dropdown-{{ $pengajuan->id }}" class="dropdown-menu">
-                                            <!-- Detail -->
                                             <a href="{{ route('admin.skd.detail', $pengajuan->id) }}"
                                                 class="dropdown-item">
                                                 <svg class="w-4 h-4 text-emerald-600" fill="none"
@@ -337,7 +400,6 @@
                                                 <div class="dropdown-divider"></div>
 
                                                 @if ($pengajuan->file_surat_ttd)
-                                                    <!-- Download TTD -->
                                                     <a href="{{ route('admin.skd.download-ttd', $pengajuan->id) }}"
                                                         class="dropdown-item">
                                                         <svg class="w-4 h-4 text-green-600" fill="none"
@@ -349,7 +411,6 @@
                                                         <span class="font-semibold">Download File TTD</span>
                                                     </a>
 
-                                                    <!-- Re-upload -->
                                                     <button onclick="openUploadModal({{ $pengajuan->id }})"
                                                         class="dropdown-item w-full text-left">
                                                         <svg class="w-4 h-4 text-orange-600" fill="none"
@@ -361,7 +422,6 @@
                                                         <span class="font-semibold">Re-upload File TTD</span>
                                                     </button>
                                                 @else
-                                                    <!-- Upload TTD -->
                                                     <button onclick="openUploadModal({{ $pengajuan->id }})"
                                                         class="dropdown-item w-full text-left">
                                                         <svg class="w-4 h-4 text-blue-600" fill="none"
@@ -378,7 +438,98 @@
                                     </div>
                                 </td>
                             </tr>
-                        @endforeach
+                        @empty
+                            <!-- Empty State -->
+                            <tr>
+                                <td colspan="6" class="px-6 py-16">
+                                    <div class="flex flex-col items-center justify-center text-center">
+                                        <!-- Icon -->
+                                        <div
+                                            class="w-24 h-24 bg-gradient-to-br from-gray-100 to-gray-200 rounded-full flex items-center justify-center mb-6 shadow-inner">
+                                            <svg class="w-12 h-12 text-gray-400" fill="none" stroke="currentColor"
+                                                viewBox="0 0 24 24">
+                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                                    d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+                                            </svg>
+                                        </div>
+
+                                        <!-- Message -->
+                                        <h3 class="text-xl font-bold text-gray-800 mb-2">
+                                            @if (request()->get('search'))
+                                                Tidak Ada Hasil Pencarian
+                                            @elseif(request()->get('status'))
+                                                Tidak Ada Data dengan Status Ini
+                                            @else
+                                                Belum Ada Pengajuan Surat
+                                            @endif
+                                        </h3>
+
+                                        <p class="text-gray-500 mb-6 max-w-md">
+                                            @if (request()->get('search'))
+                                                Pencarian untuk "<span
+                                                    class="font-semibold text-gray-700">{{ request()->get('search') }}</span>"
+                                                tidak ditemukan. Coba kata kunci lain atau hapus filter.
+                                            @elseif(request()->get('status'))
+                                                Tidak ada pengajuan dengan status
+                                                <span class="font-semibold text-gray-700">
+                                                    @if (request()->get('status') == 'pending')
+                                                        Menunggu
+                                                    @elseif(request()->get('status') == 'diproses')
+                                                        Diproses
+                                                    @elseif(request()->get('status') == 'ditolak')
+                                                        Ditolak
+                                                    @endif
+                                                </span>
+                                                saat ini.
+                                            @else
+                                                Belum ada pengajuan surat keterangan domisili yang masuk ke sistem.
+                                            @endif
+                                        </p>
+
+                                        <!-- Action Buttons -->
+                                        @if (request()->get('search') || request()->get('status'))
+                                            <div class="flex gap-3">
+                                                @if (request()->get('search'))
+                                                    <button
+                                                        onclick="document.getElementById('searchInput').value = ''; document.getElementById('searchInput').dispatchEvent(new Event('input'));"
+                                                        class="inline-flex items-center px-5 py-2.5 bg-gray-200 hover:bg-gray-300 text-gray-800 font-semibold rounded-xl transition shadow-sm">
+                                                        <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor"
+                                                            viewBox="0 0 24 24">
+                                                            <path stroke-linecap="round" stroke-linejoin="round"
+                                                                stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+                                                        </svg>
+                                                        Hapus Pencarian
+                                                    </button>
+                                                @endif
+
+                                                @if (request()->get('status'))
+                                                    <a href="{{ route('admin.skd.index') }}"
+                                                        class="inline-flex items-center px-5 py-2.5 bg-emerald-600 hover:bg-emerald-700 text-white font-semibold rounded-xl transition shadow-sm">
+                                                        <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor"
+                                                            viewBox="0 0 24 24">
+                                                            <path stroke-linecap="round" stroke-linejoin="round"
+                                                                stroke-width="2"
+                                                                d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
+                                                        </svg>
+                                                        Tampilkan Semua
+                                                    </a>
+                                                @endif
+                                            </div>
+                                        @else
+                                            <div
+                                                class="inline-flex items-center px-5 py-2.5 bg-emerald-100 text-emerald-700 font-semibold rounded-xl">
+                                                <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor"
+                                                    viewBox="0 0 24 24">
+                                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                                        d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                                                </svg>
+                                                Data akan muncul setelah ada pengajuan
+                                            </div>
+                                        @endif
+                                    </div>
+                                </td>
+                            </tr>
+                        @endforelse
                     </tbody>
                 </table>
             </div>
@@ -559,4 +710,5 @@
             }
         });
     </script>
+    <script src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js" defer></script>
 @endpush

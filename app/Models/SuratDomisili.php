@@ -15,4 +15,9 @@ class SuratDomisili extends Model
         'tanggal_lahir' => 'date',
         'tanggal_surat_rt' => 'date',
     ];
+
+    public function pengajuan()
+    {
+        return $this->belongsTo(PengajuanSurat::class, 'pengajuan_surat_id');
+    }
 }

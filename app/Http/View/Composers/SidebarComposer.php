@@ -13,8 +13,8 @@ class SidebarComposer
             $q->where('kode', 'SKTM');
         })->where('status', 'pending')->count();
 
-        $pendingSkck = PengajuanSurat::whereHas('jenisSurat', function ($q) {
-            $q->where('kode', 'SKCK');
+        $pendingSkp = PengajuanSurat::whereHas('jenisSurat', function ($q) {
+            $q->where('kode', 'SKP');
         })->where('status', 'pending')->count();
 
         $pendingSkd = PengajuanSurat::whereHas('jenisSurat', function ($q) {
@@ -27,7 +27,7 @@ class SidebarComposer
 
         $view->with([
             'pendingSktm' => $pendingSktm,
-            'pendingSkck' => $pendingSkck,
+            'pendingSkp' => $pendingSkp,
             'pendingSkd' => $pendingSkd,
             'pendingSku' => $pendingSku,
         ]);

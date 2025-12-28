@@ -10,4 +10,14 @@ class SuratPenghasilan extends Model
     use HasFactory;
     protected $table = 'surat_penghasilan';
     protected $guarded = ['id'];
+
+    protected $casts = [
+        'tanggal_lahir' => 'date',
+        'tanggal_surat_rt' => 'date',
+    ];
+
+    public function pengajuan()
+    {
+        return $this->belongsTo(PengajuanSurat::class, 'pengajuan_surat_id');
+    }
 }

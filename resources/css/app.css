@@ -1,5 +1,4 @@
 @import "tailwindcss";
-
 @source '../../vendor/laravel/framework/src/Illuminate/Pagination/resources/views/*.blade.php';
 @source '../../storage/framework/views/*.php';
 @source '../**/*.blade.php';
@@ -10,7 +9,7 @@
   --color-desa-secondary: #3a7647;    /* Hijau segar */
   --color-desa-tertiary: #276738;     /* Hijau balanced */
   --color-desa-accent: #4d9960;       /* Hijau cerah untuk aksen */
-  
+
   /* Extended Green Scale - Fresh & Vibrant */
   --color-desa-green-50: #f0fdf5;
   --color-desa-green-100: #dcfce8;
@@ -23,13 +22,73 @@
   --color-desa-green-800: #166534;
   --color-desa-green-900: #14532d;
   --color-desa-green-950: #052e16;
-  
+
   /* Semantic Colors */
   --color-header-bg-from: #2d5f3a;
   --color-header-bg-via: #3a7647;
   --color-header-bg-to: #276738;
   --color-button-primary: #16a34a;
   --color-button-hover: #15803d;
+}
+
+@utility font-manrope {
+    font-family: "Manrope", sans-serif;
+}
+
+body {
+    font-family: "Manrope", sans-serif;
+}
+
+/* html {
+    font-family: var(--font-display);
+} */
+
+@font-face {
+    font-family: "Manrope";
+    src: url("../fonts/Manrope-Light.ttf") format("truetype");
+    font-weight: 300;
+    font-style: normal;
+    font-display: swap;
+}
+
+@font-face {
+    font-family: "Manrope";
+    src: url("../fonts/Manrope-Regular.ttf") format("truetype");
+    font-weight: 400;
+    font-style: normal;
+    font-display: swap;
+}
+
+@font-face {
+    font-family: "Manrope";
+    src: url("../fonts/Manrope-Medium.ttf") format("truetype");
+    font-weight: 500;
+    font-style: normal;
+    font-display: swap;
+}
+
+@font-face {
+    font-family: "Manrope";
+    src: url("../fonts/Manrope-SemiBold.ttf") format("truetype");
+    font-weight: 600;
+    font-style: normal;
+    font-display: swap;
+}
+
+@font-face {
+    font-family: "Manrope";
+    src: url("../fonts/Manrope-Bold.ttf") format("truetype");
+    font-weight: 700;
+    font-style: normal;
+    font-display: swap;
+}
+
+@font-face {
+    font-family: "Manrope";
+    src: url("../fonts/Manrope-ExtraBold.ttf") format("truetype");
+    font-weight: 800;
+    font-style: normal;
+    font-display: swap;
 }
 
 @layer components {
