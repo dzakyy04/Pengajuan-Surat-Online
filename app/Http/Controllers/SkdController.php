@@ -4,17 +4,16 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\PengajuanSurat;
-use App\Models\SuratTidakMampu;
+use App\Models\SuratDomisili;
 use App\Mail\PengajuanDitolakMail;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Storage;
-use PhpOffice\PhpWord\Element\TextRun;
 use PhpOffice\PhpWord\TemplateProcessor;
 
-class SktmController extends Controller
+class SkdController extends Controller
 {
     public function __construct()
     {
@@ -25,27 +24,8 @@ class SktmController extends Controller
     {
         $query = PengajuanSurat::with(['jenisSurat', 'admin'])
             ->whereHas('jenisSurat', function ($q) {
-                $q->where('kode', 'SKTM');
+                $q->where('kode', 'SKD');
             });
-
-        if ($request->has('status') && !empty($request->status)) {
-            $query->where('status', $request->status);
-        }
-
-        $pengajuanList = $query->orderBy('created_at', 'desc')->paginate(10);
-        $pengajuanList->appends(['status' => $request->status]);
-
-        $pendingSktm = PengajuanSurat::whereHas('jenisSurat', function ($q) {
-            $q->where('kode', 'SKTM');
-        })->where('status', 'pending')->count();
-
-        $diprosesSktm = PengajuanSurat::whereHas('jenisSurat', function ($q) {
-            $q->where('kode', 'SKTM');
-        })->where('status', 'diproses')->count();
-
-        $ditolakSktm = PengajuanSurat::whereHas('jenisSurat', function ($q) {
-            $q->where('kode', 'SKTM');
-        })->where('status', 'ditolak')->count();
 
         if ($request->filled('search')) {
             $search = $request->search;
@@ -66,21 +46,32 @@ class SktmController extends Controller
             ->paginate(10)
             ->withQueryString();
 
-        return view('admin.surat.sktm.index', compact(
+        $pendingSKD = PengajuanSurat::whereHas('jenisSurat', function ($q) {
+            $q->where('kode', 'SKD');
+        })->where('status', 'pending')->count();
+
+        $diprosesSkd = PengajuanSurat::whereHas('jenisSurat', function ($q) {
+            $q->where('kode', 'SKD');
+        })->where('status', 'diproses')->count();
+
+        $ditolakSkd = PengajuanSurat::whereHas('jenisSurat', function ($q) {
+            $q->where('kode', 'SKD');
+        })->where('status', 'ditolak')->count();
+
+        return view('admin.surat.skd.index', compact(
             'pengajuanList',
-            'pendingSktm',
-            'diprosesSktm',
-            'ditolakSktm'
+            'pendingSKD',
+            'diprosesSkd',
+            'ditolakSkd'
         ));
     }
 
     public function detail($id)
     {
         $pengajuan = PengajuanSurat::with(['jenisSurat', 'admin'])->findOrFail($id);
-        $sktm = SuratTidakMampu::where('pengajuan_surat_id', $id)->firstOrFail();
-        $anggotaKeluarga = $sktm->anggota_keluarga ?? [];
+        $skd = SuratDomisili::where('pengajuan_surat_id', $id)->firstOrFail();
 
-        return view('admin.surat.sktm.detail', compact('pengajuan', 'sktm', 'anggotaKeluarga'));
+        return view('admin.surat.skd.detail', compact('pengajuan', 'skd'));
     }
 
     public function update(Request $request, $id)
@@ -107,9 +98,9 @@ class SktmController extends Controller
             DB::beginTransaction();
 
             $pengajuan = PengajuanSurat::findOrFail($id);
-            $sktm = SuratTidakMampu::where('pengajuan_surat_id', $id)->firstOrFail();
+            $skd = SuratDomisili::where('pengajuan_surat_id', $id)->firstOrFail();
 
-            $sktm->update([
+            $skd->update([
                 'nama' => $request->nama,
                 'nik' => $request->nik,
                 'tempat_lahir' => $request->tempat_lahir,
@@ -129,19 +120,19 @@ class SktmController extends Controller
 
             $fileRegenerated = false;
             if ($pengajuan->status === 'diproses' && $pengajuan->file_surat_cetak) {
-                $this->regenerateFile($pengajuan, $sktm);
+                $this->regenerateFile($pengajuan, $skd);
                 $fileRegenerated = true;
             }
 
             DB::commit();
 
-            $message = 'Data SKTM berhasil diperbarui.';
+            $message = 'Data SKD berhasil diperbarui.';
             if ($fileRegenerated) {
                 $message .= ' File surat telah di-generate ulang dengan data terbaru.';
             }
 
             return redirect()
-                ->route('admin.sktm.detail', $id)
+                ->route('admin.skd.detail', $id)
                 ->with('success', $message);
 
         } catch (\Illuminate\Validation\ValidationException $e) {
@@ -153,11 +144,11 @@ class SktmController extends Controller
 
         } catch (\Illuminate\Database\Eloquent\ModelNotFoundException $e) {
             DB::rollBack();
-            return back()->with('error', 'Data SKTM tidak ditemukan.');
+            return back()->with('error', 'Data SKD tidak ditemukan.');
 
         } catch (\Exception $e) {
             DB::rollBack();
-            Log::error('Error update SKTM: ' . $e->getMessage(), [
+            Log::error('Error update SKD: ' . $e->getMessage(), [
                 'trace' => $e->getTraceAsString()
             ]);
 
@@ -167,32 +158,32 @@ class SktmController extends Controller
         }
     }
 
-    private function regenerateFile($pengajuan, $sktm)
+    private function regenerateFile($pengajuan, $skd)
     {
         $data = [
             'nomor_surat' => $pengajuan->nomor_surat,
             'tanggal_surat' => now()->translatedFormat('d F Y'),
             'hari_ini' => now()->translatedFormat('d F Y'),
-            'nama' => $sktm->nama,
-            'nik' => $sktm->nik,
-            'tempat_lahir' => $sktm->tempat_lahir,
-            'tanggal_lahir' => \Carbon\Carbon::parse($sktm->tanggal_lahir)->translatedFormat('d F Y'),
-            'jenis_kelamin' => $sktm->jenis_kelamin,
-            'bangsa_agama' => 'Indonesia / ' . $sktm->agama,
-            'status_perkawinan' => $sktm->status_perkawinan,
-            'pekerjaan' => $sktm->pekerjaan,
-            'rt' => $sktm->rt,
-            'rw' => $sktm->rw,
-            'dusun' => $sktm->dusun,
-            'alamat' => $sktm->alamat . ' RT ' . $sktm->rt . '/RW ' . $sktm->rw .
-                ($sktm->dusun ? ', Dusun ' . $sktm->dusun : '') .
+            'nama' => $skd->nama,
+            'nik' => $skd->nik,
+            'tempat_lahir' => $skd->tempat_lahir,
+            'tanggal_lahir' => \Carbon\Carbon::parse($skd->tanggal_lahir)->translatedFormat('d F Y'),
+            'jenis_kelamin' => $skd->jenis_kelamin,
+            'bangsa_agama' => 'Indonesia / ' . $skd->agama,
+            'status_perkawinan' => $skd->status_perkawinan,
+            'pekerjaan' => $skd->pekerjaan,
+            'rt' => $skd->rt,
+            'rw' => $skd->rw,
+            'dusun' => $skd->dusun,
+            'alamat' => $skd->alamat . ' RT ' . $skd->rt . '/RW ' . $skd->rw .
+                ($skd->dusun ? ', Dusun ' . $skd->dusun : '') .
                 ', Desa Sungai Rebo, Kecamatan Banyuasin I, Kabupaten Banyuasin, Provinsi Sumatera Selatan',
-            'no_surat_rt' => $sktm->no_surat_rt,
-            'tanggal_surat_rt' => \Carbon\Carbon::parse($sktm->tanggal_surat_rt)->translatedFormat('d F Y'),
-            'keperluan_html' => $sktm->keperluan,
+            'no_surat_rt' => $skd->no_surat_rt,
+            'tanggal_surat_rt' => \Carbon\Carbon::parse($skd->tanggal_surat_rt)->translatedFormat('d F Y'),
+            'keperluan_html' => $skd->keperluan,
         ];
 
-        $templatePath = resource_path('files/surat-keterangan-miskin.docx');
+        $templatePath = resource_path('files/surat-domisili.docx');
 
         if (!file_exists($templatePath)) {
             throw new \Exception('Template DOCX tidak ditemukan');
@@ -215,29 +206,6 @@ class SktmController extends Controller
             $templateProcessor->setValue('keperluan', '-');
         }
 
-        $anggotaKeluarga = $sktm->anggota_keluarga;
-
-        if (!is_array($anggotaKeluarga)) {
-            $anggotaKeluarga = [];
-        }
-
-        $textRun = new TextRun();
-        $fontStyle = ['name' => 'Arial', 'size' => 12];
-
-        if (!empty($anggotaKeluarga)) {
-            foreach ($anggotaKeluarga as $index => $anggota) {
-                $no = $index + 1;
-                $nama = $anggota['nama'] ?? '-';
-                $nik = $anggota['nik'] ?? '-';
-                $textRun->addText("{$no}. {$nama} ({$nik})", $fontStyle);
-                $textRun->addTextBreak();
-            }
-        } else {
-            $textRun->addText('-', $fontStyle);
-        }
-
-        $templateProcessor->setComplexBlock('anggota_keluarga_list', $textRun);
-
         $outputPath = public_path('downloads/' . $pengajuan->file_surat_cetak);
         $templateProcessor->saveAs($outputPath);
 
@@ -252,7 +220,7 @@ class SktmController extends Controller
             DB::beginTransaction();
 
             $pengajuan = PengajuanSurat::findOrFail($id);
-            $sktm = SuratTidakMampu::where('pengajuan_surat_id', $id)->firstOrFail();
+            $skd = SuratDomisili::where('pengajuan_surat_id', $id)->firstOrFail();
             $jenisSurat = $pengajuan->jenisSurat;
 
             $nomorSurat = $this->generateNomorSurat($jenisSurat);
@@ -261,26 +229,26 @@ class SktmController extends Controller
                 'nomor_surat' => $nomorSurat,
                 'tanggal_surat' => now()->translatedFormat('d F Y'),
                 'hari_ini' => now()->translatedFormat('d F Y'),
-                'nama' => $sktm->nama,
-                'nik' => $sktm->nik,
-                'tempat_lahir' => $sktm->tempat_lahir,
-                'tanggal_lahir' => \Carbon\Carbon::parse($sktm->tanggal_lahir)->translatedFormat('d F Y'),
-                'jenis_kelamin' => $sktm->jenis_kelamin,
-                'bangsa_agama' => 'Indonesia / ' . $sktm->agama,
-                'status_perkawinan' => $sktm->status_perkawinan,
-                'rt' => $sktm->rt,
-                'rw' => $sktm->rw,
-                'dusun' => $sktm->dusun,
-                'pekerjaan' => $sktm->pekerjaan,
-                'alamat' => $sktm->alamat . ' RT ' . $sktm->rt . '/RW ' . $sktm->rw .
-                    ($sktm->dusun ? ', Dusun ' . $sktm->dusun : '') .
+                'nama' => $skd->nama,
+                'nik' => $skd->nik,
+                'tempat_lahir' => $skd->tempat_lahir,
+                'tanggal_lahir' => \Carbon\Carbon::parse($skd->tanggal_lahir)->translatedFormat('d F Y'),
+                'jenis_kelamin' => $skd->jenis_kelamin,
+                'bangsa_agama' => 'Indonesia / ' . $skd->agama,
+                'status_perkawinan' => $skd->status_perkawinan,
+                'rt' => $skd->rt,
+                'rw' => $skd->rw,
+                'dusun' => $skd->dusun,
+                'pekerjaan' => $skd->pekerjaan,
+                'alamat' => $skd->alamat . ' RT ' . $skd->rt . '/RW ' . $skd->rw .
+                    ($skd->dusun ? ', Dusun ' . $skd->dusun : '') .
                     ', Desa Sungai Rebo, Kecamatan Banyuasin I, Kabupaten Banyuasin, Provinsi Sumatera Selatan',
-                'no_surat_rt' => $sktm->no_surat_rt,
-                'tanggal_surat_rt' => \Carbon\Carbon::parse($sktm->tanggal_surat_rt)->translatedFormat('d F Y'),
-                'keperluan_html' => $sktm->keperluan,
+                'no_surat_rt' => $skd->no_surat_rt,
+                'tanggal_surat_rt' => \Carbon\Carbon::parse($skd->tanggal_surat_rt)->translatedFormat('d F Y'),
+                'keperluan_html' => $skd->keperluan,
             ];
 
-            $templatePath = resource_path('files/surat-keterangan-miskin.docx');
+            $templatePath = resource_path('files/surat-domisili.docx');
 
             if (!file_exists($templatePath)) {
                 throw new \Exception('Template DOCX tidak ditemukan di: ' . $templatePath);
@@ -301,30 +269,7 @@ class SktmController extends Controller
                 $templateProcessor->setValue('keperluan', $keperluanInline);
             }
 
-            $anggotaKeluarga = $sktm->anggota_keluarga;
-
-            if (!is_array($anggotaKeluarga)) {
-                $anggotaKeluarga = [];
-            }
-
-            $textRun = new TextRun();
-            $fontStyle = ['name' => 'Arial', 'size' => 12];
-
-            if (!empty($anggotaKeluarga)) {
-                foreach ($anggotaKeluarga as $index => $anggota) {
-                    $no = $index + 1;
-                    $nama = $anggota['nama'] ?? '-';
-                    $nik = $anggota['nik'] ?? '-';
-                    $textRun->addText("{$no}. {$nama} ({$nik})", $fontStyle);
-                    $textRun->addTextBreak();
-                }
-            } else {
-                $textRun->addText('-', $fontStyle);
-            }
-
-            $templateProcessor->setComplexBlock('anggota_keluarga_list', $textRun);
-
-            $filename = 'SKTM_' . $sktm->nik . '_' . time() . '.docx';
+            $filename = 'SKD_' . $skd->nik . '_' . time() . '.docx';
             $outputPath = public_path('downloads/' . $filename);
 
             if (!file_exists(public_path('downloads'))) {
@@ -344,12 +289,12 @@ class SktmController extends Controller
 
             DB::commit();
 
-            return redirect()->route('admin.sktm.success', $filename)
+            return redirect()->route('admin.skd.success', $filename)
                 ->with('success', 'Surat berhasil disetujui dan dicetak!');
 
         } catch (\Exception $e) {
             DB::rollBack();
-            Log::error('Error approve SKTM: ' . $e->getMessage());
+            Log::error('Error approve SKD: ' . $e->getMessage());
             return back()->with('error', 'Terjadi kesalahan: ' . $e->getMessage());
         }
     }
@@ -382,7 +327,7 @@ class SktmController extends Controller
 
             DB::commit();
 
-            return redirect()->route('admin.sktm.index')
+            return redirect()->route('admin.skd.index')
                 ->with('success', 'Pengajuan berhasil ditolak. Notifikasi telah dikirim ke pemohon.');
         } catch (\Exception $e) {
             DB::rollBack();
@@ -426,7 +371,7 @@ class SktmController extends Controller
             abort(404, 'File tidak ditemukan');
         }
 
-        return view('admin.surat.sktm.success', compact('file'));
+        return view('admin.surat.skd.success', compact('file'));
     }
 
     public function download($file)

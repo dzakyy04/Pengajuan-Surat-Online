@@ -1,6 +1,6 @@
 @extends('admin.layout.app')
 
-@section('title', 'Detail Pengajuan SKTM')
+@section('title', 'Detail Pengajuan SKD')
 
 @push('styles')
     <style>
@@ -64,15 +64,15 @@
 
 @section('content')
 
-@if($errors->any())
-       <div class="alert alert-danger">
-           <ul>
-               @foreach($errors->all() as $error)
-                   <li>{{ $error }}</li>
-               @endforeach
-           </ul>
-       </div>
-   @endif
+    @if ($errors->any())
+        <div class="alert alert-danger">
+            <ul>
+                @foreach ($errors->all() as $error)
+                    <li>{{ $error }}</li>
+                @endforeach
+            </ul>
+        </div>
+    @endif
     <div class="container mx-auto py-8 px-2 max-w-full">
         <!-- Header -->
         <div class="mb-8 animate-slide-in">
@@ -85,7 +85,7 @@
                         </svg>
                     </div>
                     <div>
-                        <h1 class="text-3xl font-extrabold text-gray-900 mb-2 tracking-tight">Detail Pengajuan SKTM</h1>
+                        <h1 class="text-3xl font-extrabold text-gray-900 mb-2 tracking-tight">Detail Pengajuan SKD</h1>
                         <p class="text-sm text-gray-500 mb-3">Kelola dan verifikasi data pengajuan surat keterangan</p>
                         <span
                             class="inline-flex items-center px-5 py-2.5 rounded-full text-xs bg-gradient-to-r from-emerald-600 to-emerald-500 text-white font-bold shadow-lg hover:shadow-xl transition-all duration-300">
@@ -98,7 +98,7 @@
                         </span>
                     </div>
                 </div>
-                <a href="{{ route('admin.sktm.index') }}"
+                <a href="{{ route('admin.sku.index') }}"
                     class="inline-flex items-center px-4 py-2 bg-gradient-to-r from-emerald-600 to-emerald-500 hover:from-emerald-700 hover:to-emerald-600 text-white rounded-full transition-all duration-200 shadow-sm hover:shadow-xl font-semibold text-xs">
                     <svg class="w-3 h-3 mr-2 font-semibold" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
@@ -148,7 +148,7 @@
         <div class="grid grid-cols-1 lg:grid-cols-4 gap-6">
             <!-- Main Content -->
             <div class="lg:col-span-3 ">
-                <form action="{{ route('admin.sktm.update', ['id' => $pengajuan->id]) }}" method="POST" id="formUnified"
+                <form action="{{ route('admin.sku.update', ['id' => $pengajuan->id]) }}" method="POST" id="formUnified"
                     class="space-y-4">
                     @csrf
                     @method('PUT')
@@ -175,7 +175,7 @@
                         <div class="grid grid-cols-2 md:grid-cols-3 gap-5">
                             <div class="input-group">
                                 <label class="block text-sm font-semibold text-gray-700 mb-2">Nama Lengkap *</label>
-                                <input type="text" name="nama" value="{{ old('nama', $sktm->nama) }}" required
+                                <input type="text" name="nama" value="{{ old('nama', $sku->nama) }}" required
                                     class="w-full px-4 py-3 border-2 border-gray-200 rounded-lg focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 transition-all">
                                 @error('nama')
                                     <p class="text-red-500 text-xs mt-1 font-medium">{{ $message }}</p>
@@ -184,7 +184,7 @@
 
                             <div class="input-group">
                                 <label class="block text-sm font-semibold text-gray-700 mb-2">NIK *</label>
-                                <input type="text" name="nik" value="{{ old('nik', $sktm->nik) }}" required
+                                <input type="text" name="nik" value="{{ old('nik', $sku->nik) }}" required
                                     maxlength="16"
                                     class="w-full px-4 py-3 border-2 border-gray-200 rounded-lg focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 transition-all">
                                 @error('nik')
@@ -195,7 +195,7 @@
                             <div class="input-group">
                                 <label class="block text-sm font-semibold text-gray-700 mb-2">Tempat Lahir *</label>
                                 <input type="text" name="tempat_lahir"
-                                    value="{{ old('tempat_lahir', $sktm->tempat_lahir) }}" required
+                                    value="{{ old('tempat_lahir', $sku->tempat_lahir) }}" required
                                     class="w-full px-4 py-3 border-2 border-gray-200 rounded-lg focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 transition-all">
                                 @error('tempat_lahir')
                                     <p class="text-red-500 text-xs mt-1 font-medium">{{ $message }}</p>
@@ -205,7 +205,7 @@
                             <div class="input-group">
                                 <label class="block text-sm font-semibold text-gray-700 mb-2">Tanggal Lahir *</label>
                                 <input type="date" name="tanggal_lahir"
-                                    value="{{ old('tanggal_lahir', optional($sktm->tanggal_lahir)->format('Y-m-d')) }}"
+                                    value="{{ old('tanggal_lahir', optional($sku->tanggal_lahir)->format('Y-m-d')) }}"
                                     required
                                     class="w-full px-4 py-3 border-2 border-gray-200 rounded-lg
  focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 transition-all">
@@ -218,9 +218,9 @@
                                 <label class="block text-sm font-semibold text-gray-700 mb-2">Jenis Kelamin *</label>
                                 <select name="jenis_kelamin" required
                                     class="w-full px-4 py-3 border-2 border-gray-200 rounded-lg focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 transition-all">
-                                    <option value="Laki-Laki" {{ $sktm->jenis_kelamin == 'Laki-Laki' ? 'selected' : '' }}>
+                                    <option value="Laki-Laki" {{ $sku->jenis_kelamin == 'Laki-Laki' ? 'selected' : '' }}>
                                         Laki-Laki</option>
-                                    <option value="Perempuan" {{ $sktm->jenis_kelamin == 'Perempuan' ? 'selected' : '' }}>
+                                    <option value="Perempuan" {{ $sku->jenis_kelamin == 'Perempuan' ? 'selected' : '' }}>
                                         Perempuan</option>
                                 </select>
                             </div>
@@ -231,7 +231,7 @@
                                     class="w-full px-4 py-3 border-2 border-gray-200 rounded-lg focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 transition-all">
                                     @foreach (['Islam', 'Kristen', 'Katolik', 'Hindu', 'Buddha', 'Konghucu'] as $agama)
                                         <option value="{{ $agama }}"
-                                            {{ $sktm->agama == $agama ? 'selected' : '' }}>{{ $agama }}</option>
+                                            {{ $sku->agama == $agama ? 'selected' : '' }}>{{ $agama }}</option>
                                     @endforeach
                                 </select>
                             </div>
@@ -242,7 +242,7 @@
                                     class="w-full px-4 py-3 border-2 border-gray-200 rounded-lg focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 transition-all">
                                     @foreach (['Belum Kawin', 'Kawin', 'Cerai Hidup', 'Cerai Mati'] as $status)
                                         <option value="{{ $status }}"
-                                            {{ $sktm->status_perkawinan == $status ? 'selected' : '' }}>
+                                            {{ $sku->status_perkawinan == $status ? 'selected' : '' }}>
                                             {{ $status }}</option>
                                     @endforeach
                                 </select>
@@ -250,35 +250,35 @@
 
                             <div class="input-group">
                                 <label class="block text-sm font-semibold text-gray-700 mb-2">Pekerjaan *</label>
-                                <input type="text" name="pekerjaan" value="{{ old('pekerjaan', $sktm->pekerjaan) }}"
+                                <input type="text" name="pekerjaan" value="{{ old('pekerjaan', $sku->pekerjaan) }}"
                                     required
                                     class="w-full px-4 py-3 border-2 border-gray-200 rounded-lg focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 transition-all">
                             </div>
 
                             <div class="input-group">
                                 <label class="block text-sm font-semibold text-gray-700 mb-2">RT *</label>
-                                <input type="text" name="rt" value="{{ old('rt', $sktm->rt) }}" required
+                                <input type="text" name="rt" value="{{ old('rt', $sku->rt) }}" required
                                     maxlength="3"
                                     class="w-full px-4 py-3 border-2 border-gray-200 rounded-lg focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 transition-all">
                             </div>
 
                             <div class="input-group">
                                 <label class="block text-sm font-semibold text-gray-700 mb-2">RW *</label>
-                                <input type="text" name="rw" value="{{ old('rw', $sktm->rw) }}" required
+                                <input type="text" name="rw" value="{{ old('rw', $sku->rw) }}" required
                                     maxlength="3"
                                     class="w-full px-4 py-3 border-2 border-gray-200 rounded-lg focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 transition-all">
                             </div>
 
                             <div class="input-group">
                                 <label class="block text-sm font-semibold text-gray-700 mb-2">Dusun</label>
-                                <input type="text" name="dusun" value="{{ old('dusun', $sktm->dusun) }}"
+                                <input type="text" name="dusun" value="{{ old('dusun', $sku->dusun) }}"
                                     class="w-full px-4 py-3 border-2 border-gray-200 rounded-lg focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 transition-all">
                             </div>
 
                             <div class="md:col-span-2 input-group">
                                 <label class="block text-sm font-semibold text-gray-700 mb-2">Alamat Lengkap *</label>
                                 <textarea name="alamat" rows="3" required
-                                    class="w-full px-4 py-3 border-2 border-gray-200 rounded-lg focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 transition-all">{{ old('alamat', $sktm->alamat) }}</textarea>
+                                    class="w-full px-4 py-3 border-2 border-gray-200 rounded-lg focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 transition-all">{{ old('alamat', $sku->alamat) }}</textarea>
                             </div>
                         </div>
                     </div>
@@ -306,14 +306,14 @@
                             <div class="input-group">
                                 <label class="block text-sm font-semibold text-gray-700 mb-2">Nomor Surat RT *</label>
                                 <input type="text" name="no_surat_rt"
-                                    value="{{ old('no_surat_rt', $sktm->no_surat_rt) }}" required
+                                    value="{{ old('no_surat_rt', $sku->no_surat_rt) }}" required
                                     class="w-full px-4 py-3 border-2 border-gray-200 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-green-500 transition-all">
                             </div>
 
                             <div class="input-group">
                                 <label class="block text-sm font-semibold text-gray-700 mb-2">Tanggal Surat RT *</label>
                                 <input type="date" name="tanggal_surat_rt"
-                                    value="{{ old('tanggal_surat_rt', optional($sktm->tanggal_surat_rt)->format('Y-m-d')) }}"
+                                    value="{{ old('tanggal_surat_rt', optional($sku->tanggal_surat_rt)->format('Y-m-d')) }}"
                                     required
                                     class="w-full px-4 py-3 border-2 border-gray-200 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-green-500 transition-all">
                             </div>
@@ -321,7 +321,7 @@
                     </div>
 
                     <!-- Keperluan -->
-                    <div class="bg-white rounded-xl shadow-sm p-6 section-card keperluan animate-slide-in">
+                    {{-- <div class="bg-white rounded-xl shadow-sm p-6 section-card keperluan animate-slide-in">
                         <div class="mb-6">
                             <div class="flex items-center gap-3 mb-2">
                                 <div class="p-2 bg-gradient-to-r from-emerald-600 to-emerald-500 rounded-lg">
@@ -333,61 +333,88 @@
                                 </div>
                                 <div class="flex flex-col">
                                     <h2 class="text-lg font-bold text-gray-800">Keperluan</h2>
-                                    <p class="text-sm text-gray-500">Tujuan dan keperluan pembuatan SKTM</p>
+                                    <p class="text-sm text-gray-500">Tujuan dan keperluan pembuatan SKD</p>
                                 </div>
                             </div>
                         </div>
 
                         <div class="input-group">
-                            <textarea name="keperluan" id="editor">{{ $sktm->keperluan }}</textarea>
+                            <textarea name="keperluan" id="editor">{{ $sku->keperluan }}</textarea>
+                        </div>
+                    </div> --}}
+
+                                        <div class="bg-white rounded-xl shadow-sm p-6 section-card animate-slide-in">
+                        <div class="mb-6">
+                            <div class="flex items-center gap-3 mb-2">
+                                <div class="p-2 bg-gradient-to-r from-emerald-600 to-emerald-500 rounded-lg">
+                                    <svg class="w-5 h-5 text-white" fill="none" stroke="currentColor"
+                                        viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                            d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4" />
+                                    </svg>
+                                </div>
+                                <div class="flex flex-col">
+                                    <h2 class="text-lg font-bold text-gray-800">Informasi Usaha</h2>
+                                    <p class="text-sm text-gray-500">Detail usaha yang dijalankan</p>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
+                            <div class="input-group">
+                                <label class="block text-sm font-semibold text-gray-700 mb-2">Nama Usaha *</label>
+                                <input type="text" name="nama_usaha"
+                                    value="{{ old('nama_usaha', $sku->nama_usaha) }}" required
+                                    class="w-full px-4 py-3 border-2 border-gray-200 rounded-lg focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 transition-all">
+                                @error('nama_usaha')
+                                    <p class="text-red-500 text-xs mt-1 font-medium">{{ $message }}</p>
+                                @enderror
+                            </div>
+
+                            <div class="input-group">
+                                <label class="block text-sm font-semibold text-gray-700 mb-2">Jenis Usaha *</label>
+                                <input type="text" name="jenis_usaha"
+                                    value="{{ old('jenis_usaha', $sku->jenis_usaha) }}" required
+                                    class="w-full px-4 py-3 border-2 border-gray-200 rounded-lg focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 transition-all">
+                                @error('jenis_usaha')
+                                    <p class="text-red-500 text-xs mt-1 font-medium">{{ $message }}</p>
+                                @enderror
+                            </div>
+
+                            <div class="md:col-span-2 input-group">
+                                <label class="block text-sm font-semibold text-gray-700 mb-2">Alamat Usaha *</label>
+                                <textarea name="alamat_usaha" rows="3" required
+                                    class="w-full px-4 py-3 border-2 border-gray-200 rounded-lg focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 transition-all">{{ old('alamat_usaha', $sku->alamat_usaha) }}</textarea>
+                                @error('alamat_usaha')
+                                    <p class="text-red-500 text-xs mt-1 font-medium">{{ $message }}</p>
+                                @enderror
+                            </div>
                         </div>
                     </div>
 
-                    <!-- Anggota Keluarga -->
-                    @if (!empty($anggotaKeluarga))
-                        <div class="bg-white rounded-xl shadow-sm p-6 section-card anggota animate-slide-in">
-                            <div class="mb-6">
-                                <div class="flex items-center gap-3 mb-2">
-                                    <div class="p-2 bg-gradient-to-r from-emerald-600 to-emerald-500 rounded-lg">
-                                        <svg class="w-5 h-5 text-white" fill="none" stroke="currentColor"
-                                            viewBox="0 0 24 24">
-                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                                d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z" />
-                                        </svg>
-                                    </div>
-                                    <div class="flex flex-col">
-                                        <h2 class="text-lg font-bold text-gray-800">Anggota Keluarga</h2>
-                                        <p class="text-sm text-gray-500">Daftar anggota keluarga yang terdaftar</p>
-                                    </div>
+                    <!-- Keterangan Usaha -->
+                    <div class="bg-white rounded-xl shadow-sm p-6 section-card animate-slide-in">
+                        <div class="mb-6">
+                            <div class="flex items-center gap-3 mb-2">
+                                <div class="p-2 bg-gradient-to-r from-emerald-600 to-emerald-500 rounded-lg">
+                                    <svg class="w-5 h-5 text-white" fill="none" stroke="currentColor"
+                                        viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                            d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
+                                    </svg>
+                                </div>
+                                <div class="flex flex-col">
+                                    <h2 class="text-lg font-bold text-gray-800">Keterangan Usaha</h2>
+                                    <p class="text-sm text-gray-500">Informasi tambahan mengenai usaha (opsional)</p>
                                 </div>
                             </div>
-
-                            <div class="overflow-hidden rounded-lg border-2 border-gray-200">
-                                <table class="min-w-full divide-y divide-gray-200">
-                                    <thead class="bg-gradient-to-r from-emerald-50 to-green-100">
-                                        <tr>
-                                            <th
-                                                class="px-6 py-4 text-left text-xs font-bold text-gray-700 uppercase tracking-wider">
-                                                Nama</th>
-                                            <th
-                                                class="px-6 py-4 text-left text-xs font-bold text-gray-700 uppercase tracking-wider">
-                                                NIK</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody class="bg-white divide-y divide-gray-200">
-                                        @foreach ($anggotaKeluarga as $anggota)
-                                            <tr class="hover:bg-emerald-50 transition-colors">
-                                                <td class="px-6 py-4 text-sm font-medium text-gray-900">
-                                                    {{ $anggota['nama'] ?? '-' }}</td>
-                                                <td class="px-6 py-4 text-sm text-gray-700">{{ $anggota['nik'] ?? '-' }}
-                                                </td>
-                                            </tr>
-                                        @endforeach
-                                    </tbody>
-                                </table>
-                            </div>
                         </div>
-                    @endif
+
+                        <div class="input-group">
+                            <textarea name="keterangan_usaha" id="editor">{{ old('keterangan_usaha', $sku->keterangan_usaha) }}</textarea>
+                        </div>
+                    </div>
+
 
                     {{-- Dokumen Pendukung --}}
                     <div class="bg-white rounded-2xl shadow-sm p-6 section-card border border-gray-100">
@@ -554,7 +581,7 @@
 
                         <div class="space-y-3">
                             <!-- Download Button -->
-                            <a href="{{ route('admin.sktm.download', $pengajuan->file_surat_cetak) }}"
+                            <a href="{{ route('admin.sku.download', $pengajuan->file_surat_cetak) }}"
                                 class="group w-full inline-flex items-center justify-center px-4 py-2.5 bg-gradient-to-r from-emerald-600 to-emerald-500 hover:from-emerald-700 hover:to-emerald-600 text-white rounded-full font-semibold text-sm transition-all duration-300 shadow-lg hover:shadow-xl hover:scale-[1.02] active:scale-[0.98] relative overflow-hidden">
                                 <div
                                     class="absolute inset-0 bg-white opacity-0 group-hover:opacity-20 transition-opacity duration-300">
@@ -668,7 +695,7 @@
                     Pastikan seluruh data sudah benar.
                 </p>
 
-                <form action="{{ route('admin.sktm.approve', $pengajuan->id) }}" method="POST">
+                <form action="{{ route('admin.sku.approve', $pengajuan->id) }}" method="POST">
                     @csrf
 
                     <!-- Actions -->
@@ -713,7 +740,7 @@
 
             <!-- Body -->
             <div class="px-6 py-5">
-                <form action="{{ route('admin.sktm.reject', $pengajuan->id) }}" method="POST">
+                <form action="{{ route('admin.sku.reject', $pengajuan->id) }}" method="POST">
                     @csrf
                     @method('PUT')
 

@@ -10,4 +10,9 @@ class SuratDomisili extends Model
     use HasFactory;
     protected $table = 'surat_domisili';
     protected $guarded = ['id'];
+
+    protected $casts = [
+        'tanggal_lahir' => 'date',
+        'tanggal_surat_rt' => 'date',
+    ];
 }

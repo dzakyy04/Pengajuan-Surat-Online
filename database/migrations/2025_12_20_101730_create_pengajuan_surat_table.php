@@ -27,6 +27,8 @@ return new class extends Migration
             $table->string('dokumen_surat_rt')->nullable();
             $table->timestamp('tanggal_diproses')->nullable();
             $table->string('file_surat_cetak')->nullable();
+            $table->string('file_surat_ttd')->nullable();
+            $table->timestamp('tanggal_upload_ttd')->nullable();
             $table->timestamp('tanggal_cetak')->nullable();
             $table->timestamp('tanggal_notifikasi_warga')->nullable();
             $table->timestamp('tanggal_diambil')->nullable();

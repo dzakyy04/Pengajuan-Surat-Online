@@ -1,10 +1,12 @@
 <?php
 
+use App\Http\Controllers\SkdController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\SktmController;
 use App\Http\Controllers\AdminAuthController;
 use App\Http\Controllers\MasyarakatController;
 use App\Http\Controllers\PengajuanDokumenController;
+use App\Http\Controllers\SkuController;
 
 /*
 |--------------------------------------------------------------------------
@@ -33,15 +35,48 @@ Route::prefix('admin')->name('admin.')->group(function () {
         // Surat Keterangan Tidak Mampu (SKTM)
         Route::prefix('sktm')->name('sktm.')->group(function () {
             Route::get('/', [SktmController::class, 'index'])->name('index');
-            Route::get('/{id}', [SktmController::class, 'detail'])->name('detail');
-            Route::put('/update/{id}', [SktmController::class, 'update'])->name('update');
-
-            Route::post('/approve/{id}', [SktmController::class, 'approve'])->name('approve');
-            Route::put('/reject/{id}', [SktmController::class, 'reject'])->name('reject');
-
             Route::get('/success/{file}', [SktmController::class, 'success'])->name('success');
             Route::get('/download/{file}', [SktmController::class, 'download'])->name('download');
+
+            Route::get('/{id}', [SktmController::class, 'detail'])->name('detail');
+            Route::put('/{id}', [SktmController::class, 'update'])->name('update');
+            Route::post('/{id}/approve', [SktmController::class, 'approve'])->name('approve');
+            Route::put('/{id}/reject', [SktmController::class, 'reject'])->name('reject');
+            Route::post('/{id}/upload-ttd', [SktmController::class, 'uploadTtd'])->name('upload-ttd');
+            Route::get('/{id}/download-ttd', [SktmController::class, 'downloadTtd'])->name('download-ttd');
+            Route::get('/{id}/print', [SktmController::class, 'print'])->name('print');
         });
+
+        // Surat Keterangan Domisili (SKD)
+        Route::prefix('skd')->name('skd.')->group(function () {
+            Route::get('/', [SkdController::class, 'index'])->name('index');
+            Route::get('/success/{file}', [SkdController::class, 'success'])->name('success');
+            Route::get('/download/{file}', [SkdController::class, 'download'])->name('download');
+
+            Route::get('/{id}', [SkdController::class, 'detail'])->name('detail');
+            Route::put('/{id}', [SkdController::class, 'update'])->name('update');
+            Route::post('/{id}/approve', [SkdController::class, 'approve'])->name('approve');
+            Route::put('/{id}/reject', [SkdController::class, 'reject'])->name('reject');
+            Route::post('/{id}/upload-ttd', [SkdController::class, 'uploadTtd'])->name('upload-ttd');
+            Route::get('/{id}/download-ttd', [SkdController::class, 'downloadTtd'])->name('download-ttd');
+            Route::get('/{id}/print', [SkdController::class, 'print'])->name('print');
+        });
+
+        // Surat Keterangan sku (SKU)
+        Route::prefix('sku')->name('sku.')->group(function () {
+            Route::get('/', [SkuController::class, 'index'])->name('index');
+            Route::get('/success/{file}', [SkuController::class, 'success'])->name('success');
+            Route::get('/download/{file}', [SkuController::class, 'download'])->name('download');
+
+            Route::get('/{id}', [SkuController::class, 'detail'])->name('detail');
+            Route::put('/{id}', [SkuController::class, 'update'])->name('update');
+            Route::post('/{id}/approve', [SkuController::class, 'approve'])->name('approve');
+            Route::put('/{id}/reject', [SkuController::class, 'reject'])->name('reject');
+            Route::post('/{id}/upload-ttd', [SkuController::class, 'uploadTtd'])->name('upload-ttd');
+            Route::get('/{id}/download-ttd', [SkuController::class, 'downloadTtd'])->name('download-ttd');
+            Route::get('/{id}/print', [SkuController::class, 'print'])->name('print');
+        });
+
         Route::get('/pengajuan/{pengajuan}/dokumen/view', [PengajuanDokumenController::class, 'view'])
             ->name('pengajuan.dokumen.view');
 

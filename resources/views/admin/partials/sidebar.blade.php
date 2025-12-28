@@ -115,78 +115,44 @@
                     @endif
                 </a>
 
-                {{-- <!-- SKTM -->
-                <a href=""
-                    class="flex items-center justify-between px-3 py-2 rounded-lg hover:bg-gray-50 transition-colors duration-200 group {{ $isSktmActive ? 'text-emerald-600' : 'text-gray-600' }}">
-                    <div class="flex items-center">
-                        <svg class="w-4 h-4 mr-2 flex-shrink-0 {{ $isSktmActive ? 'text-emerald-600' : 'text-gray-400 group-hover:text-gray-600' }}"
-                            fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z">
-                            </path>
-                        </svg>
-                        <span class="text-xs {{ $isSktmActive ? 'font-semibold' : '' }}">Surat Domisili</span>
-                    </div>
-                    @if (isset($pendingSktm) && $pendingSktm > 0)
-                        <span
-                            class="inline-flex items-center justify-center ml-2 w-5 h-5 text-xs font-bold leading-none text-white bg-amber-500 rounded-full">
-                            {{ $pendingSktm }}
-                        </span>
-                    @endif
-                </a>
-
-                <!-- SKTM -->
-                <a href=""
-                    class="flex items-center justify-between px-3 py-2 rounded-lg hover:bg-gray-50 transition-colors duration-200 group {{ $isSktmActive ? 'text-emerald-600' : 'text-gray-600' }}">
-                    <div class="flex items-center">
-                        <svg class="w-4 h-4 mr-2 flex-shrink-0 {{ $isSktmActive ? 'text-emerald-600' : 'text-gray-400 group-hover:text-gray-600' }}"
-                            fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z">
-                            </path>
-                        </svg>
-                        <span class="text-xs {{ $isSktmActive ? 'font-semibold' : '' }}">Surat Keterangan Usaha</span>
-                    </div>
-                    @if (isset($pendingSktm) && $pendingSktm > 0)
-                        <span
-                            class="inline-flex items-center justify-center ml-2 w-5 h-5 text-xs font-bold leading-none text-white bg-amber-500 rounded-full">
-                            {{ $pendingSktm }}
-                        </span>
-                    @endif
-                </a> --}}
-
-                {{-- <!-- SKCK -->
-                <a href="{{ route('admin.skck.index') }}"
-                    class="flex items-center justify-between px-3 py-2 rounded-lg hover:bg-gray-50 transition-colors duration-200 group {{ $isSkckActive ? 'bg-emerald-50 text-emerald-600' : 'text-gray-600' }}">
-                    <span class="text-sm {{ $isSkckActive ? 'font-medium' : '' }}">SKCK</span>
-                    @if (isset($pendingSkck) && $pendingSkck > 0)
-                        <span class="inline-flex items-center justify-center px-2 py-0.5 text-xs font-bold leading-none text-white bg-red-500 rounded-full">
-                            {{ $pendingSkck }}
-                        </span>
-                    @endif
-                </a>
-
-                <!-- SKD -->
                 <a href="{{ route('admin.skd.index') }}"
-                    class="flex items-center justify-between px-3 py-2 rounded-lg hover:bg-gray-50 transition-colors duration-200 group {{ $isSkdActive ? 'bg-emerald-50 text-emerald-600' : 'text-gray-600' }}">
-                    <span class="text-sm {{ $isSkdActive ? 'font-medium' : '' }}">Surat Keterangan Domisili</span>
+                    class="flex items-center justify-between px-3 py-2 rounded-lg hover:bg-gray-50 transition-colors duration-200 group {{ $isSkdActive ? 'text-emerald-600' : 'text-gray-400' }}">
+                    <div class="flex items-center">
+                        <svg class="w-4 h-4 mr-2 flex-shrink-0 {{ $isSkdActive ? 'text-emerald-600' : 'text-gray-400 group-hover:text-gray-600' }}"
+                            fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z">
+                            </path>
+                        </svg>
+                        <span class="text-xs {{ $isSkdActive ? 'font-semibold' : '' }}">Surat Keterangan
+                            Domisili</span>
+                    </div>
                     @if (isset($pendingSkd) && $pendingSkd > 0)
-                        <span class="inline-flex items-center justify-center px-2 py-0.5 text-xs font-bold leading-none text-white bg-red-500 rounded-full">
+                        <span
+                            class="inline-flex items-center justify-center ml-2 w-5 h-5 text-xs font-bold leading-none text-white bg-amber-500 rounded-full">
                             {{ $pendingSkd }}
                         </span>
                     @endif
                 </a>
 
-                <!-- SKU -->
                 <a href="{{ route('admin.sku.index') }}"
-                    class="flex items-center justify-between px-3 py-2 rounded-lg hover:bg-gray-50 transition-colors duration-200 group {{ $isSkuActive ? 'bg-emerald-50 text-emerald-600' : 'text-gray-600' }}">
-                    <span class="text-sm {{ $isSkuActive ? 'font-medium' : '' }}">Surat Keterangan Usaha</span>
+                    class="flex items-center justify-between px-3 py-2 rounded-lg hover:bg-gray-50 transition-colors duration-200 group {{ $isSkuActive ? 'text-emerald-600' : 'text-gray-400' }}">
+                    <div class="flex items-center">
+                        <svg class="w-4 h-4 mr-2 flex-shrink-0 {{ $isSkuActive ? 'text-emerald-600' : 'text-gray-400 group-hover:text-gray-600' }}"
+                            fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z">
+                            </path>
+                        </svg>
+                        <span class="text-xs {{ $isSkuActive ? 'font-semibold' : '' }}">Surat Keterangan Usaha</span>
+                    </div>
                     @if (isset($pendingSku) && $pendingSku > 0)
-                        <span class="inline-flex items-center justify-center px-2 py-0.5 text-xs font-bold leading-none text-white bg-red-500 rounded-full">
+                        <span
+                            class="inline-flex items-center justify-center ml-2 w-5 h-5 text-xs font-bold leading-none text-white bg-amber-500 rounded-full">
                             {{ $pendingSku }}
                         </span>
                     @endif
-                </a> --}}
+                </a>
             </div>
         </div>
 
@@ -201,7 +167,8 @@
                     <div class="relative flex-shrink-0">
                         <div
                             class="w-9 h-9 rounded-full bg-gradient-to-br from-emerald-600 to-green-700 flex items-center justify-center ring-2 ring-white">
-                            <svg class="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <svg class="w-5 h-5 text-white" fill="none" stroke="currentColor"
+                                viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                                     d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
                             </svg>
@@ -224,7 +191,8 @@
                 </div>
                 <svg class="w-4 h-4 text-gray-400 sidebar-text" fill="none" stroke="currentColor"
                     viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 9l4-4 4 4m0 6l-4 4-4-4">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                        d="M8 9l4-4 4 4m0 6l-4 4-4-4">
                     </path>
                 </svg>
             </button>

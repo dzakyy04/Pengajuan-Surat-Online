@@ -164,7 +164,7 @@
                 <div class="flex items-center justify-between">
                     <div>
                         <p class="text-sm font-semibold">Menunggu</p>
-                        <h3 class="text-3xl font-bold mt-2">{{ $pendingSktm }}</h3>
+                        <h3 class="text-3xl font-bold mt-2">{{ $pendingSkd }}</h3>
                     </div>
                     <div class="bg-orange-200 bg-opacity-30 rounded-full p-3">
                         <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -181,7 +181,7 @@
                 <div class="flex items-center justify-between">
                     <div>
                         <p class="text-sm font-semibold">Diproses</p>
-                        <h3 class="text-3xl font-bold mt-2">{{ $diprosesSktm }}</h3>
+                        <h3 class="text-3xl font-bold mt-2">{{ $diprosesSkd }}</h3>
                     </div>
                     <div class="bg-blue-200 bg-opacity-30 rounded-full p-3">
                         <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -198,7 +198,7 @@
                 <div class="flex items-center justify-between">
                     <div>
                         <p class="text-sm font-semibold">Ditolak</p>
-                        <h3 class="text-3xl font-bold mt-2">{{ $ditolakSktm }}</h3>
+                        <h3 class="text-3xl font-bold mt-2">{{ $ditolakSkd }}</h3>
                     </div>
                     <div class="bg-red-200 bg-opacity-30 rounded-full p-3">
                         <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -321,7 +321,7 @@
                                         <!-- Dropdown Menu -->
                                         <div id="dropdown-{{ $pengajuan->id }}" class="dropdown-menu">
                                             <!-- Detail -->
-                                            <a href="{{ route('admin.sktm.detail', $pengajuan->id) }}"
+                                            <a href="{{ route('admin.skd.detail', $pengajuan->id) }}"
                                                 class="dropdown-item">
                                                 <svg class="w-4 h-4 text-emerald-600" fill="none"
                                                     stroke="currentColor" viewBox="0 0 24 24">
@@ -338,7 +338,7 @@
 
                                                 @if ($pengajuan->file_surat_ttd)
                                                     <!-- Download TTD -->
-                                                    <a href="{{ route('admin.sktm.download-ttd', $pengajuan->id) }}"
+                                                    <a href="{{ route('admin.skd.download-ttd', $pengajuan->id) }}"
                                                         class="dropdown-item">
                                                         <svg class="w-4 h-4 text-green-600" fill="none"
                                                             stroke="currentColor" viewBox="0 0 24 24">
@@ -387,8 +387,6 @@
                     {{ $pengajuanList->links('pagination::tailwind') }}
                 </div>
             @endif
-
-
 
         </div>
     </div>
@@ -542,7 +540,7 @@
         // Upload Modal Functions
         function openUploadModal(id) {
             document.getElementById('uploadModal').classList.remove('hidden');
-            document.getElementById('uploadForm').action = `/admin/sktm/${id}/upload-ttd`;
+            document.getElementById('uploadForm').action = `/admin/skd/${id}/upload-ttd`;
 
             // Close dropdown when opening modal
             document.querySelectorAll('.dropdown-menu').forEach(menu => {

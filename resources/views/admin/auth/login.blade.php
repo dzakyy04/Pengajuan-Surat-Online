@@ -4,33 +4,29 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>@yield('title', 'Welcome Back - Login')</title>
-    @vite(['resources/css/app.css', 'resources/js/app.js'])
+    <title>Welcome Back - Login</title>
+    <script src="https://cdn.tailwindcss.com"></script>
 </head>
 
 <body class="bg-gradient-to-bl from-white to-emerald-100 min-h-screen">
-    <div class="flex min-h-screen">
+    <div class="flex flex-col lg:flex-row min-h-screen">
 
-        <!-- Left Section - Login Form (w-1/2) -->
-        <div class="w-1/2 flex items-center justify-center p-8">
-            <div class="bg-white/10 backdrop-blur-md rounded-3xl shadow-sm border border-slate-50 p-12 w-full max-w-md">
-                <div class="mb-8">
-                    <h2 class="text-3xl font-bold text-gray-800 mb-2">Selamat Datang Kembali</h2>
+        <div class="w-full lg:w-1/2 flex items-center justify-center p-4 sm:p-8 order-2 lg:order-1">
+            <div class="bg-white/10 backdrop-blur-md rounded-3xl shadow-sm border border-slate-50 p-6 sm:p-12 w-full max-w-md">
+                <div class="mb-6 sm:mb-8">
+                    <h2 class="text-2xl sm:text-3xl font-bold text-gray-800 mb-2">Selamat Datang Kembali</h2>
                     <p class="text-gray-500 text-sm">Lanjutkan dengan salah satu opsi berikut</p>
                 </div>
 
                 <form method="POST" action="{{ route('admin.login') }}">
                     @csrf
-
-                    <!-- Email Input -->
-                    <div class="mb-5">
+                    <div class="mb-4 sm:mb-5">
                         <label for="email" class="block text-sm font-medium text-gray-700 mb-2">Email</label>
                         <input type="email" id="email" name="email" placeholder="Alamat Email"
                             class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-transparent transition"
                             required>
                     </div>
 
-                    <!-- Password Input -->
                     <div class="mb-3">
                         <label for="password" class="block text-sm font-medium text-gray-700 mb-2">Kata Sandi</label>
                         <div class="relative">
@@ -40,7 +36,6 @@
                                 required>
                             <button type="button" id="togglePasswordBtn"
                                 class="absolute cursor-pointer right-3 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-gray-600 focus:outline-none">
-                                <!-- Eye Icon (Show) -->
                                 <svg id="eyeIconShow" xmlns="http://www.w3.org/2000/svg" class="h-5 w-5"
                                     viewBox="0 0 20 20" fill="currentColor">
                                     <path d="M10 12a2 2 0 100-4 2 2 0 000 4z" />
@@ -48,7 +43,6 @@
                                         d="M.458 10C1.732 5.943 5.522 3 10 3s8.268 2.943 9.542 7c-1.274 4.057-5.064 7-9.542 7S1.732 14.057.458 10zM14 10a4 4 0 11-8 0 4 4 0 018 0z"
                                         clip-rule="evenodd" />
                                 </svg>
-                                <!-- Eye Slash Icon (Hide) - Hidden by default -->
                                 <svg id="eyeIconHide" xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 hidden"
                                     viewBox="0 0 20 20" fill="currentColor">
                                     <path fill-rule="evenodd"
@@ -61,8 +55,7 @@
                         </div>
                     </div>
 
-                    <!-- Remember Me -->
-                    <div class="flex items-start mb-6">
+                    <div class="flex items-start mb-5 sm:mb-6">
                         <label class="flex items-start">
                             <input type="checkbox" name="remember"
                                 class="w-4 h-4 text-emerald-600 border-gray-300 rounded focus:ring-emerald-500">
@@ -70,13 +63,11 @@
                         </label>
                     </div>
 
-                    <!-- Sign In Button -->
                     <button type="submit"
                         class="w-full bg-emerald-800 text-white py-3 rounded-lg font-medium hover:bg-emerald-900 transition duration-300 mb-2 cursor-pointer">
                         Masuk
                     </button>
 
-                    <!-- Register Link -->
                     <p class="text-center text-sm text-gray-600 mt-2">
                         Belum punya akun? <a href="#" class="text-gray-800 font-medium hover:underline">Daftar
                             Sekarang</a>
@@ -85,30 +76,25 @@
             </div>
         </div>
 
-        <!-- Right Section - Splash Screen -->
-        <div class="w-1/2 flex items-center justify-center p-2">
+        <div class="w-full lg:w-1/2 flex items-center justify-center p-4 sm:p-8 lg:p-2 order-1 lg:order-2 min-h-[500px] sm:min-h-[550px] lg:min-h-screen">
             <div
                 class="bg-gradient-to-br from-emerald-900 to-emerald-950 backdrop-blur-md border border-slate-200 shadow-sm rounded-xl w-full h-full flex items-center justify-center relative overflow-hidden">
 
                 <div class="orbit-container">
-                    <!-- Blob 1 -->
                     <div class="orbit-blob blob-1">
-                        <div class="w-36 h-36 bg-emerald-900 rounded-full mix-blend-multiply filter blur-xl opacity-80">
+                        <div class="w-24 h-24 sm:w-36 sm:h-36 bg-emerald-900 rounded-full mix-blend-multiply filter blur-xl opacity-80">
                         </div>
                     </div>
-                    <!-- Blob 2 -->
                     <div class="orbit-blob blob-2">
-                        <div class="w-32 h-32 bg-emerald-800 rounded-full mix-blend-multiply filter blur-xl opacity-80">
+                        <div class="w-20 h-20 sm:w-32 sm:h-32 bg-emerald-800 rounded-full mix-blend-multiply filter blur-xl opacity-80">
                         </div>
                     </div>
-                    <!-- Blob 3 -->
                     <div class="orbit-blob blob-3">
-                        <div class="w-30 h-20 bg-lime-800 rounded-full mix-blend-multiply filter blur-xl opacity-80">
+                        <div class="w-16 h-16 sm:w-30 sm:h-20 bg-lime-800 rounded-full mix-blend-multiply filter blur-xl opacity-80">
                         </div>
                     </div>
-                    <!-- Blob 4 -->
                     <div class="orbit-blob blob-4">
-                        <div class="w-28 h-28 bg-green-800 rounded-full mix-blend-multiply filter blur-xl opacity-80">
+                        <div class="w-20 h-20 sm:w-28 sm:h-28 bg-green-800 rounded-full mix-blend-multiply filter blur-xl opacity-80">
                         </div>
                     </div>
                 </div>
@@ -119,11 +105,9 @@
                         class="relative z-10 w-10 h-auto drop-shadow-2xl">
                 </div>
 
-                <!-- Splash Screen Carousel -->
                 <div class="splash-carousel relative z-10 w-full max-w-lg px-8">
-                    <!-- Slide 1 - Layanan Surat -->
                     <div class="splash-slide active">
-                        <div class="flex flex-col items-center text-center">
+                        <div class="flex flex-col items-center text-center py-3">
                             <div class="mb-6 bg-white/10 backdrop-blur-md rounded-full p-8 border border-white/20">
                                 <img src="{{ asset('assets/img/login.png') }}" alt="Layanan Surat"
                                     class="w-32 h-32 object-contain">
@@ -137,7 +121,7 @@
                     </div>
 
                     <div class="splash-slide">
-                        <div class="flex flex-col items-center text-center">
+                        <div class="flex flex-col items-center text-center py-3">
                             <div class="mb-6 bg-white/10 backdrop-blur-md rounded-full p-8 border border-white/20">
                                 <img src="{{ asset('assets/img/login-2.png') }}" alt="Proses Cepat"
                                     class="w-32 h-32 object-contain">
@@ -151,7 +135,7 @@
                     </div>
 
                     <div class="splash-slide">
-                        <div class="flex flex-col items-center text-center">
+                        <div class="flex flex-col items-center text-center py-3">
                             <div class="mb-6 bg-white/10 backdrop-blur-md rounded-full p-8 border border-white/20">
                                 <img src="{{ asset('assets/img/login-3.png') }}" alt="Aman Terpercaya"
                                     class="w-32 h-32 object-contain">
@@ -165,8 +149,7 @@
                     </div>
                 </div>
 
-                <!-- Dots Indicator -->
-                <div class="absolute bottom-8 left-1/2 transform -translate-x-1/2 z-20 flex gap-3">
+                <div class="absolute bottom-2 sm:bottom-4 left-1/2 transform -translate-x-1/2 z-20 flex gap-2 sm:gap-3">
                     <button class="dot active" onclick="goToSlide(0)"></button>
                     <button class="dot" onclick="goToSlide(1)"></button>
                     <button class="dot" onclick="goToSlide(2)"></button>
@@ -178,7 +161,6 @@
     </div>
 
     <style>
-        /* Orbit Container */
         .orbit-container {
             position: absolute;
             width: 100%;
@@ -210,50 +192,96 @@
         .blob-4 {
             animation: orbit-extra 18s linear infinite reverse;
         }
-
         @keyframes orbit-large {
             0% {
-                transform: translate(-50%, -50%) rotate(0deg) translateX(280px) rotate(0deg);
+                transform: translate(-50%, -50%) rotate(0deg) translateX(150px) rotate(0deg);
             }
-
             100% {
-                transform: translate(-50%, -50%) rotate(360deg) translateX(280px) rotate(-360deg);
+                transform: translate(-50%, -50%) rotate(360deg) translateX(150px) rotate(-360deg);
             }
         }
 
         @keyframes orbit-medium {
             0% {
-                transform: translate(-50%, -50%) rotate(0deg) translateX(220px) rotate(0deg);
+                transform: translate(-50%, -50%) rotate(0deg) translateX(120px) rotate(0deg);
             }
-
             100% {
-                transform: translate(-50%, -50%) rotate(360deg) translateX(220px) rotate(-360deg);
+                transform: translate(-50%, -50%) rotate(360deg) translateX(120px) rotate(-360deg);
             }
         }
 
         @keyframes orbit-small {
             0% {
-                transform: translate(-50%, -50%) rotate(0deg) translateX(160px) rotate(0deg);
+                transform: translate(-50%, -50%) rotate(0deg) translateX(90px) rotate(0deg);
             }
-
             100% {
-                transform: translate(-50%, -50%) rotate(360deg) translateX(160px) rotate(-360deg);
+                transform: translate(-50%, -50%) rotate(360deg) translateX(90px) rotate(-360deg);
             }
         }
 
         @keyframes orbit-extra {
             0% {
-                transform: translate(-50%, -50%) rotate(0deg) translateX(320px) rotate(0deg);
+                transform: translate(-50%, -50%) rotate(0deg) translateX(180px) rotate(0deg);
+            }
+            100% {
+                transform: translate(-50%, -50%) rotate(360deg) translateX(180px) rotate(-360deg);
+            }
+        }
+
+        /* Larger orbits for desktop */
+        @media (min-width: 640px) {
+            @keyframes orbit-large {
+                0% {
+                    transform: translate(-50%, -50%) rotate(0deg) translateX(280px) rotate(0deg);
+                }
+                100% {
+                    transform: translate(-50%, -50%) rotate(360deg) translateX(280px) rotate(-360deg);
+                }
             }
 
-            100% {
-                transform: translate(-50%, -50%) rotate(360deg) translateX(320px) rotate(-360deg);
+            @keyframes orbit-medium {
+                0% {
+                    transform: translate(-50%, -50%) rotate(0deg) translateX(220px) rotate(0deg);
+                }
+                100% {
+                    transform: translate(-50%, -50%) rotate(360deg) translateX(220px) rotate(-360deg);
+                }
+            }
+
+            @keyframes orbit-small {
+                0% {
+                    transform: translate(-50%, -50%) rotate(0deg) translateX(160px) rotate(0deg);
+                }
+                100% {
+                    transform: translate(-50%, -50%) rotate(360deg) translateX(160px) rotate(-360deg);
+                }
+            }
+
+            @keyframes orbit-extra {
+                0% {
+                    transform: translate(-50%, -50%) rotate(0deg) translateX(320px) rotate(0deg);
+                }
+                100% {
+                    transform: translate(-50%, -50%) rotate(360deg) translateX(320px) rotate(-360deg);
+                }
             }
         }
 
         .splash-carousel {
             position: relative;
-            min-height: 400px;
+            min-height: 380px;
+        }
+
+        @media (min-width: 640px) {
+            .splash-carousel {
+                min-height: 450px;
+            }
+        }
+
+        @media (min-width: 1024px) {
+            .splash-carousel {
+                min-height: 400px;
+            }
         }
 
         .splash-slide {
@@ -275,8 +303,8 @@
 
         /* Dots Indicator */
         .dot {
-            width: 12px;
-            height: 12px;
+            width: 10px;
+            height: 10px;
             border-radius: 50%;
             background: rgba(255, 255, 255, 0.3);
             border: 2px solid rgba(255, 255, 255, 0.5);
@@ -284,10 +312,23 @@
             transition: all 0.3s ease;
         }
 
+        @media (min-width: 640px) {
+            .dot {
+                width: 12px;
+                height: 12px;
+            }
+        }
+
         .dot.active {
             background: white;
-            width: 36px;
+            width: 28px;
             border-radius: 6px;
+        }
+
+        @media (min-width: 640px) {
+            .dot.active {
+                width: 36px;
+            }
         }
 
         .dot:hover {
@@ -304,17 +345,19 @@
             const eyeShow = document.getElementById('eyeIconShow');
             const eyeHide = document.getElementById('eyeIconHide');
 
-            toggleBtn.addEventListener('click', function() {
-                if (passwordField.type === 'password') {
-                    passwordField.type = 'text';
-                    eyeShow.classList.add('hidden');
-                    eyeHide.classList.remove('hidden');
-                } else {
-                    passwordField.type = 'password';
-                    eyeShow.classList.remove('hidden');
-                    eyeHide.classList.add('hidden');
-                }
-            });
+            if (toggleBtn && passwordField && eyeShow && eyeHide) {
+                toggleBtn.addEventListener('click', function() {
+                    if (passwordField.type === 'password') {
+                        passwordField.type = 'text';
+                        eyeShow.classList.add('hidden');
+                        eyeHide.classList.remove('hidden');
+                    } else {
+                        passwordField.type = 'password';
+                        eyeShow.classList.remove('hidden');
+                        eyeHide.classList.add('hidden');
+                    }
+                });
+            }
         });
 
         // ========== SPLASH SCREEN CAROUSEL ==========
@@ -350,4 +393,4 @@
     </script>
 </body>
 
-</html>4
+</html>
