@@ -5,8 +5,10 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Models\PengajuanSurat;
 use App\Models\SuratTidakMampu;
+use App\Mail\PengajuanDitolakMail;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Mail;
 use PhpOffice\PhpWord\Element\TextRun;
 use PhpOffice\PhpWord\TemplateProcessor;
 
@@ -231,6 +233,8 @@ class SktmController extends Controller
         ]);
 
         try {
+            DB::beginTransaction();
+
             $pengajuan = PengajuanSurat::findOrFail($id);
 
             $pengajuan->update([
@@ -240,10 +244,22 @@ class SktmController extends Controller
                 'tanggal_diproses' => now(),
             ]);
 
+            // Kirim email notifikasi
+            try {
+                Mail::to($pengajuan->email_pemohon)->send(
+                    new PengajuanDitolakMail($pengajuan, $request->catatan_admin)
+                );
+            } catch (\Exception $mailError) {
+                // Log error tapi tetap lanjutkan proses
+                \Log::error('Gagal mengirim email penolakan: ' . $mailError->getMessage());
+            }
+
+            DB::commit();
+
             return redirect()->route('admin.sktm.index')
                 ->with('success', 'Pengajuan berhasil ditolak. Notifikasi telah dikirim ke pemohon.');
         } catch (\Exception $e) {
-            dd($e->getMessage());
+            DB::rollBack();
             return back()->with('error', 'Terjadi kesalahan: ' . $e->getMessage());
         }
     }
