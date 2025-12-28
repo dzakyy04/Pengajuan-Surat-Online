@@ -9,4 +9,5 @@ class SuratPenghasilan extends Model
 {
     use HasFactory;
     protected $table = 'surat_penghasilan';
+    protected $guarded = ['id'];
 }

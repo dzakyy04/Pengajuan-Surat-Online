@@ -9,4 +9,5 @@ class SuratDomisili extends Model
 {
     use HasFactory;
     protected $table = 'surat_domisili';
+    protected $guarded = ['id'];
 }

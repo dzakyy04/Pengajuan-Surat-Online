@@ -3,16 +3,18 @@
 namespace App\Http\Controllers;
 
 use App\Models\JenisSurat;
+use App\Models\SuratUsaha;
+use Illuminate\Support\Str;
+use Illuminate\Http\Request;
+use App\Models\SuratDomisili;
+use App\Models\SuratKematian;
 use App\Models\PengajuanSurat;
 use App\Models\SuratTidakMampu;
-use App\Models\SuratDomisili;
-use App\Models\SuratUsaha;
+use App\Mail\PengajuanSuratMail;
 use App\Models\SuratPenghasilan;
-use App\Models\SuratKematian;
-use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Storage;
-use Illuminate\Support\Str;
 
 class MasyarakatController extends Controller
 {
@@ -292,26 +294,41 @@ class MasyarakatController extends Controller
                     'email' => $request->email_pemohon,
                     'no_hp' => $request->no_hp_pemohon,
                     'nama' => $request->nama,
+                    'jenis_surat' => $jenis->nama,
                 ];
             });
+
+            // Kirim email konfirmasi
+            try {
+                Mail::to($result['email'])->send(
+                    new PengajuanSuratMail(
+                        $result['nomor_pengajuan'],
+                        $result['nama'],
+                        $result['jenis_surat']
+                    )
+                );
+            } catch (\Exception $e) {
+                // Log error tapi jangan gagalkan proses
+                \Log::error('Error mengirim email: ' . $e->getMessage());
+            }
 
             // Return JSON untuk AJAX request
             if ($request->ajax() || $request->wantsJson()) {
                 return response()->json([
                     'success' => true,
-                    'message' => 'Pengajuan berhasil dikirim',
+                    'message' => 'Pengajuan berhasil dikirim. Email konfirmasi telah dikirim ke ' . $result['email'],
                     'no_pengajuan' => $result['nomor_pengajuan'],
                     'email' => $result['email'],
                     'no_hp' => $result['no_hp'],
                     'nama' => $result['nama'],
-                    'redirect' => route('pengajuan') // optional: bisa diganti dengan route('pengajuan.cek')
+                    'redirect' => route('pengajuan')
                 ]);
             }
 
             // Redirect biasa untuk non-AJAX
             return redirect()
                 ->route('pengajuan')
-                ->with('success', "Pengajuan berhasil dikirim. Nomor pengajuan: {$result['nomor_pengajuan']}");
+                ->with('success', "Pengajuan berhasil dikirim. Nomor pengajuan: {$result['nomor_pengajuan']}. Email konfirmasi telah dikirim ke {$result['email']}");
         } catch (\Illuminate\Validation\ValidationException $e) {
             // Handle validation error
             if ($request->ajax() || $request->wantsJson()) {

@@ -58,7 +58,11 @@ class SktmController extends Controller
     {
         $pengajuan = PengajuanSurat::with(['jenisSurat', 'admin'])->findOrFail($id);
         $sktm = SuratTidakMampu::where('pengajuan_surat_id', $id)->firstOrFail();
-        $anggotaKeluarga = json_decode($sktm->anggota_keluarga, true) ?? [];
+
+        // Cek apakah sudah array atau masih string JSON
+        $anggotaKeluarga = is_array($sktm->anggota_keluarga)
+            ? $sktm->anggota_keluarga
+            : json_decode($sktm->anggota_keluarga, true) ?? [];
 
         return view('admin.surat.sktm.detail', compact('pengajuan', 'sktm', 'anggotaKeluarga'));
     }

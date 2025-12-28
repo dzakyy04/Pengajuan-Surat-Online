@@ -736,6 +736,101 @@
                     }
                 };
 
+                // Fungsi untuk validasi step
+                function validateStep(step) {
+                    const currentStepElement = document.querySelector(`[data-step="${step}"]`);
+                    if (!currentStepElement) return false;
+
+                    // Ambil semua input yang required di step ini
+                    const requiredFields = currentStepElement.querySelectorAll('[required]');
+                    let isValid = true;
+                    let firstInvalidField = null;
+
+                    requiredFields.forEach(field => {
+                        // Reset border error sebelumnya
+                        field.classList.remove('border-red-500', 'border-2');
+
+                        // Cek nilai field
+                        let fieldValue = field.value.trim();
+
+                        // Khusus untuk select, cek jika masih default value
+                        if (field.tagName === 'SELECT' && (fieldValue === '' || fieldValue === null)) {
+                            isValid = false;
+                            field.classList.add('border-red-500', 'border-2');
+                            if (!firstInvalidField) firstInvalidField = field;
+                        }
+                        // Untuk input text, textarea, dll
+                        else if (field.tagName !== 'SELECT' && fieldValue === '') {
+                            isValid = false;
+                            field.classList.add('border-red-500', 'border-2');
+                            if (!firstInvalidField) firstInvalidField = field;
+                        }
+                        // Khusus untuk input file
+                        else if (field.type === 'file' && field.files.length === 0) {
+                            isValid = false;
+                            field.classList.add('border-red-500', 'border-2');
+                            if (!firstInvalidField) firstInvalidField = field;
+                        }
+                        // Validasi untuk email
+                        else if (field.type === 'email' && fieldValue !== '') {
+                            const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+                            if (!emailPattern.test(fieldValue)) {
+                                isValid = false;
+                                field.classList.add('border-red-500', 'border-2');
+                                if (!firstInvalidField) firstInvalidField = field;
+                            }
+                        }
+                        // Validasi untuk NIK (16 digit)
+                        else if (field.name === 'nik' && fieldValue !== '' && fieldValue.length !== 16) {
+                            isValid = false;
+                            field.classList.add('border-red-500', 'border-2');
+                            if (!firstInvalidField) firstInvalidField = field;
+                        }
+                    });
+
+                    // Jika tidak valid, tampilkan pesan dan scroll ke field pertama yang error
+                    if (!isValid) {
+                        Swal.fire({
+                            icon: 'warning',
+                            title: 'Data Belum Lengkap',
+                            text: 'Mohon lengkapi semua field yang bertanda (*) sebelum melanjutkan.',
+                            confirmButtonText: 'OK',
+                            confirmButtonColor: '#059669',
+                            customClass: {
+                                popup: 'rounded-2xl',
+                                confirmButton: 'rounded-xl px-6 py-2.5'
+                            }
+                        });
+
+                        // Scroll ke field pertama yang error
+                        if (firstInvalidField) {
+                            firstInvalidField.scrollIntoView({
+                                behavior: 'smooth',
+                                block: 'center'
+                            });
+                            setTimeout(() => {
+                                firstInvalidField.focus();
+                            }, 500);
+                        }
+                    }
+
+                    return isValid;
+                }
+
+                // Fungsi untuk menghapus border error ketika user mulai mengisi
+                function attachInputListeners() {
+                    const allInputs = document.querySelectorAll(
+                    'input[required], select[required], textarea[required]');
+                    allInputs.forEach(input => {
+                        input.addEventListener('input', function() {
+                            this.classList.remove('border-red-500', 'border-2');
+                        });
+                        input.addEventListener('change', function() {
+                            this.classList.remove('border-red-500', 'border-2');
+                        });
+                    });
+                }
+
                 // Fungsi untuk menambah form anggota keluarga
                 function tambahAnggotaKeluarga() {
                     anggotaKeluargaCounter++;
@@ -781,6 +876,9 @@
                         div.remove();
                         updateNomorAnggota();
                     });
+
+                    // Attach input listeners ke field baru
+                    attachInputListeners();
                 }
 
                 // Fungsi untuk update nomor urut anggota setelah ada yang dihapus
@@ -797,12 +895,10 @@
                 // Event listener untuk tombol tambah anggota (menggunakan event delegation)
                 document.addEventListener('click', function(e) {
                     const target = e.target;
-                    // Check if clicked element or its parent is the button
                     if (target.id === 'btnTambahAnggota' || target.closest('#btnTambahAnggota')) {
                         e.preventDefault();
                         e.stopPropagation();
 
-                        // Pastikan container sudah ada
                         const container = document.getElementById('containerAnggotaKeluarga');
                         if (container) {
                             tambahAnggotaKeluarga();
@@ -815,7 +911,6 @@
                     const selectedOption = this.options[this.selectedIndex];
                     const kode = selectedOption.getAttribute('data-kode');
 
-                    // Update label di step 2
                     if (kode === 'SKMT') {
                         document.getElementById('label_subjek').textContent = 'Almarhum/Almarhumah';
                         document.getElementById('nama').placeholder = 'Nama almarhum/almarhumah';
@@ -858,6 +953,11 @@
                 // Next button handlers
                 document.querySelectorAll('[data-next]').forEach(btn => {
                     btn.addEventListener('click', function() {
+                        // Validasi step saat ini sebelum lanjut
+                        if (!validateStep(currentStep)) {
+                            return; // Jangan lanjut jika validasi gagal
+                        }
+
                         if (currentStep === 1) {
                             const jenisSurat = document.getElementById('jenis_surat').value;
                             const errorStep1 = document.getElementById('error_step1');
@@ -929,6 +1029,8 @@
                                 const dynamicFields = document.getElementById('dynamic-fields');
                                 if (dynamicFields) {
                                     dynamicFields.innerHTML = config.fields;
+                                    // Attach listeners ke field baru
+                                    attachInputListeners();
                                 }
                             }
                         }
@@ -940,6 +1042,11 @@
 
                         if (currentStep < totalSteps) {
                             showStep(currentStep + 1);
+                            // Scroll ke atas setelah pindah step
+                            window.scrollTo({
+                                top: 0,
+                                behavior: 'smooth'
+                            });
                         }
                     });
                 });
@@ -949,6 +1056,10 @@
                     btn.addEventListener('click', function() {
                         if (currentStep > 1) {
                             showStep(currentStep - 1);
+                            window.scrollTo({
+                                top: 0,
+                                behavior: 'smooth'
+                            });
                         }
                     });
                 });
@@ -1158,8 +1269,10 @@
 
                 // Initialize
                 showStep(1);
+                attachInputListeners();
             });
 
+            // Form submission handler
             document.getElementById('formPengajuan').addEventListener('submit', function(e) {
                 e.preventDefault();
 
@@ -1186,11 +1299,9 @@
                     })
                     .then(response => response.json())
                     .then(data => {
-                        // Tutup loading
                         Swal.close();
 
                         if (data.success) {
-                            // Tampilkan alert sukses
                             Swal.fire({
                                 icon: 'success',
                                 title: 'Pengajuan Berhasil!',
@@ -1216,13 +1327,10 @@
                                     confirmButton: 'rounded-xl px-6 py-2.5'
                                 }
                             }).then(() => {
-                                // Redirect atau reset form
                                 if (data.redirect) {
                                     window.location.href = data.redirect;
                                 } else {
-                                    // Reset form dan kembali ke step 1
                                     document.getElementById('formPengajuan').reset();
-                                    showStep(1);
                                     window.scrollTo({
                                         top: 0,
                                         behavior: 'smooth'
@@ -1230,7 +1338,6 @@
                                 }
                             });
                         } else {
-                            // Tampilkan alert error
                             Swal.fire({
                                 icon: 'error',
                                 title: 'Pengajuan Gagal',
@@ -1246,10 +1353,7 @@
                         }
                     })
                     .catch(error => {
-                        // Tutup loading
                         Swal.close();
-
-                        // Tampilkan alert error
                         Swal.fire({
                             icon: 'error',
                             title: 'Terjadi Kesalahan',
@@ -1264,7 +1368,6 @@
                                 confirmButton: 'rounded-xl px-6 py-2.5'
                             }
                         });
-
                         console.error('Error:', error);
                     });
             });
