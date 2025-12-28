@@ -174,7 +174,11 @@ class SktmController extends Controller
                 $templateProcessor->setValue('keperluan', $keperluanInline);
             }
 
-            $anggotaKeluarga = json_decode($sktm->anggota_keluarga, true);
+            // PERBAIKAN: Cek apakah sudah array atau masih string JSON
+            $anggotaKeluarga = is_array($sktm->anggota_keluarga)
+                ? $sktm->anggota_keluarga
+                : json_decode($sktm->anggota_keluarga, true);
+
             $textRun = new TextRun();
             $fontStyle = ['name' => 'Arial', 'size' => 12];
 
