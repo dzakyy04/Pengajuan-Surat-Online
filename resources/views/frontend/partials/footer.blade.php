@@ -117,7 +117,7 @@
                     </li>
                     <li class="flex items-center">
                         <i class="fas fa-envelope text-emerald-300 mr-3"></i>
-                        <span class="text-emerald-100/80">sungairebo.desa@gmail.com</span>
+                        <span class="text-emerald-100/80">kantordesasungairebo@gmail.com</span>
                     </li>
                 </ul>
             </div>

@@ -29,7 +29,7 @@ class JenisSurat extends Seeder
             [
                 'kode' => 'SKD',
                 'nama' => 'Surat Keterangan Domisili',
-                'format_nomor' => '440/[NO]/SKD/SR/[TAHUN]',
+                'format_nomor' => '470/[NO]/SR/[TAHUN]',
                 'counter_terakhir' => 0,
                 'tahun_counter' => date('Y'),
                 'template_path' => 'null',
@@ -40,7 +40,7 @@ class JenisSurat extends Seeder
             [
                 'kode' => 'SKU',
                 'nama' => 'Surat Keterangan Usaha',
-                'format_nomor' => '440/[NO]/SKU/SR/[TAHUN]',
+                'format_nomor' => '500/[NO]/SR/[TAHUN]',
                 'counter_terakhir' => 0,
                 'tahun_counter' => date('Y'),
                 'template_path' => 'null',
@@ -51,7 +51,7 @@ class JenisSurat extends Seeder
             [
                 'kode' => 'SKP',
                 'nama' => 'Surat Keterangan Penghasilan',
-                'format_nomor' => '440/[NO]/SKP/SR/[TAHUN]',
+                'format_nomor' => '470/[NO]/SR/[TAHUN]',
                 'counter_terakhir' => 0,
                 'tahun_counter' => date('Y'),
                 'template_path' => 'null',
@@ -62,7 +62,7 @@ class JenisSurat extends Seeder
             [
                 'kode' => 'SKMT',
                 'nama' => 'Surat Keterangan Kematian',
-                'format_nomor' => '440/[NO]/SKMT/SR/[TAHUN]',
+                'format_nomor' => '472.12/[NO]/SR/[TAHUN]',
                 'counter_terakhir' => 0,
                 'tahun_counter' => date('Y'),
                 'template_path' => 'null',
