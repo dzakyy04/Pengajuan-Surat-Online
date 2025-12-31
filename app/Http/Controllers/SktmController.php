@@ -395,13 +395,21 @@ class SktmController extends Controller
         try {
             $pengajuan = PengajuanSurat::findOrFail($id);
 
-            if ($pengajuan->file_surat_ttd && Storage::disk('public')->exists('surat_ttd/' . $pengajuan->file_surat_ttd)) {
-                Storage::disk('public')->delete('surat_ttd/' . $pengajuan->file_surat_ttd);
+            $directory = 'arsip/sktm';
+
+            // Hapus file lama jika ada
+            if (
+                $pengajuan->file_surat_ttd &&
+                Storage::exists($directory . '/' . $pengajuan->file_surat_ttd)
+            ) {
+                Storage::delete($directory . '/' . $pengajuan->file_surat_ttd);
             }
 
             $file = $request->file('file_ttd');
             $filename = 'TTD_' . $pengajuan->nomor_pengajuan . '_' . $pengajuan->nama . '.' . $file->getClientOriginalExtension();
-            $file->storeAs('surat_ttd', $filename, 'public');
+
+            // Simpan ke storage/app/arsip/sktm
+            $file->storeAs($directory, $filename);
 
             $pengajuan->update([
                 'file_surat_ttd' => $filename,
