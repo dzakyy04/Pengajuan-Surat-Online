@@ -143,18 +143,15 @@ class SktmController extends Controller
             return redirect()
                 ->route('admin.sktm.detail', $id)
                 ->with('success', $message);
-
         } catch (\Illuminate\Validation\ValidationException $e) {
             DB::rollBack();
             return back()
                 ->withErrors($e->errors())
                 ->withInput()
                 ->with('error', 'Validasi gagal. Periksa kembali data yang diinput.');
-
         } catch (\Illuminate\Database\Eloquent\ModelNotFoundException $e) {
             DB::rollBack();
             return back()->with('error', 'Data SKTM tidak ditemukan.');
-
         } catch (\Exception $e) {
             DB::rollBack();
             Log::error('Error update SKTM: ' . $e->getMessage(), [
@@ -233,12 +230,12 @@ class SktmController extends Controller
                 $textRun->addTextBreak();
             }
         } else {
-            $textRun->addText('-', $fontStyle);
+            $textRun->addText('', $fontStyle);
         }
 
         $templateProcessor->setComplexBlock('anggota_keluarga_list', $textRun);
 
-        $outputPath = public_path('downloads/' . $pengajuan->file_surat_cetak);
+        $outputPath = storage_path('app/surat/sktm/' . $pengajuan->file_surat_cetak);
         $templateProcessor->saveAs($outputPath);
 
         $pengajuan->update([
@@ -319,16 +316,16 @@ class SktmController extends Controller
                     $textRun->addTextBreak();
                 }
             } else {
-                $textRun->addText('-', $fontStyle);
+                $textRun->addText('', $fontStyle);
             }
 
             $templateProcessor->setComplexBlock('anggota_keluarga_list', $textRun);
 
-            $filename = 'SKTM_' . $sktm->nik . '_' . time() . '.docx';
-            $outputPath = public_path('downloads/' . $filename);
+            $filename = 'SKTM_' . $sktm->nik . '_' . $sktm->nama . '.docx';
+            $outputPath = storage_path('app/surat/sktm/' . $filename);
 
-            if (!file_exists(public_path('downloads'))) {
-                mkdir(public_path('downloads'), 0755, true);
+            if (!file_exists(storage_path('app/surat/sktm'))) {
+                mkdir(storage_path('app/surat/sktm'), 0755, true);
             }
 
             $templateProcessor->saveAs($outputPath);
@@ -346,7 +343,6 @@ class SktmController extends Controller
 
             return redirect()->route('admin.sktm.success', $filename)
                 ->with('success', 'Surat berhasil disetujui dan dicetak!');
-
         } catch (\Exception $e) {
             DB::rollBack();
             Log::error('Error approve SKTM: ' . $e->getMessage());
@@ -399,13 +395,21 @@ class SktmController extends Controller
         try {
             $pengajuan = PengajuanSurat::findOrFail($id);
 
-            if ($pengajuan->file_surat_ttd && Storage::disk('public')->exists('surat_ttd/' . $pengajuan->file_surat_ttd)) {
-                Storage::disk('public')->delete('surat_ttd/' . $pengajuan->file_surat_ttd);
+            $directory = 'arsip/sktm';
+
+            // Hapus file lama jika ada
+            if (
+                $pengajuan->file_surat_ttd &&
+                Storage::exists($directory . '/' . $pengajuan->file_surat_ttd)
+            ) {
+                Storage::delete($directory . '/' . $pengajuan->file_surat_ttd);
             }
 
             $file = $request->file('file_ttd');
-            $filename = 'TTD_' . $pengajuan->nomor_pengajuan . '_' . time() . '.' . $file->getClientOriginalExtension();
-            $file->storeAs('surat_ttd', $filename, 'public');
+            $filename = 'TTD_' . $pengajuan->nomor_pengajuan . '_' . $pengajuan->nama . '.' . $file->getClientOriginalExtension();
+
+            // Simpan ke storage/app/arsip/sktm
+            $file->storeAs($directory, $filename);
 
             $pengajuan->update([
                 'file_surat_ttd' => $filename,
@@ -420,7 +424,7 @@ class SktmController extends Controller
 
     public function success($file)
     {
-        $filePath = public_path('downloads/' . $file);
+        $filePath = storage_path('app/surat/sktm/' . $file);
 
         if (!file_exists($filePath)) {
             abort(404, 'File tidak ditemukan');
@@ -431,7 +435,7 @@ class SktmController extends Controller
 
     public function download($file)
     {
-        $filePath = public_path('downloads/' . $file);
+        $filePath = storage_path('app/surat/sktm/' . $file);
 
         if (!file_exists($filePath)) {
             abort(404, 'File tidak ditemukan');
@@ -456,7 +460,6 @@ class SktmController extends Controller
             }
 
             return response()->download($filePath);
-
         } catch (\Exception $e) {
             return back()->with('error', 'Gagal mengunduh file: ' . $e->getMessage());
         }

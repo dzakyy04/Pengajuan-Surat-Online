@@ -343,7 +343,7 @@
                         </div>
                     </div> --}}
 
-                                        <div class="bg-white rounded-xl shadow-sm p-6 section-card animate-slide-in">
+                    <div class="bg-white rounded-xl shadow-sm p-6 section-card animate-slide-in">
                         <div class="mb-6">
                             <div class="flex items-center gap-3 mb-2">
                                 <div class="p-2 bg-gradient-to-r from-emerald-600 to-emerald-500 rounded-lg">

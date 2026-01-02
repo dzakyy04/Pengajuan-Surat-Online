@@ -88,7 +88,7 @@
                                 </label>
                                 <input type="email" name="email_pemohon" id="email_pemohon" required
                                     class="w-full rounded-xl border border-emerald-100 px-3 py-2.5 text-sm focus:ring-2 focus:ring-emerald-500/70 focus:border-emerald-500 outline-none"
-                                    placeholder="Contoh: masyarakat@gmail.com">
+                                    placeholder="Contoh: dedyarsadi@gmail.com">
                                 <p class="text-[11px] text-neutral-500">
                                     Email untuk menerima notifikasi status pengajuan surat
                                 </p>
@@ -107,7 +107,7 @@
                         <div class="pt-4 flex justify-end">
                             <button type="button" data-next
                                 class="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl bg-gradient-to-r from-emerald-600 via-emerald-500 to-teal-400 text-white text-xs md:text-sm font-semibold shadow-md shadow-emerald-900/30 hover:brightness-110 hover:-translate-y-0.5 transition">
-                                Lanjut ke Data Pribadi
+                                Lanjut
                                 <i class="fa-solid fa-arrow-right-long"></i>
                             </button>
                         </div>
@@ -142,21 +142,23 @@
                             </div>
 
                             {{-- Tempat & Tanggal Lahir --}}
-                            <div class="grid md:grid-cols-2 gap-4" id="field_ttl">
-                                <div class="space-y-1.5">
-                                    <label class="block text-sm font-semibold text-neutral-800">
-                                        Tempat Lahir <span class="text-red-500">*</span>
-                                    </label>
-                                    <input type="text" name="tempat_lahir" id="tempat_lahir"
-                                        class="w-full rounded-xl border border-emerald-100 px-3 py-2.5 text-sm focus:ring-2 focus:ring-emerald-500/70 focus:border-emerald-500 outline-none"
-                                        placeholder="Contoh: Sungai Rebo">
-                                </div>
-                                <div class="space-y-1.5">
-                                    <label class="block text-sm font-semibold text-neutral-800">
-                                        Tanggal Lahir <span class="text-red-500">*</span>
-                                    </label>
-                                    <input type="date" name="tanggal_lahir" id="tanggal_lahir"
-                                        class="w-full rounded-xl border border-emerald-100 px-3 py-2.5 text-sm focus:ring-2 focus:ring-emerald-500/70 focus:border-emerald-500 outline-none">
+                            <div id="field_ttl">
+                                <div class="grid md:grid-cols-2 gap-4">
+                                    <div class="space-y-1.5">
+                                        <label class="block text-sm font-semibold text-neutral-800">
+                                            Tempat Lahir <span class="text-red-500">*</span>
+                                        </label>
+                                        <input type="text" name="tempat_lahir" id="tempat_lahir"
+                                            class="w-full rounded-xl border border-emerald-100 px-3 py-2.5 text-sm focus:ring-2 focus:ring-emerald-500/70 focus:border-emerald-500 outline-none"
+                                            placeholder="Contoh: Sungai Rebo">
+                                    </div>
+                                    <div class="space-y-1.5">
+                                        <label class="block text-sm font-semibold text-neutral-800">
+                                            Tanggal Lahir <span class="text-red-500">*</span>
+                                        </label>
+                                        <input type="date" name="tanggal_lahir" id="tanggal_lahir"
+                                            class="w-full rounded-xl border border-emerald-100 px-3 py-2.5 text-sm focus:ring-2 focus:ring-emerald-500/70 focus:border-emerald-500 outline-none">
+                                    </div>
                                 </div>
                             </div>
 
@@ -222,7 +224,7 @@
                                 </label>
                                 <input type="text" name="pekerjaan" id="pekerjaan"
                                     class="w-full rounded-xl border border-emerald-100 px-3 py-2.5 text-sm focus:ring-2 focus:ring-emerald-500/70 focus:border-emerald-500 outline-none"
-                                    placeholder="Contoh: Buruh Harian Lepas, Ibu Rumah Tangga, Pelajar, dll.">
+                                    placeholder="Contoh: Mahasiswa, PNS, dll">
                             </div>
 
                             {{-- Alamat Lengkap --}}
@@ -272,7 +274,7 @@
                             </button>
                             <button type="button" data-next
                                 class="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl bg-gradient-to-r from-emerald-600 via-emerald-500 to-teal-400 text-white text-xs md:text-sm font-semibold shadow-md shadow-emerald-900/30 hover:brightness-110 hover:-translate-y-0.5 transition">
-                                Lanjut ke Detail & Dokumen
+                                Lanjut
                                 <i class="fa-solid fa-arrow-right-long"></i>
                             </button>
                         </div>
@@ -366,7 +368,7 @@
                             </button>
                             <button type="button" data-next
                                 class="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl bg-gradient-to-r from-emerald-600 via-emerald-500 to-teal-400 text-white text-xs md:text-sm font-semibold shadow-md shadow-emerald-900/30 hover:brightness-110 hover:-translate-y-0.5 transition">
-                                Lanjut ke Konfirmasi
+                                Lanjut
                                 <i class="fa-solid fa-arrow-right-long"></i>
                             </button>
                         </div>
@@ -820,7 +822,7 @@
                 // Fungsi untuk menghapus border error ketika user mulai mengisi
                 function attachInputListeners() {
                     const allInputs = document.querySelectorAll(
-                    'input[required], select[required], textarea[required]');
+                        'input[required], select[required], textarea[required]');
                     allInputs.forEach(input => {
                         input.addEventListener('input', function() {
                             this.classList.remove('border-red-500', 'border-2');

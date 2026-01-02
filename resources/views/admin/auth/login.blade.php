@@ -67,11 +67,6 @@
                         class="w-full bg-emerald-800 text-white py-3 rounded-lg font-medium hover:bg-emerald-900 transition duration-300 mb-2 cursor-pointer">
                         Masuk
                     </button>
-
-                    <p class="text-center text-sm text-gray-600 mt-2">
-                        Belum punya akun? <a href="#" class="text-gray-800 font-medium hover:underline">Daftar
-                            Sekarang</a>
-                    </p>
                 </form>
             </div>
         </div>

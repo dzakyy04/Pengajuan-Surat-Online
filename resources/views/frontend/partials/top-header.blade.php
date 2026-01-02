@@ -3,7 +3,7 @@
     <div class="flex items-center gap-4 md:gap-8">
         <span class="flex items-center gap-1.5">
             <i class="fa-solid fa-envelope text-emerald-300 text-sm"></i>
-            <span class="font-medium">sungairebo.desa@gmail.com</span>
+            <span class="font-medium">kantordesasungairebo@gmail.com</span>
         </span>
         <span class="hidden sm:flex items-center gap-1.5">
             <i class="fa-solid fa-phone text-emerald-300 text-sm"></i>
