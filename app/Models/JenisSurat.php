@@ -9,4 +9,11 @@ class JenisSurat extends Model
 {
     use HasFactory;
     protected $table = 'jenis_surat';
+
+    protected $guarded = ['id'];
+
+    public function pengajuanSurat()
+    {
+        return $this->hasMany(PengajuanSurat::class, 'jenis_surat_id');
+    }
 }

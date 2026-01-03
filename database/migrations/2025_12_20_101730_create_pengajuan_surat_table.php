@@ -4,8 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-return new class extends Migration
-{
+return new class extends Migration {
     /**
      * Run the migrations.
      */
@@ -19,7 +18,13 @@ return new class extends Migration
             $table->string('nama_pemohon', 100);
             $table->string('email_pemohon', 100);
             $table->string('no_hp_pemohon', 20);
-            $table->enum('status', ['pending', 'diproses', 'siap_ttd_kades', 'siap_diambil', 'selesai', 'ditolak'])->default('pending');
+            $table->enum('status', [
+                'submitted',
+                'verified',
+                'approved',
+                'notified',
+                'rejected'
+            ])->default('submitted');
             $table->foreignId('admin_id')->nullable()->constrained('admin')->onDelete('set null');
             $table->text('catatan_admin')->nullable();
             $table->string('dokumen_ktp')->nullable();

@@ -109,11 +109,13 @@
                                     d="M3 4a1 1 0 011-1h16a1 1 0 011 1v2.586a1 1 0 01-.293.707l-6.414 6.414a1 1 0 00-.293.707V17l-4 4v-6.586a1 1 0 00-.293-.707L3.293 7.293A1 1 0 013 6.586V4z" />
                             </svg>
                             <span class="text-sm font-medium text-gray-700">
-                                @if (request()->get('status') == 'pending')
-                                    Menunggu
-                                @elseif(request()->get('status') == 'diproses')
-                                    Diproses
-                                @elseif(request()->get('status') == 'ditolak')
+                                @if (request()->get('status') == 'submitted')
+                                    Baru Diajukan
+                                @elseif(request()->get('status') == 'verified')
+                                    Diverifikasi
+                                @elseif(request()->get('status') == 'approved')
+                                    Disetujui
+                                @elseif(request()->get('status') == 'rejected')
                                     Ditolak
                                 @else
                                     Semua Status
@@ -137,30 +139,37 @@
                                     </svg>
                                     Semua Status
                                 </a>
-                                <a href="{{ route('admin.skd.index', ['status' => 'pending']) }}"
-                                    class="flex items-center px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 transition {{ request()->get('status') == 'pending' ? 'bg-yellow-50 text-yellow-700 font-semibold' : '' }}">
+                                <a href="{{ route('admin.skd.index', ['status' => 'submitted']) }}"
+                                    class="flex items-center px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 transition {{ request()->get('status') == 'submitted' ? 'bg-yellow-50 text-yellow-700 font-semibold' : '' }}">
                                     <svg class="w-4 h-4 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                                             d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
                                     </svg>
-                                    Menunggu
+                                    Baru Diajukan
                                 </a>
-                                <a href="{{ route('admin.skd.index', ['status' => 'diproses']) }}"
-                                    class="flex items-center px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 transition {{ request()->get('status') == 'diproses' ? 'bg-emerald-50 text-emerald-700 font-semibold' : '' }}">
+                                <a href="{{ route('admin.skd.index', ['status' => 'verified']) }}"
+                                    class="flex items-center px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 transition {{ request()->get('status') == 'verified' ? 'bg-emerald-50 text-emerald-700 font-semibold' : '' }}">
                                     <svg class="w-4 h-4 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                                             d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
                                     </svg>
-                                    Diproses
+                                    Diverifikasi
                                 </a>
-                                <a href="{{ route('admin.skd.index', ['status' => 'ditolak']) }}"
-                                    class="flex items-center px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 transition {{ request()->get('status') == 'ditolak' ? 'bg-red-50 text-red-700 font-semibold' : '' }}">
+                                <a href="{{ route('admin.skd.index', ['status' => 'approved']) }}"
+                                    class="flex items-center px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 transition {{ request()->get('status') == 'approved' ? 'bg-purple-50 text-purple-700 font-semibold' : '' }}">
                                     <svg class="w-4 h-4 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                            d="M10 14l2-2m0 0l2-2m-2 2l-2-2m2 2l2 2m7-2a9 9 0 11-18 0 9 9 0 0118 0z" />
+                                            d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
                                     </svg>
-                                    Ditolak
-                                </a>
+                                    Disetujui
+                                    <a href="{{ route('admin.skd.index', ['status' => 'rejected']) }}"
+                                        class="flex items-center px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 transition {{ request()->get('status') == 'rejected' ? 'bg-red-50 text-red-700 font-semibold' : '' }}">
+                                        <svg class="w-4 h-4 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                                d="M10 14l2-2m0 0l2-2m-2 2l-2-2m2 2l2 2m7-2a9 9 0 11-18 0 9 9 0 0118 0z" />
+                                        </svg>
+                                        Ditolak
+                                    </a>
                             </div>
                         </div>
                     </div>
@@ -204,7 +213,7 @@
         @endif
 
         <!-- Statistics Cards -->
-        <div class="grid grid-cols-1 md:grid-cols-4 gap-3 mb-6">
+        <div class="grid grid-cols-1 md:grid-cols-5 gap-3 mb-6">
             <!-- Total Pengajuan -->
             <div
                 class="border border-emerald-200 bg-gradient-to-bl from-emerald-50 to-emerald-200 rounded-2xl shadow-sm p-6 text-emerald-600 card-stats">
@@ -227,8 +236,8 @@
                 class="border border-orange-200 bg-gradient-to-bl from-orange-50 to-orange-200 rounded-2xl shadow-xs p-6 text-orange-600 card-stats">
                 <div class="flex items-center justify-between">
                     <div>
-                        <p class="text-sm font-semibold">Menunggu</p>
-                        <h3 class="text-3xl font-bold mt-2">{{ $pendingSkd }}</h3>
+                        <p class="text-sm font-semibold">Baru Diajukan</p>
+                        <h3 class="text-3xl font-bold mt-2">{{ $submittedSkd }}</h3>
                     </div>
                     <div class="bg-orange-200 bg-opacity-30 rounded-full p-3">
                         <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -244,10 +253,27 @@
                 class="border border-blue-200 bg-gradient-to-bl from-blue-50 to-blue-200 rounded-2xl shadow-xs p-6 text-blue-600 card-stats">
                 <div class="flex items-center justify-between">
                     <div>
-                        <p class="text-sm font-semibold">Diproses</p>
-                        <h3 class="text-3xl font-bold mt-2">{{ $diprosesSkd }}</h3>
+                        <p class="text-sm font-semibold">Diverifikasi</p>
+                        <h3 class="text-3xl font-bold mt-2">{{ $verifiedSkd }}</h3>
                     </div>
                     <div class="bg-blue-200 bg-opacity-30 rounded-full p-3">
+                        <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+                        </svg>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Disetujui -->
+            <div
+                class="border border-green-200 bg-gradient-to-bl from-green-50 to-green-200 rounded-2xl shadow-xs p-6 text-green-600 card-stats">
+                <div class="flex items-center justify-between">
+                    <div>
+                        <p class="text-sm font-semibold">Disetujui</p>
+                        <h3 class="text-3xl font-bold mt-2">{{ $approvedSkd }}</h3>
+                    </div>
+                    <div class="bg-green-200 bg-opacity-30 rounded-full p-3">
                         <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                                 d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
@@ -262,7 +288,7 @@
                 <div class="flex items-center justify-between">
                     <div>
                         <p class="text-sm font-semibold">Ditolak</p>
-                        <h3 class="text-3xl font-bold mt-2">{{ $ditolakSkd }}</h3>
+                        <h3 class="text-3xl font-bold mt-2">{{ $rejectedSkd }}</h3>
                     </div>
                     <div class="bg-red-200 bg-opacity-30 rounded-full p-3">
                         <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -395,11 +421,23 @@
                                                 </svg>
                                                 <span class="font-semibold">Lihat Detail</span>
                                             </a>
-
-                                            @if ($pengajuan->status == 'diproses')
+                                            @if ($pengajuan->status === 'verified')
                                                 <div class="dropdown-divider"></div>
 
-                                                @if ($pengajuan->file_surat_ttd)
+                                                <button onclick="openUploadModal({{ $pengajuan->id }})"
+                                                    class="dropdown-item w-full text-left">
+                                                    <svg class="w-4 h-4 text-blue-600" fill="none"
+                                                        stroke="currentColor" viewBox="0 0 24 24">
+                                                        <path stroke-linecap="round" stroke-linejoin="round"
+                                                            stroke-width="2"
+                                                            d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12" />
+                                                    </svg>
+                                                    <span class="font-semibold">Upload Surat TTD</span>
+                                                </button>
+                                            @elseif ($pengajuan->status === 'approved')
+                                                <div class="dropdown-divider"></div>
+
+                                                @if (!empty($pengajuan->file_surat_ttd))
                                                     <a href="{{ route('admin.skd.download-ttd', $pengajuan->id) }}"
                                                         class="dropdown-item">
                                                         <svg class="w-4 h-4 text-green-600" fill="none"
@@ -410,7 +448,6 @@
                                                         </svg>
                                                         <span class="font-semibold">Download File TTD</span>
                                                     </a>
-
                                                     <button onclick="openUploadModal({{ $pengajuan->id }})"
                                                         class="dropdown-item w-full text-left">
                                                         <svg class="w-4 h-4 text-orange-600" fill="none"
@@ -421,6 +458,17 @@
                                                         </svg>
                                                         <span class="font-semibold">Re-upload File TTD</span>
                                                     </button>
+                                                    <button onclick=""
+                                                        class="dropdown-item w-full text-left">
+                                                        <svg class="w-4 h-4 text-red-600" fill="none"
+                                                            stroke="currentColor" viewBox="0 0 24 24">
+                                                            <path stroke-linecap="round" stroke-linejoin="round"
+                                                                stroke-width="2"
+                                                                d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
+                                                        </svg>
+                                                        <span class="font-semibold">Kirim Email</span>
+                                                    </button>
+
                                                 @else
                                                     <button onclick="openUploadModal({{ $pengajuan->id }})"
                                                         class="dropdown-item w-full text-left">
@@ -435,6 +483,7 @@
                                                 @endif
                                             @endif
                                         </div>
+
                                     </div>
                                 </td>
                             </tr>
@@ -472,11 +521,13 @@
                                             @elseif(request()->get('status'))
                                                 Tidak ada pengajuan dengan status
                                                 <span class="font-semibold text-gray-700">
-                                                    @if (request()->get('status') == 'pending')
-                                                        Menunggu
-                                                    @elseif(request()->get('status') == 'diproses')
-                                                        Diproses
-                                                    @elseif(request()->get('status') == 'ditolak')
+                                                    @if (request()->get('status') == 'submitted')
+                                                        Baru Diajukan
+                                                    @elseif(request()->get('status') == 'verified')
+                                                        Diverifikasi
+                                                    @elseif(request()->get('status') == 'approved')
+                                                        Disetujui
+                                                    @elseif(request()->get('status') == 'rejected')
                                                         Ditolak
                                                     @endif
                                                 </span>
@@ -534,7 +585,7 @@
                 </table>
             </div>
             @if ($pengajuanList->hasPages())
-                <div class="mt-6">
+                <div class="py-1 px-4">
                     {{ $pengajuanList->links('pagination::tailwind') }}
                 </div>
             @endif

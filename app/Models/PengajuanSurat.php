@@ -32,8 +32,19 @@ class PengajuanSurat extends Model
         return $this->hasOne(SuratDomisili::class, 'pengajuan_surat_id');
     }
 
-        public function suratKeteranganUsaha()
+    public function suratKeteranganUsaha()
     {
         return $this->hasOne(SuratUsaha::class, 'pengajuan_surat_id');
+    }
+
+
+    public function suratKematian()
+    {
+        return $this->hasOne(SuratKematian::class, 'pengajuan_surat_id');
+    }
+
+        public function suratPenghasilan()
+    {
+        return $this->hasOne(SuratPenghasilan::class, 'pengajuan_surat_id');
     }
 }

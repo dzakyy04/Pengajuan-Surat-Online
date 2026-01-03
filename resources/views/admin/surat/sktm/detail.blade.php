@@ -539,8 +539,7 @@
                     </div>
                 </div>
 
-                <!-- FITUR BARU: File Surat & Print -->
-                @if ($pengajuan->status == 'diproses' && $pengajuan->file_surat_cetak)
+                @if ($pengajuan->status == 'verified' && $pengajuan->file_surat_cetak)
                     <div
                         class="bg-gradient-to-br from-white to-gray-50 rounded-2xl shadow-lg hover:shadow-xl transition-all duration-300 p-6 section-card border border-gray-100">
                         <h3
@@ -610,11 +609,11 @@
                 @endif
 
                 <!-- Action Buttons -->
-                @if ($pengajuan->status == 'pending')
+                @if ($pengajuan->status == 'submitted')
                     <div class="">
 
                         <button type="button"
-                            onclick="document.getElementById('modalApprove').classList.remove('hidden')"
+                            onclick="document.getElementById('modalVerify').classList.remove('hidden')"
                             class="group w-full inline-flex items-center justify-center px-4 py-3 bg-gradient-to-r from-emerald-600 to-emerald-500 hover:from-emerald-700 hover:to-emerald-600 text-white rounded-full font-semibold text-sm transition-all duration-300 shadow-lg hover:shadow-xl hover:scale-[1.02] active:scale-[0.98] relative overflow-hidden mb-1.5">
 
                             <div
@@ -624,7 +623,7 @@
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                                     d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
                             </svg>
-                            <span class="ml-1.5">Setuju</span>
+                            <span class="ml-1.5">Verifikasi</span>
                         </button>
 
                         <button type="button" onclick="document.getElementById('modalReject').classList.remove('hidden')"
@@ -645,8 +644,8 @@
         </div>
     </div>
 
-    <!-- Modal Approve -->
-    <div id="modalApprove"
+    <!-- Modal Verifikasi -->
+    <div id="modalVerify"
         class="hidden fixed inset-0 z-50 flex items-center justify-center backdrop-brightness-50 backdrop-blur-sm">
 
         <div class="w-full max-w-md mx-auto bg-white rounded-3xl shadow-xs overflow-hidden animate-slide-in">
@@ -659,7 +658,7 @@
                     </svg>
                 </div>
                 <div>
-                    <h3 class="text-base font-bold">Setujui Pengajuan</h3>
+                    <h3 class="text-base font-bold">Verifikasi Pengajuan</h3>
                     <p class="text-xs text-emerald-100">Pengajuan akan diproses dan surat dibuat</p>
                 </div>
             </div>
@@ -672,12 +671,12 @@
                     Pastikan seluruh data sudah benar.
                 </p>
 
-                <form action="{{ route('admin.sktm.approve', $pengajuan->id) }}" method="POST">
+                <form action="{{ route('admin.sktm.verify', $pengajuan->id) }}" method="POST">
                     @csrf
 
                     <!-- Actions -->
                     <div class="flex gap-3">
-                        <button type="button" onclick="document.getElementById('modalApprove').classList.add('hidden')"
+                        <button type="button" onclick="document.getElementById('modalVerify').classList.add('hidden')"
                             class="flex-1 px-4 py-2.5 rounded-xl bg-gray-200 hover:bg-gray-300 text-gray-800 font-semibold transition text-sm">
                             Batal
                         </button>

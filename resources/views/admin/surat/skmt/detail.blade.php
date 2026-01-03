@@ -1,18 +1,13 @@
 @extends('admin.layout.app')
 
-@section('title', 'Detail Pengajuan SKD')
+@section('title', 'Detail Pengajuan Surat Keterangan Kematian')
 
 @push('styles')
     <style>
-        .ck-editor__editable {
-            min-height: 150px;
-        }
-
         .section-card {
             transition: all 0.3s ease;
             border-left: 4px solid transparent;
             border-left-color: #15a776;
-
         }
 
         .section-card:hover {
@@ -60,10 +55,7 @@
     </style>
 @endpush
 
-
-
 @section('content')
-
     @if ($errors->any())
         <div class="alert alert-danger">
             <ul>
@@ -73,7 +65,9 @@
             </ul>
         </div>
     @endif
+
     <div class="container mx-auto py-8 px-2 max-w-full">
+        <!-- Header -->
         <div class="mb-8 animate-slide-in">
             <div class="flex flex-col md:flex-row md:items-center md:justify-between gap-6">
                 <div class="flex items-start gap-4">
@@ -84,8 +78,8 @@
                         </svg>
                     </div>
                     <div>
-                        <h1 class="text-3xl font-extrabold text-gray-900 mb-2 tracking-tight">Detail Pengajuan SKD</h1>
-                        <p class="text-sm text-gray-500 mb-3">Kelola dan verifikasi data pengajuan surat keterangan</p>
+                        <h1 class="text-3xl font-extrabold text-gray-900 mb-2 tracking-tight">Detail Pengajuan SKMT</h1>
+                        <p class="text-sm text-gray-500 mb-3">Kelola dan verifikasi data pengajuan surat kematian</p>
                         <span
                             class="inline-flex items-center px-5 py-2.5 rounded-full text-xs bg-gradient-to-r from-emerald-600 to-emerald-500 text-white font-bold shadow-lg hover:shadow-xl transition-all duration-300">
                             <svg class="w-4 h-4 mr-2" fill="currentColor" viewBox="0 0 20 20">
@@ -97,7 +91,7 @@
                         </span>
                     </div>
                 </div>
-                <a href="{{ route('admin.skd.index') }}"
+                <a href="{{ route('admin.skmt.index') }}"
                     class="inline-flex items-center px-4 py-2 bg-gradient-to-r from-emerald-600 to-emerald-500 hover:from-emerald-700 hover:to-emerald-600 text-white rounded-full transition-all duration-200 shadow-sm hover:shadow-xl font-semibold text-xs">
                     <svg class="w-3 h-3 mr-2 font-semibold" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
@@ -141,19 +135,16 @@
             </div>
         @endif
 
-        <!-- UNIFIED FORM -->
-
-
         <div class="grid grid-cols-1 lg:grid-cols-4 gap-6">
             <!-- Main Content -->
-            <div class="lg:col-span-3 ">
-                <form action="{{ route('admin.skd.update', ['id' => $pengajuan->id]) }}" method="POST" id="formUnified"
+            <div class="lg:col-span-3">
+                <form action="{{ route('admin.skmt.update', ['id' => $pengajuan->id]) }}" method="POST" id="formUnified"
                     class="space-y-4">
                     @csrf
                     @method('PUT')
 
-                    <!-- Data Pemohon -->
-                    <div class="bg-white rounded-xl shadow-xs p-6 section-card  animate-slide-in">
+                    <!-- Data Almarhum/Almarhumah -->
+                    <div class="bg-white rounded-xl shadow-xs p-6 section-card animate-slide-in">
                         <div class="mb-6">
                             <div class="flex items-center gap-3 mb-2">
                                 <div class="p-2 bg-gradient-to-r from-emerald-600 to-emerald-500 rounded-full">
@@ -164,51 +155,19 @@
                                     </svg>
                                 </div>
                                 <div class="flex flex-col">
-                                    <h2 class="text-lg font-bold text-gray-800">Data Pemohon</h2>
-                                    <p class="text-sm text-gray-500">Informasi identitas dan data diri pemohon</p>
+                                    <h2 class="text-lg font-bold text-gray-800">Data Almarhum/Almarhumah</h2>
+                                    <p class="text-sm text-gray-500">Informasi orang yang meninggal</p>
                                 </div>
-
                             </div>
                         </div>
 
                         <div class="grid grid-cols-2 md:grid-cols-3 gap-5">
                             <div class="input-group">
                                 <label class="block text-sm font-semibold text-gray-700 mb-2">Nama Lengkap *</label>
-                                <input type="text" name="nama" value="{{ old('nama', $skd->nama) }}" required
+                                <input type="text" name="nama_almarhum"
+                                    value="{{ old('nama_almarhum', $skmt->nama_almarhum) }}" required
                                     class="w-full px-4 py-3 border-2 border-gray-200 rounded-lg focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 transition-all">
-                                @error('nama')
-                                    <p class="text-red-500 text-xs mt-1 font-medium">{{ $message }}</p>
-                                @enderror
-                            </div>
-
-                            <div class="input-group">
-                                <label class="block text-sm font-semibold text-gray-700 mb-2">NIK *</label>
-                                <input type="text" name="nik" value="{{ old('nik', $skd->nik) }}" required
-                                    maxlength="16"
-                                    class="w-full px-4 py-3 border-2 border-gray-200 rounded-lg focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 transition-all">
-                                @error('nik')
-                                    <p class="text-red-500 text-xs mt-1 font-medium">{{ $message }}</p>
-                                @enderror
-                            </div>
-
-                            <div class="input-group">
-                                <label class="block text-sm font-semibold text-gray-700 mb-2">Tempat Lahir *</label>
-                                <input type="text" name="tempat_lahir"
-                                    value="{{ old('tempat_lahir', $skd->tempat_lahir) }}" required
-                                    class="w-full px-4 py-3 border-2 border-gray-200 rounded-lg focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 transition-all">
-                                @error('tempat_lahir')
-                                    <p class="text-red-500 text-xs mt-1 font-medium">{{ $message }}</p>
-                                @enderror
-                            </div>
-
-                            <div class="input-group">
-                                <label class="block text-sm font-semibold text-gray-700 mb-2">Tanggal Lahir *</label>
-                                <input type="date" name="tanggal_lahir"
-                                    value="{{ old('tanggal_lahir', optional($skd->tanggal_lahir)->format('Y-m-d')) }}"
-                                    required
-                                    class="w-full px-4 py-3 border-2 border-gray-200 rounded-lg
- focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 transition-all">
-                                @error('tanggal_lahir')
+                                @error('nama_almarhum')
                                     <p class="text-red-500 text-xs mt-1 font-medium">{{ $message }}</p>
                                 @enderror
                             </div>
@@ -217,72 +176,49 @@
                                 <label class="block text-sm font-semibold text-gray-700 mb-2">Jenis Kelamin *</label>
                                 <select name="jenis_kelamin" required
                                     class="w-full px-4 py-3 border-2 border-gray-200 rounded-lg focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 transition-all">
-                                    <option value="Laki-Laki" {{ $skd->jenis_kelamin == 'Laki-Laki' ? 'selected' : '' }}>
+                                    <option value="Laki-Laki" {{ $skmt->jenis_kelamin == 'Laki-Laki' ? 'selected' : '' }}>
                                         Laki-Laki</option>
-                                    <option value="Perempuan" {{ $skd->jenis_kelamin == 'Perempuan' ? 'selected' : '' }}>
+                                    <option value="Perempuan" {{ $skmt->jenis_kelamin == 'Perempuan' ? 'selected' : '' }}>
                                         Perempuan</option>
                                 </select>
                             </div>
 
                             <div class="input-group">
-                                <label class="block text-sm font-semibold text-gray-700 mb-2">Agama *</label>
-                                <select name="agama" required
-                                    class="w-full px-4 py-3 border-2 border-gray-200 rounded-lg focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 transition-all">
-                                    @foreach (['Islam', 'Kristen', 'Katolik', 'Hindu', 'Buddha', 'Konghucu'] as $agama)
-                                        <option value="{{ $agama }}"
-                                            {{ $skd->agama == $agama ? 'selected' : '' }}>{{ $agama }}</option>
-                                    @endforeach
-                                </select>
-                            </div>
-
-                            <div class="input-group">
-                                <label class="block text-sm font-semibold text-gray-700 mb-2">Status Perkawinan *</label>
-                                <select name="status_perkawinan" required
-                                    class="w-full px-4 py-3 border-2 border-gray-200 rounded-lg focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 transition-all">
-                                    @foreach (['Belum Kawin', 'Kawin', 'Cerai Hidup', 'Cerai Mati'] as $status)
-                                        <option value="{{ $status }}"
-                                            {{ $skd->status_perkawinan == $status ? 'selected' : '' }}>
-                                            {{ $status }}</option>
-                                    @endforeach
-                                </select>
-                            </div>
-
-                            <div class="input-group">
-                                <label class="block text-sm font-semibold text-gray-700 mb-2">Pekerjaan *</label>
-                                <input type="text" name="pekerjaan" value="{{ old('pekerjaan', $skd->pekerjaan) }}"
-                                    required
+                                <label class="block text-sm font-semibold text-gray-700 mb-2">Umur *</label>
+                                <input type="number" name="umur" value="{{ old('umur', $skmt->umur) }}" required
+                                    min="0"
                                     class="w-full px-4 py-3 border-2 border-gray-200 rounded-lg focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 transition-all">
                             </div>
 
                             <div class="input-group">
                                 <label class="block text-sm font-semibold text-gray-700 mb-2">RT *</label>
-                                <input type="text" name="rt" value="{{ old('rt', $skd->rt) }}" required
-                                    maxlength="3"
+                                <input type="text" name="rt" value="{{ old('rt', $skmt->rt) }}" required
+                                    maxlength="5"
                                     class="w-full px-4 py-3 border-2 border-gray-200 rounded-lg focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 transition-all">
                             </div>
 
                             <div class="input-group">
                                 <label class="block text-sm font-semibold text-gray-700 mb-2">RW *</label>
-                                <input type="text" name="rw" value="{{ old('rw', $skd->rw) }}" required
-                                    maxlength="3"
+                                <input type="text" name="rw" value="{{ old('rw', $skmt->rw) }}" required
+                                    maxlength="5"
                                     class="w-full px-4 py-3 border-2 border-gray-200 rounded-lg focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 transition-all">
                             </div>
 
                             <div class="input-group">
                                 <label class="block text-sm font-semibold text-gray-700 mb-2">Dusun</label>
-                                <input type="text" name="dusun" value="{{ old('dusun', $skd->dusun) }}"
+                                <input type="text" name="dusun" value="{{ old('dusun', $skmt->dusun) }}"
                                     class="w-full px-4 py-3 border-2 border-gray-200 rounded-lg focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 transition-all">
                             </div>
 
-                            <div class="md:col-span-2 input-group">
+                            <div class="md:col-span-3 input-group">
                                 <label class="block text-sm font-semibold text-gray-700 mb-2">Alamat Lengkap *</label>
                                 <textarea name="alamat" rows="3" required
-                                    class="w-full px-4 py-3 border-2 border-gray-200 rounded-lg focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 transition-all">{{ old('alamat', $skd->alamat) }}</textarea>
+                                    class="w-full px-4 py-3 border-2 border-gray-200 rounded-lg focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 transition-all">{{ old('alamat', $skmt->alamat) }}</textarea>
                             </div>
                         </div>
                     </div>
 
-                    <!-- Surat RT -->
+                    <!-- Data Kematian -->
                     <div class="bg-white rounded-xl shadow-sm p-6 section-card animate-slide-in">
                         <div class="mb-6">
                             <div class="flex items-center gap-3 mb-2">
@@ -290,60 +226,169 @@
                                     <svg class="w-5 h-5 text-white" fill="none" stroke="currentColor"
                                         viewBox="0 0 24 24">
                                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                            d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+                                            d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
                                     </svg>
                                 </div>
                                 <div class="flex flex-col">
-                                    <h2 class="text-lg font-bold text-gray-800">Surat Pengantar RT</h2>
-                                    <p class="text-sm text-gray-500">Informasi surat pengantar dari RT setempat</p>
+                                    <h2 class="text-lg font-bold text-gray-800">Data Kematian</h2>
+                                    <p class="text-sm text-gray-500">Informasi waktu dan sebab kematian</p>
                                 </div>
                             </div>
-
                         </div>
 
-                        <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
+                        <div class="grid grid-cols-1 md:grid-cols-3 gap-5">
                             <div class="input-group">
-                                <label class="block text-sm font-semibold text-gray-700 mb-2">Nomor Surat RT *</label>
-                                <input type="text" name="no_surat_rt"
-                                    value="{{ old('no_surat_rt', $skd->no_surat_rt) }}" required
-                                    class="w-full px-4 py-3 border-2 border-gray-200 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-green-500 transition-all">
+                                <label class="block text-sm font-semibold text-gray-700 mb-2">Tanggal Meninggal *</label>
+                                <input type="date" name="tanggal_meninggal"
+                                    value="{{ old('tanggal_meninggal', optional($skmt->tanggal_meninggal)->format('Y-m-d')) }}"
+                                    required
+                                    class="w-full px-4 py-3 border-2 border-gray-200 rounded-lg focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 transition-all">
                             </div>
 
                             <div class="input-group">
-                                <label class="block text-sm font-semibold text-gray-700 mb-2">Tanggal Surat RT *</label>
-                                <input type="date" name="tanggal_surat_rt"
-                                    value="{{ old('tanggal_surat_rt', optional($skd->tanggal_surat_rt)->format('Y-m-d')) }}"
+                                <label class="block text-sm font-semibold text-gray-700 mb-2">Jam Meninggal *</label>
+                                <input type="time" name="jam_meninggal"
+                                    value="{{ old('jam_meninggal', date('H:i', strtotime($skmt->jam_meninggal))) }}"
                                     required
-                                    class="w-full px-4 py-3 border-2 border-gray-200 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-green-500 transition-all">
+                                    class="w-full px-4 py-3 border-2 border-gray-200 rounded-lg focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 transition-all">
+                            </div>
+
+                            <div class="input-group">
+                                <label class="block text-sm font-semibold text-gray-700 mb-2">Hari Meninggal *</label>
+                                <input type="text" name="hari_meninggal"
+                                    value="{{ old('hari_meninggal', $skmt->hari_meninggal) }}" required
+                                    class="w-full px-4 py-3 border-2 border-gray-200 rounded-lg focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 transition-all"
+                                    placeholder="Contoh: Senin">
+                            </div>
+
+                            <div class="md:col-span-2 input-group">
+                                <label class="block text-sm font-semibold text-gray-700 mb-2">Tempat Meninggal *</label>
+                                <input type="text" name="tempat_meninggal"
+                                    value="{{ old('tempat_meninggal', $skmt->tempat_meninggal) }}" required
+                                    class="w-full px-4 py-3 border-2 border-gray-200 rounded-lg focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 transition-all">
+                            </div>
+
+                            <div class="input-group">
+                                <label class="block text-sm font-semibold text-gray-700 mb-2">Sebab Meninggal *</label>
+                                <input type="text" name="sebab_meninggal"
+                                    value="{{ old('sebab_meninggal', $skmt->sebab_meninggal) }}" required
+                                    class="w-full px-4 py-3 border-2 border-gray-200 rounded-lg focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 transition-all">
                             </div>
                         </div>
                     </div>
 
-                    <!-- Keperluan -->
-                    <div class="bg-white rounded-xl shadow-sm p-6 section-card keperluan animate-slide-in">
+                    <!-- Data Pelapor -->
+                    <div class="bg-white rounded-xl shadow-sm p-6 section-card animate-slide-in">
                         <div class="mb-6">
                             <div class="flex items-center gap-3 mb-2">
                                 <div class="p-2 bg-gradient-to-r from-emerald-600 to-emerald-500 rounded-lg">
                                     <svg class="w-5 h-5 text-white" fill="none" stroke="currentColor"
                                         viewBox="0 0 24 24">
                                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                            d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
+                                            d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
                                     </svg>
                                 </div>
                                 <div class="flex flex-col">
-                                    <h2 class="text-lg font-bold text-gray-800">Keperluan</h2>
-                                    <p class="text-sm text-gray-500">Tujuan dan keperluan pembuatan SKD</p>
+                                    <h2 class="text-lg font-bold text-gray-800">Data Pelapor</h2>
+                                    <p class="text-sm text-gray-500">Informasi orang yang melaporkan kematian</p>
                                 </div>
                             </div>
                         </div>
 
-                        <div class="input-group">
-                            <textarea name="keperluan" id="editor">{{ $skd->keperluan }}</textarea>
+                        <div class="grid grid-cols-2 md:grid-cols-3 gap-5">
+                            <div class="md:col-span-2 input-group">
+                                <label class="block text-sm font-semibold text-gray-700 mb-2">Nama Lengkap *</label>
+                                <input type="text" name="nama_pelapor"
+                                    value="{{ old('nama_pelapor', $skmt->nama_pelapor) }}" required
+                                    class="w-full px-4 py-3 border-2 border-gray-200 rounded-lg focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 transition-all">
+                            </div>
+
+                            <div class="input-group">
+                                <label class="block text-sm font-semibold text-gray-700 mb-2">NIK *</label>
+                                <input type="text" name="nik_pelapor"
+                                    value="{{ old('nik_pelapor', $skmt->nik_pelapor) }}" required maxlength="16"
+                                    class="w-full px-4 py-3 border-2 border-gray-200 rounded-lg focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 transition-all">
+                            </div>
+
+                            <div class="input-group">
+                                <label class="block text-sm font-semibold text-gray-700 mb-2">Jenis Kelamin *</label>
+                                <select name="jenis_kelamin_pelapor" required
+                                    class="w-full px-4 py-3 border-2 border-gray-200 rounded-lg focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 transition-all">
+                                    <option value="Laki-Laki"
+                                        {{ $skmt->jenis_kelamin_pelapor == 'Laki-Laki' ? 'selected' : '' }}>Laki-Laki
+                                    </option>
+                                    <option value="Perempuan"
+                                        {{ $skmt->jenis_kelamin_pelapor == 'Perempuan' ? 'selected' : '' }}>Perempuan
+                                    </option>
+                                </select>
+                            </div>
+
+                            <div class="input-group">
+                                <label class="block text-sm font-semibold text-gray-700 mb-2">Tempat Lahir *</label>
+                                <input type="text" name="tempat_lahir_pelapor"
+                                    value="{{ old('tempat_lahir_pelapor', $skmt->tempat_lahir_pelapor) }}" required
+                                    class="w-full px-4 py-3 border-2 border-gray-200 rounded-lg focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 transition-all">
+                            </div>
+
+                            <div class="input-group">
+                                <label class="block text-sm font-semibold text-gray-700 mb-2">Tanggal Lahir *</label>
+                                <input type="date" name="tanggal_lahir_pelapor"
+                                    value="{{ old('tanggal_lahir_pelapor', optional($skmt->tanggal_lahir_pelapor)->format('Y-m-d')) }}"
+                                    required
+                                    class="w-full px-4 py-3 border-2 border-gray-200 rounded-lg focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 transition-all">
+                            </div>
+
+                            <div class="input-group">
+                                <label class="block text-sm font-semibold text-gray-700 mb-2">Agama *</label>
+                                <select name="agama_pelapor" required
+                                    class="w-full px-4 py-3 border-2 border-gray-200 rounded-lg focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 transition-all">
+                                    @foreach (['Islam', 'Kristen', 'Katolik', 'Hindu', 'Buddha', 'Konghucu'] as $agama)
+                                        <option value="{{ $agama }}"
+                                            {{ $skmt->agama_pelapor == $agama ? 'selected' : '' }}>{{ $agama }}
+                                        </option>
+                                    @endforeach
+                                </select>
+                            </div>
+
+                            <div class="input-group">
+                                <label class="block text-sm font-semibold text-gray-700 mb-2">Pekerjaan *</label>
+                                <input type="text" name="pekerjaan_pelapor"
+                                    value="{{ old('pekerjaan_pelapor', $skmt->pekerjaan_pelapor) }}" required
+                                    class="w-full px-4 py-3 border-2 border-gray-200 rounded-lg focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 transition-all">
+                            </div>
+
+                            <div class="input-group">
+                                <label class="block text-sm font-semibold text-gray-700 mb-2">RT *</label>
+                                <input type="text" name="rt_pelapor"
+                                    value="{{ old('rt_pelapor', $skmt->rt_pelapor) }}" required maxlength="5"
+                                    class="w-full px-4 py-3 border-2 border-gray-200 rounded-lg focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 transition-all">
+                            </div>
+
+                            <div class="input-group">
+                                <label class="block text-sm font-semibold text-gray-700 mb-2">RW *</label>
+                                <input type="text" name="rw_pelapor"
+                                    value="{{ old('rw_pelapor', $skmt->rw_pelapor) }}" required maxlength="5"
+                                    class="w-full px-4 py-3 border-2 border-gray-200 rounded-lg focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 transition-all">
+                            </div>
+
+                            <div class="input-group">
+                                <label class="block text-sm font-semibold text-gray-700 mb-2">Hubungan dengan Almarhum
+                                    *</label>
+                                <input type="text" name="hubungan_pelapor"
+                                    value="{{ old('hubungan_pelapor', $skmt->hubungan_pelapor) }}" required
+                                    class="w-full px-4 py-3 border-2 border-gray-200 rounded-lg focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 transition-all"
+                                    placeholder="Contoh: Anak, Suami, Istri">
+                            </div>
+                            <div class="md:col-span-2 input-group">
+                                <label class="block text-sm font-semibold text-gray-700 mb-2">Alamat Lengkap *</label>
+                                <textarea name="alamat_pelapor" rows="3" required
+                                    class="w-full px-4 py-3 border-2 border-gray-200 rounded-lg focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 transition-all">{{ old('alamat_pelapor', $skmt->alamat_pelapor) }}</textarea>
+                            </div>
+
                         </div>
                     </div>
 
-
-                    {{-- Dokumen Pendukung --}}
+                    <!-- Dokumen Pendukung -->
                     <div class="bg-white rounded-2xl shadow-sm p-6 section-card border border-gray-100">
                         <h3 class="text-lg font-bold text-gray-800 mb-4 flex items-center">
                             <div
@@ -357,7 +402,10 @@
                             $docs = [
                                 ['label' => 'KTP', 'path' => $pengajuan->dokumen_ktp ?? null],
                                 ['label' => 'KK', 'path' => $pengajuan->dokumen_kk ?? null],
-                                ['label' => 'Surat Pengantar RT', 'path' => $pengajuan->dokumen_surat_rt ?? null],
+                                [
+                                    'label' => 'Surat Keterangan Kematian dari RS/Dukuh',
+                                    'path' => $pengajuan->dokumen_surat_rt ?? null,
+                                ],
                             ];
 
                             $isImage = fn($p) => $p && preg_match('/\.(jpg|jpeg|png|webp)$/i', $p);
@@ -508,7 +556,7 @@
 
                         <div class="space-y-3">
                             <!-- Download Button -->
-                            <a href="{{ route('admin.skd.download', $pengajuan->file_surat_cetak) }}"
+                            <a href="{{ route('admin.skmt.download', $pengajuan->file_surat_cetak) }}"
                                 class="group w-full inline-flex items-center justify-center px-4 py-2.5 bg-gradient-to-r from-emerald-600 to-emerald-500 hover:from-emerald-700 hover:to-emerald-600 text-white rounded-full font-semibold text-sm transition-all duration-300 shadow-lg hover:shadow-xl hover:scale-[1.02] active:scale-[0.98] relative overflow-hidden">
                                 <div
                                     class="absolute inset-0 bg-white opacity-0 group-hover:opacity-20 transition-opacity duration-300">
@@ -528,6 +576,7 @@
                             </a>
                         </div>
 
+                        <!-- Info File TTD (jika sudah diupload) -->
                         @if ($pengajuan->file_surat_ttd)
                             <div class="mt-5 p-4 bg-green-50 border-l-4 border-green-500 rounded-lg">
                                 <div class="flex items-start">
@@ -562,8 +611,7 @@
                 @if ($pengajuan->status == 'submitted')
                     <div class="">
 
-                        <button type="button"
-                            onclick="document.getElementById('modalVerify').classList.remove('hidden')"
+                        <button type="button" onclick="document.getElementById('modalVerify').classList.remove('hidden')"
                             class="group w-full inline-flex items-center justify-center px-4 py-3 bg-gradient-to-r from-emerald-600 to-emerald-500 hover:from-emerald-700 hover:to-emerald-600 text-white rounded-full font-semibold text-sm transition-all duration-300 shadow-lg hover:shadow-xl hover:scale-[1.02] active:scale-[0.98] relative overflow-hidden mb-1.5">
 
                             <div
@@ -621,7 +669,7 @@
                     Pastikan seluruh data sudah benar.
                 </p>
 
-                <form action="{{ route('admin.skd.verify', $pengajuan->id) }}" method="POST">
+                <form action="{{ route('admin.skmt.verify', $pengajuan->id) }}" method="POST">
                     @csrf
 
                     <!-- Actions -->
@@ -666,7 +714,7 @@
 
             <!-- Body -->
             <div class="px-6 py-5">
-                <form action="{{ route('admin.skd.reject', $pengajuan->id) }}" method="POST">
+                <form action="{{ route('admin.skmt.reject', $pengajuan->id) }}" method="POST">
                     @csrf
                     @method('PUT')
 
@@ -684,6 +732,7 @@
                         </p>
                     </div>
 
+                    <!-- Actions -->
                     <div class="flex gap-3 mt-6">
                         <button type="button" onclick="document.getElementById('modalReject').classList.add('hidden')"
                             class="flex-1 px-4 py-2.5 rounded-full bg-gray-200 hover:bg-gray-300 text-gray-800 font-semibold transition text-sm">

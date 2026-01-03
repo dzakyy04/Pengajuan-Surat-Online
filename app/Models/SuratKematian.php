@@ -8,6 +8,17 @@ use Illuminate\Database\Eloquent\Model;
 class SuratKematian extends Model
 {
     use HasFactory;
+
     protected $table = 'surat_kematian';
     protected $guarded = ['id'];
+
+    protected $casts = [
+        'tanggal_meninggal' => 'date',
+        'tanggal_lahir_pelapor' => 'date',
+    ];
+
+    public function pengajuan()
+    {
+        return $this->belongsTo(PengajuanSurat::class, 'pengajuan_surat_id');
+    }
 }

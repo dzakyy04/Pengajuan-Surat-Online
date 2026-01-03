@@ -4,7 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Http\Controllers\Controller;
 use App\Models\PengajuanSurat;
-use App\Models\SuratUsaha;
+use App\Models\SuratKematian;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
@@ -14,7 +14,7 @@ use Illuminate\Support\Facades\Storage;
 use PhpOffice\PhpWord\TemplateProcessor;
 use App\Mail\PengajuanDitolakMail;
 
-class SkuController extends Controller
+class SkmtController extends Controller
 {
     public function __construct()
     {
@@ -25,7 +25,7 @@ class SkuController extends Controller
     {
         $query = PengajuanSurat::with(['jenisSurat', 'admin'])
             ->whereHas('jenisSurat', function ($q) {
-                $q->where('kode', 'SKU');
+                $q->where('kode', 'SKMT');
             });
 
         if ($request->filled('search')) {
@@ -47,109 +47,119 @@ class SkuController extends Controller
             ->paginate(10)
             ->withQueryString();
 
-        $submittedSku = PengajuanSurat::whereHas('jenisSurat', function ($q) {
-            $q->where('kode', 'SKU');
+        $submittedSkmt = PengajuanSurat::whereHas('jenisSurat', function ($q) {
+            $q->where('kode', 'SKMT');
         })->where('status', 'submitted')->count();
 
-        $verifiedSku = PengajuanSurat::whereHas('jenisSurat', function ($q) {
-            $q->where('kode', 'SKU');
+        $verifiedSkmt = PengajuanSurat::whereHas('jenisSurat', function ($q) {
+            $q->where('kode', 'SKMT');
         })->where('status', 'verified')->count();
 
-        $approvedSku = PengajuanSurat::whereHas('jenisSurat', function ($q) {
-            $q->where('kode', 'SKU');
+        $approvedSkmt = PengajuanSurat::whereHas('jenisSurat', function ($q) {
+            $q->where('kode', 'SKMT');
         })->where('status', 'approved')->count();
 
-        $rejectedSku = PengajuanSurat::whereHas('jenisSurat', function ($q) {
-            $q->where('kode', 'SKU');
+        $rejectedSkmt = PengajuanSurat::whereHas('jenisSurat', function ($q) {
+            $q->where('kode', 'SKMT');
         })->where('status', 'rejected')->count();
 
-        return view('admin.surat.sku.index', compact(
+        return view('admin.surat.skmt.index', compact(
             'pengajuanList',
-            'submittedSku',
-            'verifiedSku',
-            'approvedSku',
-            'rejectedSku'
+            'submittedSkmt',
+            'verifiedSkmt',
+            'approvedSkmt',
+            'rejectedSkmt'
         ));
     }
 
     public function detail($id)
     {
         $pengajuan = PengajuanSurat::with(['jenisSurat', 'admin'])->findOrFail($id);
-        $sku = SuratUsaha::where('pengajuan_surat_id', $id)->firstOrFail();
+        $skmt = SuratKematian::where('pengajuan_surat_id', $id)->firstOrFail();
 
-        return view('admin.surat.sku.detail', compact('pengajuan', 'sku'));
+        return view('admin.surat.skmt.detail', compact('pengajuan', 'skmt'));
     }
 
     public function update(Request $request, $id)
     {
         $request->validate([
-            'nama' => 'required|string|max:255',
-            'nik' => 'required|string|size:16',
-            'tempat_lahir' => 'required|string|max:100',
-            'tanggal_lahir' => 'required|date',
+            'nama_almarhum' => 'required|string|max:100',
             'jenis_kelamin' => 'required|in:Laki-Laki,Perempuan',
-            'agama' => 'required|string',
-            'status_perkawinan' => 'required|string',
-            'pekerjaan' => 'required|string|max:100',
-            'rt' => 'required|string|max:3',
-            'rw' => 'required|string|max:3',
-            'dusun' => 'nullable|string|max:100',
+            'umur' => 'required|integer|min:0',
             'alamat' => 'required|string',
-            'no_surat_rt' => 'required|string|max:50',
-            'tanggal_surat_rt' => 'required|date',
-            'nama_usaha' => 'required|string|max:100',
-            'jenis_usaha' => 'required|string|max:100',
-            'alamat_usaha' => 'required|string',
-            'keterangan_usaha' => 'nullable|string',
+            'rt' => 'required|string|max:5',
+            'rw' => 'required|string|max:5',
+            'dusun' => 'nullable|string|max:50',
+            'tanggal_meninggal' => 'required|date',
+            'jam_meninggal' => 'required',
+            'hari_meninggal' => 'required|string|max:20',
+            'tempat_meninggal' => 'required|string|max:100',
+            'sebab_meninggal' => 'required|string|max:100',
+            'nama_pelapor' => 'required|string|max:100',
+            'nik_pelapor' => 'required|string|size:16',
+            'jenis_kelamin_pelapor' => 'required|in:Laki-Laki,Perempuan',
+            'tempat_lahir_pelapor' => 'required|string|max:100',
+            'tanggal_lahir_pelapor' => 'required|date',
+            'agama_pelapor' => 'required|string|max:20',
+            'pekerjaan_pelapor' => 'required|string|max:100',
+            'alamat_pelapor' => 'required|string',
+            'rt_pelapor' => 'required|string|max:5',
+            'rw_pelapor' => 'required|string|max:5',
+            'hubungan_pelapor' => 'required|string|max:50',
         ]);
 
         try {
             DB::beginTransaction();
 
             $pengajuan = PengajuanSurat::findOrFail($id);
-            $sku = SuratUsaha::where('pengajuan_surat_id', $id)->firstOrFail();
+            $skmt = SuratKematian::where('pengajuan_surat_id', $id)->firstOrFail();
 
-            $sku->update([
-                'nama' => $request->nama,
-                'nik' => $request->nik,
-                'tempat_lahir' => $request->tempat_lahir,
-                'tanggal_lahir' => $request->tanggal_lahir,
+            $skmt->update([
+                'nama_almarhum' => $request->nama_almarhum,
                 'jenis_kelamin' => $request->jenis_kelamin,
-                'agama' => $request->agama,
-                'status_perkawinan' => $request->status_perkawinan,
-                'pekerjaan' => $request->pekerjaan,
+                'umur' => $request->umur,
+                'alamat' => $request->alamat,
                 'rt' => $request->rt,
                 'rw' => $request->rw,
                 'dusun' => $request->dusun,
-                'alamat' => $request->alamat,
-                'no_surat_rt' => $request->no_surat_rt,
-                'tanggal_surat_rt' => $request->tanggal_surat_rt,
-                'nama_usaha' => $request->nama_usaha,
-                'jenis_usaha' => $request->jenis_usaha,
-                'alamat_usaha' => $request->alamat_usaha,
-                'keterangan_usaha' => $request->keterangan_usaha,
+                'tanggal_meninggal' => $request->tanggal_meninggal,
+                'jam_meninggal' => $request->jam_meninggal,
+                'hari_meninggal' => $request->hari_meninggal,
+                'tempat_meninggal' => $request->tempat_meninggal,
+                'sebab_meninggal' => $request->sebab_meninggal,
+                'nama_pelapor' => $request->nama_pelapor,
+                'nik_pelapor' => $request->nik_pelapor,
+                'jenis_kelamin_pelapor' => $request->jenis_kelamin_pelapor,
+                'tempat_lahir_pelapor' => $request->tempat_lahir_pelapor,
+                'tanggal_lahir_pelapor' => $request->tanggal_lahir_pelapor,
+                'agama_pelapor' => $request->agama_pelapor,
+                'pekerjaan_pelapor' => $request->pekerjaan_pelapor,
+                'alamat_pelapor' => $request->alamat_pelapor,
+                'rt_pelapor' => $request->rt_pelapor,
+                'rw_pelapor' => $request->rw_pelapor,
+                'hubungan_pelapor' => $request->hubungan_pelapor,
             ]);
 
             $fileRegenerated = false;
             if (in_array($pengajuan->status, ['verified', 'approved']) && $pengajuan->file_surat_cetak) {
-                $this->regenerateFile($pengajuan, $sku);
+                $this->regenerateFile($pengajuan, $skmt);
                 $fileRegenerated = true;
             }
 
             DB::commit();
 
-            $message = 'Data SKU berhasil diperbarui.';
+            $message = 'Data Surat Kematian berhasil diperbarui.';
             if ($fileRegenerated) {
                 $message .= ' File surat telah di-generate ulang dengan data terbaru.';
             }
 
             return redirect()
-                ->route('admin.sku.detail', $id)
+                ->route('admin.skmt.detail', $id)
                 ->with('success', $message);
 
         } catch (\Exception $e) {
             DB::rollBack();
-            Log::error('Error update SKU: ' . $e->getMessage());
+            Log::error('Error update SKMT: ' . $e->getMessage());
             return back()->withInput()->with('error', 'Gagal update data: ' . $e->getMessage());
         }
     }
@@ -165,11 +175,11 @@ class SkuController extends Controller
                 return back()->with('error', 'Pengajuan ini tidak dalam status submitted.');
             }
 
-            $sku = SuratUsaha::where('pengajuan_surat_id', $id)->firstOrFail();
+            $skmt = SuratKematian::where('pengajuan_surat_id', $id)->firstOrFail();
             $jenisSurat = $pengajuan->jenisSurat;
 
             $nomorSurat = $this->generateNomorSurat($jenisSurat);
-            $filename = $this->generateSuratFile($pengajuan, $sku, $nomorSurat);
+            $filename = $this->generateSuratFile($pengajuan, $skmt, $nomorSurat);
 
             $pengajuan->update([
                 'status' => 'verified',
@@ -182,12 +192,12 @@ class SkuController extends Controller
 
             DB::commit();
 
-            return redirect()->route('admin.sku.success', $filename)
+            return redirect()->route('admin.skmt.success', $filename)
                 ->with('success', 'Surat berhasil disetujui dan dicetak!');
 
         } catch (\Exception $e) {
             DB::rollBack();
-            Log::error('Error verify SKU: ' . $e->getMessage());
+            Log::error('Error verify SKMT: ' . $e->getMessage());
             return back()->with('error', 'Terjadi kesalahan: ' . $e->getMessage());
         }
     }
@@ -259,7 +269,7 @@ class SkuController extends Controller
 
             DB::commit();
 
-            return redirect()->route('admin.sku.index')
+            return redirect()->route('admin.skmt.index')
                 ->with('success', 'Pengajuan berhasil ditolak. Notifikasi telah dikirim ke pemohon.');
         } catch (\Exception $e) {
             DB::rollBack();
@@ -267,38 +277,35 @@ class SkuController extends Controller
         }
     }
 
-    private function generateSuratFile($pengajuan, $sku, $nomorSurat)
+    private function generateSuratFile($pengajuan, $skmt, $nomorSurat)
     {
-        $tanggalBerlaku = now()->addDays(90);
-
         $data = [
             'nomor_surat' => $nomorSurat,
             'tanggal_surat' => now()->format('d-m-Y'),
-            'tanggal_berlaku' => $tanggalBerlaku->format('d-m-Y'),
-            'hari_ini' => now()->format('d-m-Y'),
-            'nama' => $sku->nama,
-            'nik' => $sku->nik,
-            'tempat_lahir' => $sku->tempat_lahir,
-            'tanggal_lahir' => \Carbon\Carbon::parse($sku->tanggal_lahir)->format('d-m-Y'),
-            'jenis_kelamin' => $sku->jenis_kelamin,
-            'bangsa_agama' => 'Indonesia / ' . $sku->agama,
-            'status_perkawinan' => $sku->status_perkawinan,
-            'pekerjaan' => $sku->pekerjaan,
-            'rt' => $sku->rt,
-            'rw' => $sku->rw,
-            'dusun' => $sku->dusun,
-            'alamat' => $sku->alamat . ' RT ' . $sku->rt . '/RW ' . $sku->rw .
-                ($sku->dusun ? ', Dusun ' . $sku->dusun : '') .
-                ', Desa Sungai Rebo, Kecamatan Banyuasin I, Kabupaten Banyuasin, Provinsi Sumatera Selatan',
-            'no_surat_rt' => $sku->no_surat_rt,
-            'tanggal_surat_rt' => \Carbon\Carbon::parse($sku->tanggal_surat_rt)->format('d-m-Y'),
-            'nama_usaha' => $sku->nama_usaha,
-            'jenis_usaha' => $sku->jenis_usaha,
-            'alamat_usaha' => $sku->alamat_usaha,
-            'keterangan_usaha_html' => $sku->keterangan_usaha,
+            'nama_almarhum' => $skmt->nama_almarhum,
+            'jenis_kelamin' => $skmt->jenis_kelamin,
+            'umur' => $skmt->umur,
+            'alamat_almarhum' => $skmt->alamat . ' RT ' . $skmt->rt . '/RW ' . $skmt->rw .
+                ($skmt->dusun ? ', Dusun ' . $skmt->dusun : '') .
+                ', Desa Sungai Rebo, Kecamatan Banyuasin I, Kabupaten Banyuasin',
+            'tanggal_meninggal' => \Carbon\Carbon::parse($skmt->tanggal_meninggal)->format('d-m-Y'),
+            'jam_meninggal' => $skmt->jam_meninggal,
+            'hari_meninggal' => $skmt->hari_meninggal,
+            'tempat_meninggal' => $skmt->tempat_meninggal,
+            'sebab_meninggal' => $skmt->sebab_meninggal,
+            'nama_pelapor' => $skmt->nama_pelapor,
+            'nik_pelapor' => $skmt->nik_pelapor,
+            'jenis_kelamin_pelapor' => $skmt->jenis_kelamin_pelapor,
+            'tempat_lahir_pelapor' => $skmt->tempat_lahir_pelapor,
+            'tanggal_lahir_pelapor' => \Carbon\Carbon::parse($skmt->tanggal_lahir_pelapor)->format('d-m-Y'),
+            'agama_pelapor' => $skmt->agama_pelapor,
+            'pekerjaan_pelapor' => $skmt->pekerjaan_pelapor,
+            'alamat_pelapor' => $skmt->alamat_pelapor . ' RT ' . $skmt->rt_pelapor . '/RW ' . $skmt->rw_pelapor .
+                ', Desa Sungai Rebo, Kecamatan Banyuasin I, Kabupaten Banyuasin',
+            'hubungan_pelapor' => $skmt->hubungan_pelapor,
         ];
 
-        $templatePath = resource_path('files/surat-usaha.docx');
+        $templatePath = resource_path('files/surat-kematian.docx');
 
         if (!file_exists($templatePath)) {
             throw new \Exception('Template DOCX tidak ditemukan');
@@ -307,23 +314,14 @@ class SkuController extends Controller
         $templateProcessor = new TemplateProcessor($templatePath);
 
         foreach ($data as $key => $value) {
-            if ($key !== 'keterangan_usaha_html') {
-                $templateProcessor->setValue($key, $value);
-            }
+            $templateProcessor->setValue($key, $value);
         }
 
-        if (!empty($data['keterangan_usaha_html'])) {
-            $keteranganInline = trim(
-                preg_replace('/\s+/', ' ', strip_tags($data['keterangan_usaha_html']))
-            );
-            $templateProcessor->setValue('keterangan_usaha', $keteranganInline);
-        }
+        $filename = 'SKMT_' . $skmt->nik_pelapor . '_' . time() . '.docx';
+        $outputPath = storage_path('app/surat/skmt/' . $filename);
 
-        $filename = 'SKU_' . $sku->nik . '_' . time() . '.docx';
-        $outputPath = storage_path('app/surat/sku/' . $filename);
-
-        if (!file_exists(storage_path('app/surat/sku'))) {
-            mkdir(storage_path('app/surat/sku'), 0755, true);
+        if (!file_exists(storage_path('app/surat/skmt'))) {
+            mkdir(storage_path('app/surat/skmt'), 0755, true);
         }
 
         $templateProcessor->saveAs($outputPath);
@@ -331,38 +329,35 @@ class SkuController extends Controller
         return $filename;
     }
 
-    private function regenerateFile($pengajuan, $sku)
+    private function regenerateFile($pengajuan, $skmt)
     {
-        $tanggalBerlaku = now()->addDays(90);
-
         $data = [
             'nomor_surat' => $pengajuan->nomor_surat,
             'tanggal_surat' => now()->format('d-m-Y'),
-            'tanggal_berlaku' => $tanggalBerlaku->format('d-m-Y'),
-            'hari_ini' => now()->format('d-m-Y'),
-            'nama' => $sku->nama,
-            'nik' => $sku->nik,
-            'tempat_lahir' => $sku->tempat_lahir,
-            'tanggal_lahir' => \Carbon\Carbon::parse($sku->tanggal_lahir)->format('d-m-Y'),
-            'jenis_kelamin' => $sku->jenis_kelamin,
-            'bangsa_agama' => 'Indonesia / ' . $sku->agama,
-            'status_perkawinan' => $sku->status_perkawinan,
-            'pekerjaan' => $sku->pekerjaan,
-            'rt' => $sku->rt,
-            'rw' => $sku->rw,
-            'dusun' => $sku->dusun,
-            'alamat' => $sku->alamat . ' RT ' . $sku->rt . '/RW ' . $sku->rw .
-                ($sku->dusun ? ', Dusun ' . $sku->dusun : '') .
-                ', Desa Sungai Rebo, Kecamatan Banyuasin I, Kabupaten Banyuasin, Provinsi Sumatera Selatan',
-            'no_surat_rt' => $sku->no_surat_rt,
-            'tanggal_surat_rt' => \Carbon\Carbon::parse($sku->tanggal_surat_rt)->format('d-m-Y'),
-            'nama_usaha' => $sku->nama_usaha,
-            'jenis_usaha' => $sku->jenis_usaha,
-            'alamat_usaha' => $sku->alamat_usaha,
-            'keterangan_usaha_html' => $sku->keterangan_usaha,
+            'nama_almarhum' => $skmt->nama_almarhum,
+            'jenis_kelamin' => $skmt->jenis_kelamin,
+            'umur' => $skmt->umur,
+            'alamat_almarhum' => $skmt->alamat . ' RT ' . $skmt->rt . '/RW ' . $skmt->rw .
+                ($skmt->dusun ? ', Dusun ' . $skmt->dusun : '') .
+                ', Desa Sungai Rebo, Kecamatan Banyuasin I, Kabupaten Banyuasin',
+            'tanggal_meninggal' => \Carbon\Carbon::parse($skmt->tanggal_meninggal)->format('d-m-Y'),
+            'jam_meninggal' => $skmt->jam_meninggal,
+            'hari_meninggal' => $skmt->hari_meninggal,
+            'tempat_meninggal' => $skmt->tempat_meninggal,
+            'sebab_meninggal' => $skmt->sebab_meninggal,
+            'nama_pelapor' => $skmt->nama_pelapor,
+            'nik_pelapor' => $skmt->nik_pelapor,
+            'jenis_kelamin_pelapor' => $skmt->jenis_kelamin_pelapor,
+            'tempat_lahir_pelapor' => $skmt->tempat_lahir_pelapor,
+            'tanggal_lahir_pelapor' => \Carbon\Carbon::parse($skmt->tanggal_lahir_pelapor)->format('d-m-Y'),
+            'agama_pelapor' => $skmt->agama_pelapor,
+            'pekerjaan_pelapor' => $skmt->pekerjaan_pelapor,
+            'alamat_pelapor' => $skmt->alamat_pelapor . ' RT ' . $skmt->rt_pelapor . '/RW ' . $skmt->rw_pelapor .
+                ', Desa Sungai Rebo, Kecamatan Banyuasin I, Kabupaten Banyuasin',
+            'hubungan_pelapor' => $skmt->hubungan_pelapor,
         ];
 
-        $templatePath = resource_path('files/surat-usaha.docx');
+        $templatePath = resource_path('files/surat-kematian.docx');
 
         if (!file_exists($templatePath)) {
             throw new \Exception('Template DOCX tidak ditemukan');
@@ -371,21 +366,10 @@ class SkuController extends Controller
         $templateProcessor = new TemplateProcessor($templatePath);
 
         foreach ($data as $key => $value) {
-            if ($key !== 'keterangan_usaha_html') {
-                $templateProcessor->setValue($key, $value);
-            }
+            $templateProcessor->setValue($key, $value);
         }
 
-        if (!empty($data['keterangan_usaha_html'])) {
-            $keteranganInline = trim(
-                preg_replace('/\s+/', ' ', strip_tags($data['keterangan_usaha_html']))
-            );
-            $templateProcessor->setValue('keterangan_usaha', $keteranganInline);
-        } else {
-            $templateProcessor->setValue('keterangan_usaha', '-');
-        }
-
-        $outputPath = storage_path('app/surat/sku/' . $pengajuan->file_surat_cetak);
+        $outputPath = storage_path('app/surat/skmt/' . $pengajuan->file_surat_cetak);
         $templateProcessor->saveAs($outputPath);
 
         $pengajuan->update(['tanggal_cetak' => now()]);
@@ -393,16 +377,16 @@ class SkuController extends Controller
 
     public function success($file)
     {
-        $filePath = storage_path('app/surat/sku/' . $file);
+        $filePath = storage_path('app/surat/skmt/' . $file);
         if (!file_exists($filePath)) {
             abort(404, 'File tidak ditemukan');
         }
-        return view('admin.surat.sku.success', compact('file'));
+        return view('admin.surat.skmt.success', compact('file'));
     }
 
     public function download($file)
     {
-        $filePath = storage_path('app/surat/sku/' . $file);
+        $filePath = storage_path('app/surat/skmt/' . $file);
         if (!file_exists($filePath)) {
             abort(404, 'File tidak ditemukan');
         }

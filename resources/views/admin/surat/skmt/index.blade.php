@@ -1,9 +1,8 @@
 @extends('admin.layout.app')
 
-@section('title', 'Kelola Pengajuan Surat Keterangan Usaha')
+@section('title', 'Kelola Pengajuan Surat Keterangan Kematian')
 
 @push('styles')
-    <!-- DataTables CSS -->
     <link rel="stylesheet" href="https://cdn.datatables.net/1.13.7/css/jquery.dataTables.min.css">
     <link rel="stylesheet" href="https://cdn.datatables.net/1.13.7/css/dataTables.tailwind.min.css">
 
@@ -25,7 +24,6 @@
             @apply bg-emerald-600 text-white border-emerald-600;
         }
 
-        /* Dropdown styles */
         .dropdown-menu {
             display: none;
             position: fixed;
@@ -42,7 +40,6 @@
             animation: slideDown 0.2s ease-out;
         }
 
-        /* Prevent table overflow from hiding dropdown */
         .table-wrapper {
             position: relative;
         }
@@ -97,7 +94,7 @@
             <div class="flex flex-col md:flex-row items-center justify-between gap-2">
                 <div>
                     <h1 class="text-3xl font-bold text-gray-800">Kelola Pengajuan Surat</h1>
-                    <p class="text-gray-600 mt-2">Surat Keterangan Usaha (SKU)</p>
+                    <p class="text-gray-600 mt-2">Surat Keterangan Kematian (SKMT)</p>
                 </div>
                 <div class="flex gap-2 items-center">
                     <div class="relative" x-data="{ open: false }">
@@ -127,11 +124,10 @@
                             </svg>
                         </button>
 
-                        <!-- Dropdown Menu -->
                         <div x-show="open" @click.away="open = false" x-transition
                             class="absolute right-0 mt-2 w-56 bg-white rounded-lg shadow-lg border border-gray-200 z-10">
                             <div class="py-1">
-                                <a href="{{ route('admin.sku.index') }}"
+                                <a href="{{ route('admin.skmt.index') }}"
                                     class="flex items-center px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 transition {{ request()->get('status') == null ? 'bg-emerald-50 text-emerald-700 font-semibold' : '' }}">
                                     <svg class="w-4 h-4 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
@@ -139,7 +135,7 @@
                                     </svg>
                                     Semua Status
                                 </a>
-                                <a href="{{ route('admin.sku.index', ['status' => 'submitted']) }}"
+                                <a href="{{ route('admin.skmt.index', ['status' => 'submitted']) }}"
                                     class="flex items-center px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 transition {{ request()->get('status') == 'submitted' ? 'bg-yellow-50 text-yellow-700 font-semibold' : '' }}">
                                     <svg class="w-4 h-4 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
@@ -147,7 +143,7 @@
                                     </svg>
                                     Baru Diajukan
                                 </a>
-                                <a href="{{ route('admin.sku.index', ['status' => 'verified']) }}"
+                                <a href="{{ route('admin.skmt.index', ['status' => 'verified']) }}"
                                     class="flex items-center px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 transition {{ request()->get('status') == 'verified' ? 'bg-emerald-50 text-emerald-700 font-semibold' : '' }}">
                                     <svg class="w-4 h-4 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
@@ -155,14 +151,14 @@
                                     </svg>
                                     Diverifikasi
                                 </a>
-                                <a href="{{ route('admin.sku.index', ['status' => 'approved']) }}"
+                                <a href="{{ route('admin.skmt.index', ['status' => 'approved']) }}"
                                     class="flex items-center px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 transition {{ request()->get('status') == 'approved' ? 'bg-purple-50 text-purple-700 font-semibold' : '' }}">
                                     <svg class="w-4 h-4 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                                             d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
                                     </svg>
                                     Disetujui
-                                    <a href="{{ route('admin.sku.index', ['status' => 'rejected']) }}"
+                                    <a href="{{ route('admin.skmt.index', ['status' => 'rejected']) }}"
                                         class="flex items-center px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 transition {{ request()->get('status') == 'rejected' ? 'bg-red-50 text-red-700 font-semibold' : '' }}">
                                         <svg class="w-4 h-4 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
@@ -173,7 +169,7 @@
                             </div>
                         </div>
                     </div>
-                    <!-- Refresh Button -->
+
                     <button onclick="window.location.reload()"
                         class="inline-flex items-center px-4 py-2 bg-gray-600 hover:bg-gray-700 text-white rounded-lg shadow-sm transition">
                         <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -214,7 +210,6 @@
 
         <!-- Statistics Cards -->
         <div class="grid grid-cols-1 md:grid-cols-5 gap-3 mb-6">
-            <!-- Total Pengajuan -->
             <div
                 class="border border-emerald-200 bg-gradient-to-bl from-emerald-50 to-emerald-200 rounded-2xl shadow-sm p-6 text-emerald-600 card-stats">
                 <div class="flex items-center justify-between">
@@ -231,13 +226,12 @@
                 </div>
             </div>
 
-            <!-- Menunggu -->
             <div
                 class="border border-orange-200 bg-gradient-to-bl from-orange-50 to-orange-200 rounded-2xl shadow-xs p-6 text-orange-600 card-stats">
                 <div class="flex items-center justify-between">
                     <div>
                         <p class="text-sm font-semibold">Menunggu</p>
-                        <h3 class="text-3xl font-bold mt-2">{{ $submittedSku }}</h3>
+                        <h3 class="text-3xl font-bold mt-2">{{ $submittedSkmt }}</h3>
                     </div>
                     <div class="bg-orange-200 bg-opacity-30 rounded-full p-3">
                         <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -248,13 +242,12 @@
                 </div>
             </div>
 
-            <!-- Diproses -->
             <div
                 class="border border-blue-200 bg-gradient-to-bl from-blue-50 to-blue-200 rounded-2xl shadow-xs p-6 text-blue-600 card-stats">
                 <div class="flex items-center justify-between">
                     <div>
                         <p class="text-sm font-semibold">Diproses</p>
-                        <h3 class="text-3xl font-bold mt-2">{{ $verifiedSku }}</h3>
+                        <h3 class="text-3xl font-bold mt-2">{{ $verifiedSkmt }}</h3>
                     </div>
                     <div class="bg-blue-200 bg-opacity-30 rounded-full p-3">
                         <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -265,13 +258,12 @@
                 </div>
             </div>
 
-            <!-- Disetujui -->
             <div
                 class="border border-green-200 bg-gradient-to-bl from-green-50 to-green-200 rounded-2xl shadow-xs p-6 text-green-600 card-stats">
                 <div class="flex items-center justify-between">
                     <div>
                         <p class="text-sm font-semibold">Disetujui</p>
-                        <h3 class="text-3xl font-bold mt-2">{{ $approvedSku }}</h3>
+                        <h3 class="text-3xl font-bold mt-2">{{ $approvedSkmt }}</h3>
                     </div>
                     <div class="bg-green-200 bg-opacity-30 rounded-full p-3">
                         <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -281,13 +273,12 @@
                 </div>
             </div>
 
-            <!-- Ditolak -->
             <div
                 class="border border-rose-200 bg-gradient-to-bl from-rose-50 to-rose-200 rounded-2xl shadow-xs p-6 text-rose-600 card-stats">
                 <div class="flex items-center justify-between">
                     <div>
                         <p class="text-sm font-semibold">Ditolak</p>
-                        <h3 class="text-3xl font-bold mt-2">{{ $rejectedSku }}</h3>
+                        <h3 class="text-3xl font-bold mt-2">{{ $rejectedSkmt }}</h3>
                     </div>
                     <div class="bg-red-200 bg-opacity-30 rounded-full p-3">
                         <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -299,27 +290,23 @@
             </div>
         </div>
 
-        <!-- Table Card with DataTables -->
+        <!-- Table Card -->
         <div class="border border-slate-200 bg-white rounded-2xl shadow-xs overflow-hidden">
-            <!-- Card Header -->
             <div class="bg-gradient-to-l from-white to-emerald-100 px-6 py-4 border-b border-slate-200">
                 <div class="flex items-center justify-between">
                     <h2 class="text-xl font-bold text-emerald-700 flex items-center">
                         <svg class="w-6 h-6 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2" />
+                                d="M9 12h6m-6 4h6m2 5H7a2 2 0 00-2-2H7a2 2 0 00-2-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
                         </svg>
-                        Daftar Pengajuan Surat Keterangan Usaha
+                        Daftar Pengajuan Surat Keterangan Kematian
                     </h2>
                     <input type="text" id="searchInput" value="{{ request('search') }}"
                         placeholder="Cari nama, nomor pengajuan, email..."
-                        class="w-full md:w-80 px-4 py-2.5 rounded-xl border border-emerald-200
-               focus:ring-2 focus:ring-emerald-200 focus:border-emerald-300
-               shadow-sm transition text-sm" />
+                        class="w-full md:w-80 px-4 py-2.5 rounded-xl border border-emerald-200 focus:ring-2 focus:ring-emerald-200 focus:border-emerald-300 shadow-sm transition text-sm" />
                 </div>
             </div>
 
-            <!-- Table -->
             <div class="overflow-x-auto">
                 <table class="min-w-full divide-y divide-gray-200">
                     <thead class="bg-gray-50">
@@ -344,7 +331,6 @@
                             </th>
                         </tr>
                     </thead>
-                    <!-- Ganti bagian tbody table Anda dengan kode ini -->
 
                     <tbody class="bg-white divide-y divide-gray-200">
                         @forelse ($pengajuanList as $pengajuan)
@@ -409,7 +395,7 @@
                                         </button>
 
                                         <div id="dropdown-{{ $pengajuan->id }}" class="dropdown-menu">
-                                            <a href="{{ route('admin.sku.detail', $pengajuan->id) }}"
+                                            <a href="{{ route('admin.skmt.detail', $pengajuan->id) }}"
                                                 class="dropdown-item">
                                                 <svg class="w-4 h-4 text-emerald-600" fill="none"
                                                     stroke="currentColor" viewBox="0 0 24 24">
@@ -437,7 +423,7 @@
                                                 <div class="dropdown-divider"></div>
 
                                                 @if (!empty($pengajuan->file_surat_ttd))
-                                                    <a href="{{ route('admin.sku.download-ttd', $pengajuan->id) }}"
+                                                    <a href="{{ route('admin.skmt.download-ttd', $pengajuan->id) }}"
                                                         class="dropdown-item">
                                                         <svg class="w-4 h-4 text-green-600" fill="none"
                                                             stroke="currentColor" viewBox="0 0 24 24">

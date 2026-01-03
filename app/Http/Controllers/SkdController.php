@@ -2,16 +2,17 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Http\Request;
+use App\Http\Controllers\Controller;
 use App\Models\PengajuanSurat;
 use App\Models\SuratDomisili;
-use App\Mail\PengajuanDitolakMail;
-use Illuminate\Support\Facades\DB;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Mail;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Storage;
 use PhpOffice\PhpWord\TemplateProcessor;
+use App\Mail\PengajuanDitolakMail;
 
 class SkdController extends Controller
 {
@@ -43,26 +44,31 @@ class SkdController extends Controller
 
         $pengajuanList = $query
             ->orderBy('created_at', 'desc')
-            ->paginate(10)
+            ->paginate(perPage: 10)
             ->withQueryString();
 
-        $pendingSKD = PengajuanSurat::whereHas('jenisSurat', function ($q) {
+        $submittedSkd = PengajuanSurat::whereHas('jenisSurat', function ($q) {
             $q->where('kode', 'SKD');
-        })->where('status', 'pending')->count();
+        })->where('status', 'submitted')->count();
 
-        $diprosesSkd = PengajuanSurat::whereHas('jenisSurat', function ($q) {
+        $verifiedSkd = PengajuanSurat::whereHas('jenisSurat', function ($q) {
             $q->where('kode', 'SKD');
-        })->where('status', 'diproses')->count();
+        })->where('status', 'verified')->count();
 
-        $ditolakSkd = PengajuanSurat::whereHas('jenisSurat', function ($q) {
+        $approvedSkd = PengajuanSurat::whereHas('jenisSurat', function ($q) {
             $q->where('kode', 'SKD');
-        })->where('status', 'ditolak')->count();
+        })->where('status', 'approved')->count();
+
+        $rejectedSkd = PengajuanSurat::whereHas('jenisSurat', function ($q) {
+            $q->where('kode', 'SKD');
+        })->where('status', 'rejected')->count();
 
         return view('admin.surat.skd.index', compact(
             'pengajuanList',
-            'pendingSKD',
-            'diprosesSkd',
-            'ditolakSkd'
+            'submittedSkd',
+            'verifiedSkd',
+            'approvedSkd',
+            'rejectedSkd'
         ));
     }
 
@@ -119,7 +125,7 @@ class SkdController extends Controller
             ]);
 
             $fileRegenerated = false;
-            if ($pengajuan->status === 'diproses' && $pengajuan->file_surat_cetak) {
+            if (in_array($pengajuan->status, ['verified', 'approved']) && $pengajuan->file_surat_cetak) {
                 $this->regenerateFile($pengajuan, $skd);
                 $fileRegenerated = true;
             }
@@ -135,99 +141,32 @@ class SkdController extends Controller
                 ->route('admin.skd.detail', $id)
                 ->with('success', $message);
 
-        } catch (\Illuminate\Validation\ValidationException $e) {
-            DB::rollBack();
-            return back()
-                ->withErrors($e->errors())
-                ->withInput()
-                ->with('error', 'Validasi gagal. Periksa kembali data yang diinput.');
-
-        } catch (\Illuminate\Database\Eloquent\ModelNotFoundException $e) {
-            DB::rollBack();
-            return back()->with('error', 'Data SKD tidak ditemukan.');
-
         } catch (\Exception $e) {
             DB::rollBack();
-            Log::error('Error update SKD: ' . $e->getMessage(), [
-                'trace' => $e->getTraceAsString()
-            ]);
-
-            return back()
-                ->withInput()
-                ->with('error', 'Gagal update data: ' . $e->getMessage());
+            Log::error('Error update SKD: ' . $e->getMessage());
+            return back()->withInput()->with('error', 'Gagal update data: ' . $e->getMessage());
         }
     }
 
-    public function approve(Request $request, $id)
+    public function verify(Request $request, $id)
     {
         try {
             DB::beginTransaction();
 
             $pengajuan = PengajuanSurat::findOrFail($id);
+
+            if ($pengajuan->status !== 'submitted') {
+                return back()->with('error', 'Pengajuan ini tidak dalam status submitted.');
+            }
+
             $skd = SuratDomisili::where('pengajuan_surat_id', $id)->firstOrFail();
             $jenisSurat = $pengajuan->jenisSurat;
 
             $nomorSurat = $this->generateNomorSurat($jenisSurat);
-
-            // Tanggal berlaku = 90 hari ke depan
-            $tanggalBerlaku = now()->addDays(90);
-
-            $data = [
-                'nomor_surat' => $nomorSurat,
-                'tanggal_surat' => now()->format('d-m-Y'),
-                'tanggal_berlaku' => $tanggalBerlaku->format('d-m-Y'),
-                'hari_ini' => now()->format('d-m-Y'),
-                'nama' => $skd->nama,
-                'nik' => $skd->nik,
-                'tempat_lahir' => $skd->tempat_lahir,
-                'tanggal_lahir' => \Carbon\Carbon::parse($skd->tanggal_lahir)->format('d-m-Y'),
-                'jenis_kelamin' => $skd->jenis_kelamin,
-                'bangsa_agama' => 'Indonesia / ' . $skd->agama,
-                'status_perkawinan' => $skd->status_perkawinan,
-                'rt' => $skd->rt,
-                'rw' => $skd->rw,
-                'dusun' => $skd->dusun,
-                'pekerjaan' => $skd->pekerjaan,
-                'alamat' => $skd->alamat . ' RT ' . $skd->rt . '/RW ' . $skd->rw .
-                    ($skd->dusun ? ', Dusun ' . $skd->dusun : '') .
-                    ', Desa Sungai Rebo, Kecamatan Banyuasin I, Kabupaten Banyuasin, Provinsi Sumatera Selatan',
-                'no_surat_rt' => $skd->no_surat_rt,
-                'tanggal_surat_rt' => \Carbon\Carbon::parse($skd->tanggal_surat_rt)->format('d-m-Y'),
-                'keperluan_html' => $skd->keperluan,
-            ];
-
-            $templatePath = resource_path('files/surat-domisili.docx');
-
-            if (!file_exists($templatePath)) {
-                throw new \Exception('Template DOCX tidak ditemukan di: ' . $templatePath);
-            }
-
-            $templateProcessor = new TemplateProcessor($templatePath);
-
-            foreach ($data as $key => $value) {
-                if ($key !== 'keperluan_html') {
-                    $templateProcessor->setValue($key, $value);
-                }
-            }
-
-            if (!empty($data['keperluan_html'])) {
-                $keperluanInline = trim(
-                    preg_replace('/\s+/', ' ', strip_tags($data['keperluan_html']))
-                );
-                $templateProcessor->setValue('keperluan', $keperluanInline);
-            }
-
-            $filename = 'SKD_' . $skd->nik . '_' . time() . '.docx';
-            $outputPath = public_path('downloads/' . $filename);
-
-            if (!file_exists(public_path('downloads'))) {
-                mkdir(public_path('downloads'), 0755, true);
-            }
-
-            $templateProcessor->saveAs($outputPath);
+            $filename = $this->generateSuratFile($pengajuan, $skd, $nomorSurat);
 
             $pengajuan->update([
-                'status' => 'diproses',
+                'status' => 'verified',
                 'nomor_surat' => $nomorSurat,
                 'admin_id' => Auth::guard('admin')->id(),
                 'tanggal_diproses' => now(),
@@ -237,19 +176,155 @@ class SkdController extends Controller
 
             DB::commit();
 
+            // return redirect()->route('admin.skd.detail', $id)
+            //     ->with('success', 'Pengajuan berhasil diverifikasi dan surat telah di-generate!');
+
             return redirect()->route('admin.skd.success', $filename)
                 ->with('success', 'Surat berhasil disetujui dan dicetak!');
 
         } catch (\Exception $e) {
             DB::rollBack();
-            Log::error('Error approve SKD: ' . $e->getMessage());
+            Log::error('Error verify SKD: ' . $e->getMessage());
             return back()->with('error', 'Terjadi kesalahan: ' . $e->getMessage());
         }
     }
 
+    public function uploadTtd(Request $request, $id)
+    {
+        $request->validate([
+            'file_ttd' => 'required|file|mimes:pdf,docx|max:5120',
+        ]);
+
+        try {
+            DB::beginTransaction();
+
+            $pengajuan = PengajuanSurat::findOrFail($id);
+
+            if (!in_array($pengajuan->status, ['verified', 'approved'])) {
+                return back()->with('error', 'Hanya surat yang sudah diverifikasi atau disetujui yang bisa di-upload TTD.');
+            }
+
+
+            if ($pengajuan->file_surat_ttd && Storage::disk('public')->exists('surat_ttd/' . $pengajuan->file_surat_ttd)) {
+                Storage::disk('public')->delete('surat_ttd/' . $pengajuan->file_surat_ttd);
+            }
+
+            $file = $request->file('file_ttd');
+            $filename = 'TTD_' . $pengajuan->nomor_pengajuan . '_' . time() . '.' . $file->getClientOriginalExtension();
+            $file->storeAs('surat_ttd', $filename, 'public');
+
+            $pengajuan->update([
+                'file_surat_ttd' => $filename,
+                'tanggal_upload_ttd' => now(),
+                'status' => 'approved',
+            ]);
+
+            DB::commit();
+
+            return back()->with('success', 'File surat bertanda tangan berhasil diupload! Status berubah menjadi Approved.');
+        } catch (\Exception $e) {
+            DB::rollBack();
+            return back()->with('error', 'Gagal upload file: ' . $e->getMessage());
+        }
+    }
+
+    public function reject(Request $request, $id)
+    {
+        $request->validate([
+            'catatan_admin' => 'required|string',
+        ]);
+
+        try {
+            DB::beginTransaction();
+
+            $pengajuan = PengajuanSurat::findOrFail($id);
+
+            $pengajuan->update([
+                'status' => 'rejected',
+                'admin_id' => Auth::guard('admin')->id(),
+                'catatan_admin' => $request->catatan_admin,
+                'tanggal_diproses' => now(),
+            ]);
+
+            try {
+                Mail::to($pengajuan->email_pemohon)->send(
+                    new PengajuanDitolakMail($pengajuan, $request->catatan_admin)
+                );
+            } catch (\Exception $mailError) {
+                Log::error('Gagal mengirim email penolakan: ' . $mailError->getMessage());
+            }
+
+            DB::commit();
+
+            return redirect()->route('admin.skd.index')
+                ->with('success', 'Pengajuan berhasil ditolak. Notifikasi telah dikirim ke pemohon.');
+        } catch (\Exception $e) {
+            DB::rollBack();
+            return back()->with('error', 'Terjadi kesalahan: ' . $e->getMessage());
+        }
+    }
+
+    private function generateSuratFile($pengajuan, $skd, $nomorSurat)
+    {
+        $tanggalBerlaku = now()->addDays(90);
+
+        $data = [
+            'nomor_surat' => $nomorSurat,
+            'tanggal_surat' => now()->format('d-m-Y'),
+            'tanggal_berlaku' => $tanggalBerlaku->format('d-m-Y'),
+            'hari_ini' => now()->format('d-m-Y'),
+            'nama' => $skd->nama,
+            'nik' => $skd->nik,
+            'tempat_lahir' => $skd->tempat_lahir,
+            'tanggal_lahir' => \Carbon\Carbon::parse($skd->tanggal_lahir)->format('d-m-Y'),
+            'jenis_kelamin' => $skd->jenis_kelamin,
+            'bangsa_agama' => 'Indonesia / ' . $skd->agama,
+            'status_perkawinan' => $skd->status_perkawinan,
+            'rt' => $skd->rt,
+            'rw' => $skd->rw,
+            'dusun' => $skd->dusun,
+            'pekerjaan' => $skd->pekerjaan,
+            'alamat' => $skd->alamat . ' RT ' . $skd->rt . '/RW ' . $skd->rw .
+                ($skd->dusun ? ', Dusun ' . $skd->dusun : '') .
+                ', Desa Sungai Rebo, Kecamatan Banyuasin I, Kabupaten Banyuasin, Provinsi Sumatera Selatan',
+            'no_surat_rt' => $skd->no_surat_rt,
+            'tanggal_surat_rt' => \Carbon\Carbon::parse($skd->tanggal_surat_rt)->format('d-m-Y'),
+            'keperluan_html' => $skd->keperluan,
+        ];
+
+        $templatePath = resource_path('files/surat-domisili.docx');
+
+        if (!file_exists($templatePath)) {
+            throw new \Exception('Template DOCX tidak ditemukan');
+        }
+
+        $templateProcessor = new TemplateProcessor($templatePath);
+
+        foreach ($data as $key => $value) {
+            if ($key !== 'keperluan_html') {
+                $templateProcessor->setValue($key, $value);
+            }
+        }
+
+        if (!empty($data['keperluan_html'])) {
+            $keperluanInline = trim(preg_replace('/\s+/', ' ', strip_tags($data['keperluan_html'])));
+            $templateProcessor->setValue('keperluan', $keperluanInline);
+        }
+
+        $filename = 'SKD_' . $skd->nik . '_' . time() . '.docx';
+        $outputPath = storage_path('app/surat/skd/' . $filename);
+
+        if (!file_exists(storage_path('app/surat/skd'))) {
+            mkdir(storage_path('app/surat/skd'), 0755, true);
+        }
+
+        $templateProcessor->saveAs($outputPath);
+
+        return $filename;
+    }
+
     private function regenerateFile($pengajuan, $skd)
     {
-        // Tanggal berlaku = 90 hari ke depan
         $tanggalBerlaku = now()->addDays(90);
 
         $data = [
@@ -291,105 +366,33 @@ class SkdController extends Controller
         }
 
         if (!empty($data['keperluan_html'])) {
-            $keperluanInline = trim(
-                preg_replace('/\s+/', ' ', strip_tags($data['keperluan_html']))
-            );
+            $keperluanInline = trim(preg_replace('/\s+/', ' ', strip_tags($data['keperluan_html'])));
             $templateProcessor->setValue('keperluan', $keperluanInline);
         } else {
             $templateProcessor->setValue('keperluan', '-');
         }
 
-        $outputPath = public_path('downloads/' . $pengajuan->file_surat_cetak);
+        $outputPath = storage_path('app/surat/skd/' . $pengajuan->file_surat_cetak);
         $templateProcessor->saveAs($outputPath);
 
-        $pengajuan->update([
-            'tanggal_cetak' => now(),
-        ]);
-    }
-
-    public function reject(Request $request, $id)
-    {
-        $request->validate([
-            'catatan_admin' => 'required|string',
-        ]);
-
-        try {
-            DB::beginTransaction();
-
-            $pengajuan = PengajuanSurat::findOrFail($id);
-
-            $pengajuan->update([
-                'status' => 'ditolak',
-                'admin_id' => Auth::guard('admin')->id(),
-                'catatan_admin' => $request->catatan_admin,
-                'tanggal_diproses' => now(),
-            ]);
-
-            try {
-                Mail::to($pengajuan->email_pemohon)->send(
-                    new PengajuanDitolakMail($pengajuan, $request->catatan_admin)
-                );
-            } catch (\Exception $mailError) {
-                Log::error('Gagal mengirim email penolakan: ' . $mailError->getMessage());
-            }
-
-            DB::commit();
-
-            return redirect()->route('admin.skd.index')
-                ->with('success', 'Pengajuan berhasil ditolak. Notifikasi telah dikirim ke pemohon.');
-        } catch (\Exception $e) {
-            DB::rollBack();
-            return back()->with('error', 'Terjadi kesalahan: ' . $e->getMessage());
-        }
-    }
-
-    public function uploadTtd(Request $request, $id)
-    {
-        $request->validate([
-            'file_ttd' => 'required|file|mimes:pdf,docx|max:5120',
-        ]);
-
-        try {
-            $pengajuan = PengajuanSurat::findOrFail($id);
-
-            if ($pengajuan->file_surat_ttd && Storage::disk('public')->exists('surat_ttd/' . $pengajuan->file_surat_ttd)) {
-                Storage::disk('public')->delete('surat_ttd/' . $pengajuan->file_surat_ttd);
-            }
-
-            $file = $request->file('file_ttd');
-            $filename = 'TTD_' . $pengajuan->nomor_pengajuan . '_' . time() . '.' . $file->getClientOriginalExtension();
-            $file->storeAs('surat_ttd', $filename, 'public');
-
-            $pengajuan->update([
-                'file_surat_ttd' => $filename,
-                'tanggal_upload_ttd' => now(),
-            ]);
-
-            return back()->with('success', 'File surat yang sudah ditandatangani berhasil diupload!');
-        } catch (\Exception $e) {
-            return back()->with('error', 'Gagal upload file: ' . $e->getMessage());
-        }
+        $pengajuan->update(['tanggal_cetak' => now()]);
     }
 
     public function success($file)
     {
-        $filePath = public_path('downloads/' . $file);
-
+        $filePath = storage_path('app/surat/skd/' . $file);
         if (!file_exists($filePath)) {
             abort(404, 'File tidak ditemukan');
         }
-
         return view('admin.surat.skd.success', compact('file'));
     }
 
     public function download($file)
     {
-        $filePath = public_path('downloads/' . $file);
-
+        $filePath = storage_path('app/surat/skd/' . $file);
         if (!file_exists($filePath)) {
             abort(404, 'File tidak ditemukan');
         }
-
         return response()->download($filePath);
     }
 
@@ -417,23 +420,38 @@ class SkdController extends Controller
 
     private function generateNomorSurat($jenisSurat)
     {
-        $tahunSekarang = date('Y');
+        $tahun = date('Y');
 
-        if ($jenisSurat->tahun_counter != $tahunSekarang) {
-            $jenisSurat->counter_terakhir = 0;
-            $jenisSurat->tahun_counter = $tahunSekarang;
-        }
+        DB::transaction(function () use ($jenisSurat, $tahun) {
+            $jenisSurat->refresh();
 
-        $jenisSurat->counter_terakhir += 1;
-        $jenisSurat->save();
+            if ($jenisSurat->tahun_counter != $tahun) {
+                $jenisSurat->counter_terakhir = 0;
+                $jenisSurat->tahun_counter = $tahun;
+            }
 
-        $nomorUrut = str_pad($jenisSurat->counter_terakhir, 3, '0', STR_PAD_LEFT);
-        $nomorSurat = str_replace(
-            ['[NO]', '[TAHUN]'],
-            [$nomorUrut, $tahunSekarang],
-            $jenisSurat->format_nomor
-        );
+            $jenisSurat->counter_terakhir++;
+            $jenisSurat->save();
+        });
+
+        do {
+            $nomorUrut = str_pad($jenisSurat->counter_terakhir, 3, '0', STR_PAD_LEFT);
+
+            $nomorSurat = str_replace(
+                ['[NO]', '[TAHUN]'],
+                [$nomorUrut, $tahun],
+                $jenisSurat->format_nomor
+            );
+
+            $exists = PengajuanSurat::where('nomor_surat', $nomorSurat)->exists();
+
+            if ($exists) {
+                $jenisSurat->increment('counter_terakhir');
+            }
+
+        } while ($exists);
 
         return $nomorSurat;
     }
+
 }

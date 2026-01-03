@@ -43,9 +43,4 @@ class AdminAuthController extends Controller
 
         return redirect()->route('admin.login')->with('status', 'Anda sudah keluar.');
     }
-
-    public function dashboard()
-    {
-        return view('admin.dashboard');
-    }
 }
