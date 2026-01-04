@@ -110,11 +110,13 @@
                             </svg>
                             <span class="text-sm font-medium text-gray-700">
                                 @if (request()->get('status') == 'submitted')
-                                    Baru Diajukan
+                                    Diajukan
                                 @elseif(request()->get('status') == 'verified')
                                     Diverifikasi
                                 @elseif(request()->get('status') == 'approved')
-                                    Disetujui
+                                    Ditandatangani
+                                @elseif(request()->get('status') == 'notified')
+                                    Dinotifikasi
                                 @elseif(request()->get('status') == 'rejected')
                                     Ditolak
                                 @else
@@ -145,7 +147,7 @@
                                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                                             d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
                                     </svg>
-                                    Baru Diajukan
+                                    Diajukan
                                 </a>
                                 <a href="{{ route('admin.skd.index', ['status' => 'verified']) }}"
                                     class="flex items-center px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 transition {{ request()->get('status') == 'verified' ? 'bg-emerald-50 text-emerald-700 font-semibold' : '' }}">
@@ -161,15 +163,24 @@
                                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                                             d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
                                     </svg>
-                                    Disetujui
-                                    <a href="{{ route('admin.skd.index', ['status' => 'rejected']) }}"
-                                        class="flex items-center px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 transition {{ request()->get('status') == 'rejected' ? 'bg-red-50 text-red-700 font-semibold' : '' }}">
-                                        <svg class="w-4 h-4 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                                d="M10 14l2-2m0 0l2-2m-2 2l-2-2m2 2l2 2m7-2a9 9 0 11-18 0 9 9 0 0118 0z" />
-                                        </svg>
-                                        Ditolak
-                                    </a>
+                                    Ditandatangani
+                                </a>
+                                <a href="{{ route('admin.skd.index', ['status' => 'notified']) }}"
+                                    class="flex items-center px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 transition {{ request()->get('status') == 'notified' ? 'bg-emerald-50 text-emerald-700 font-semibold' : '' }}">
+                                    <svg class="w-4 h-4 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                            d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+                                    </svg>
+                                    Dinotifikasi
+                                </a>
+                                <a href="{{ route('admin.skd.index', ['status' => 'rejected']) }}"
+                                    class="flex items-center px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 transition {{ request()->get('status') == 'rejected' ? 'bg-red-50 text-red-700 font-semibold' : '' }}">
+                                    <svg class="w-4 h-4 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                            d="M10 14l2-2m0 0l2-2m-2 2l-2-2m2 2l2 2m7-2a9 9 0 11-18 0 9 9 0 0118 0z" />
+                                    </svg>
+                                    Ditolak
+                                </a>
                             </div>
                         </div>
                     </div>
@@ -213,89 +224,93 @@
         @endif
 
         <!-- Statistics Cards -->
-        <div class="grid grid-cols-1 md:grid-cols-5 gap-3 mb-6">
-            <!-- Total Pengajuan -->
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-6 gap-4 mb-6">
+            <!-- Total Card -->
             <div
-                class="border border-emerald-200 bg-gradient-to-bl from-emerald-50 to-emerald-200 rounded-2xl shadow-sm p-6 text-emerald-600 card-stats">
-                <div class="flex items-center justify-between">
-                    <div>
-                        <p class="text-emerald-600 text-sm font-semibold">Total Pengajuan</p>
-                        <h3 class="text-3xl font-bold mt-2">{{ $pengajuanList->total() }}</h3>
-                    </div>
-                    <div class="bg-emerald-200 bg-opacity-30 rounded-full p-3">
-                        <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                class="border border-emerald-200 bg-gradient-to-br from-emerald-50 to-emerald-100 rounded-xl shadow-sm p-6 text-emerald-600 hover:shadow-md transition-shadow duration-200">
+                <p class="text-emerald-600 text-sm font-semibold mb-2">Total</p>
+                <div class="flex items-center gap-3">
+                    <div class="bg-emerald-200 bg-opacity-40 rounded-full p-2 flex-shrink-0">
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                                 d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
                         </svg>
                     </div>
+                    <h3 class="text-3xl font-bold">{{ $pengajuanList->total() }}</h3>
                 </div>
             </div>
 
-            <!-- Menunggu -->
+            <!-- Diajukan Card -->
             <div
-                class="border border-orange-200 bg-gradient-to-bl from-orange-50 to-orange-200 rounded-2xl shadow-xs p-6 text-orange-600 card-stats">
-                <div class="flex items-center justify-between">
-                    <div>
-                        <p class="text-sm font-semibold">Baru Diajukan</p>
-                        <h3 class="text-3xl font-bold mt-2">{{ $submittedSkd }}</h3>
-                    </div>
-                    <div class="bg-orange-200 bg-opacity-30 rounded-full p-3">
-                        <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                class="border border-orange-200 bg-gradient-to-br from-orange-50 to-orange-100 rounded-xl shadow-sm p-6 text-orange-600 hover:shadow-md transition-shadow duration-200">
+                <p class="text-orange-600 text-sm font-semibold mb-2">Diajukan</p>
+                <div class="flex items-center gap-3">
+                    <div class="bg-orange-200 bg-opacity-40 rounded-full p-2 flex-shrink-0">
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                                 d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
                         </svg>
                     </div>
+                    <h3 class="text-3xl font-bold">{{ $submittedSkd }}</h3>
                 </div>
             </div>
 
-            <!-- Diproses -->
+            <!-- Diverifikasi Card -->
             <div
-                class="border border-blue-200 bg-gradient-to-bl from-blue-50 to-blue-200 rounded-2xl shadow-xs p-6 text-blue-600 card-stats">
-                <div class="flex items-center justify-between">
-                    <div>
-                        <p class="text-sm font-semibold">Diverifikasi</p>
-                        <h3 class="text-3xl font-bold mt-2">{{ $verifiedSkd }}</h3>
-                    </div>
-                    <div class="bg-blue-200 bg-opacity-30 rounded-full p-3">
-                        <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                class="border border-blue-200 bg-gradient-to-br from-blue-50 to-blue-100 rounded-xl shadow-sm p-6 text-blue-600 hover:shadow-md transition-shadow duration-200">
+                <p class="text-blue-600 text-sm font-semibold mb-2">Diverifikasi</p>
+                <div class="flex items-center gap-3">
+                    <div class="bg-blue-200 bg-opacity-40 rounded-full p-2 flex-shrink-0">
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                                 d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
                         </svg>
                     </div>
+                    <h3 class="text-3xl font-bold">{{ $verifiedSkd }}</h3>
                 </div>
             </div>
 
-            <!-- Disetujui -->
+            <!-- Ditandatangani Card -->
             <div
-                class="border border-green-200 bg-gradient-to-bl from-green-50 to-green-200 rounded-2xl shadow-xs p-6 text-green-600 card-stats">
-                <div class="flex items-center justify-between">
-                    <div>
-                        <p class="text-sm font-semibold">Disetujui</p>
-                        <h3 class="text-3xl font-bold mt-2">{{ $approvedSkd }}</h3>
-                    </div>
-                    <div class="bg-green-200 bg-opacity-30 rounded-full p-3">
-                        <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+                class="border border-green-200 bg-gradient-to-br from-green-50 to-green-100 rounded-xl shadow-sm p-6 text-green-600 hover:shadow-md transition-shadow duration-200">
+                <p class="text-green-600 text-sm font-semibold mb-2">Ditandatangani</p>
+                <div class="flex items-center gap-3">
+                    <div class="bg-green-200 bg-opacity-40 rounded-full p-2 flex-shrink-0">
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
                         </svg>
                     </div>
+                    <h3 class="text-3xl font-bold">{{ $approvedSkd }}</h3>
                 </div>
             </div>
 
-            <!-- Ditolak -->
+            <!-- Dinotifikasi Card -->
             <div
-                class="border border-rose-200 bg-gradient-to-bl from-rose-50 to-rose-200 rounded-2xl shadow-xs p-6 text-rose-600 card-stats">
-                <div class="flex items-center justify-between">
-                    <div>
-                        <p class="text-sm font-semibold">Ditolak</p>
-                        <h3 class="text-3xl font-bold mt-2">{{ $rejectedSkd }}</h3>
+                class="border border-teal-200 bg-gradient-to-br from-teal-50 to-teal-100 rounded-xl shadow-sm p-6 text-teal-600 hover:shadow-md transition-shadow duration-200">
+                <p class="text-teal-600 text-sm font-semibold mb-2">Dinotifikasi</p>
+                <div class="flex items-center gap-3">
+                    <div class="bg-teal-200 bg-opacity-40 rounded-full p-2 flex-shrink-0">
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9" />
+                        </svg>
                     </div>
-                    <div class="bg-red-200 bg-opacity-30 rounded-full p-3">
-                        <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <h3 class="text-3xl font-bold">{{ $notifiedSkd }}</h3>
+                </div>
+            </div>
+
+            <!-- Ditolak Card -->
+            <div
+                class="border border-rose-200 bg-gradient-to-br from-rose-50 to-rose-100 rounded-xl shadow-sm p-6 text-rose-600 hover:shadow-md transition-shadow duration-200">
+                <p class="text-rose-600 text-sm font-semibold mb-2">Ditolak</p>
+                <div class="flex items-center gap-3">
+                    <div class="bg-rose-200 bg-opacity-40 rounded-full p-2 flex-shrink-0">
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                                 d="M10 14l2-2m0 0l2-2m-2 2l-2-2m2 2l2 2m7-2a9 9 0 11-18 0 9 9 0 0118 0z" />
                         </svg>
                     </div>
+                    <h3 class="text-3xl font-bold">{{ $rejectedSkd }}</h3>
                 </div>
             </div>
         </div>
@@ -411,7 +426,7 @@
 
                                         <div id="dropdown-{{ $pengajuan->id }}" class="dropdown-menu">
                                             <!-- Lihat Detail - Selalu tampil untuk semua status -->
-                                            <a href="{{ route('admin.skmt.detail', $pengajuan->id) }}"
+                                            <a href="{{ route('admin.skd.detail', $pengajuan->id) }}"
                                                 class="dropdown-item">
                                                 <svg class="w-4 h-4 text-emerald-600" fill="none"
                                                     stroke="currentColor" viewBox="0 0 24 24">
@@ -445,7 +460,7 @@
 
                                                 @if (!empty($pengajuan->file_surat_ttd))
                                                     <!-- Download File TTD -->
-                                                    <a href="{{ route('admin.skmt.download-ttd', $pengajuan->id) }}"
+                                                    <a href="{{ route('admin.skd.download-ttd', $pengajuan->id) }}"
                                                         class="dropdown-item">
                                                         <svg class="w-4 h-4 text-green-600" fill="none"
                                                             stroke="currentColor" viewBox="0 0 24 24">
@@ -500,7 +515,7 @@
                                                 <div class="dropdown-divider"></div>
 
                                                 <!-- Download File TTD -->
-                                                <a href="{{ route('admin.skmt.download-ttd', $pengajuan->id) }}"
+                                                <a href="{{ route('admin.skd.download-ttd', $pengajuan->id) }}"
                                                     class="dropdown-item">
                                                     <svg class="w-4 h-4 text-green-600" fill="none"
                                                         stroke="currentColor" viewBox="0 0 24 24">
@@ -550,11 +565,13 @@
                                                 Tidak ada pengajuan dengan status
                                                 <span class="font-semibold text-gray-700">
                                                     @if (request()->get('status') == 'submitted')
-                                                        Baru Diajukan
+                                                        Diajukan
                                                     @elseif(request()->get('status') == 'verified')
                                                         Diverifikasi
                                                     @elseif(request()->get('status') == 'approved')
-                                                        Disetujui
+                                                        Ditandatangani
+                                                    @elseif(request()->get('status') == 'notified')
+                                                        Dinotifikasi
                                                     @elseif(request()->get('status') == 'rejected')
                                                         Ditolak
                                                     @endif
@@ -663,7 +680,7 @@
         </div>
     </div>
 
-        <!-- Modal Kirim Email -->
+    <!-- Modal Kirim Email -->
     <div id="emailModal"
         class="hidden fixed inset-0 z-50 flex items-center justify-center backdrop-brightness-50 backdrop-blur-sm modal-backdrop">
         <div class="w-full max-w-lg mx-4 bg-white rounded-3xl shadow-xl overflow-hidden modal-content">

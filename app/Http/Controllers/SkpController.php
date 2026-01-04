@@ -13,9 +13,13 @@ use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Storage;
 use PhpOffice\PhpWord\TemplateProcessor;
 use App\Mail\PengajuanDitolakMail;
+use App\Mail\PengajuanSelesaiMail;
 
 class SkpController extends Controller
 {
+    private const PATH_SURAT_CETAK = 'surat/cetak';
+    private const PATH_SURAT_TTD = 'surat/ttd';
+
     public function __construct()
     {
         $this->middleware('auth:admin');
@@ -44,7 +48,7 @@ class SkpController extends Controller
 
         $pengajuanList = $query
             ->orderBy('created_at', 'desc')
-            ->paginate(10)
+            ->paginate(perPage: 10)
             ->withQueryString();
 
         $submittedSkp = PengajuanSurat::whereHas('jenisSurat', function ($q) {
@@ -59,6 +63,10 @@ class SkpController extends Controller
             $q->where('kode', 'SKP');
         })->where('status', 'approved')->count();
 
+        $notifiedSkp = PengajuanSurat::whereHas('jenisSurat', function ($q) {
+            $q->where('kode', 'SKP');
+        })->where('status', 'notified')->count();
+
         $rejectedSkp = PengajuanSurat::whereHas('jenisSurat', function ($q) {
             $q->where('kode', 'SKP');
         })->where('status', 'rejected')->count();
@@ -68,6 +76,7 @@ class SkpController extends Controller
             'submittedSkp',
             'verifiedSkp',
             'approvedSkp',
+            'notifiedSkp',
             'rejectedSkp'
         ));
     }
@@ -144,7 +153,6 @@ class SkpController extends Controller
             return redirect()
                 ->route('admin.skp.detail', $id)
                 ->with('success', $message);
-
         } catch (\Exception $e) {
             DB::rollBack();
             Log::error('Error update SKP: ' . $e->getMessage());
@@ -182,7 +190,6 @@ class SkpController extends Controller
 
             return redirect()->route('admin.skp.success', $filename)
                 ->with('success', 'Surat berhasil disetujui dan dicetak!');
-
         } catch (\Exception $e) {
             DB::rollBack();
             Log::error('Error verify SKP: ' . $e->getMessage());
@@ -205,14 +212,25 @@ class SkpController extends Controller
                 return back()->with('error', 'Hanya surat yang sudah diverifikasi atau disetujui yang bisa di-upload TTD.');
             }
 
+            // Pastikan folder ttd ada
+            $dir = storage_path('app/' . self::PATH_SURAT_TTD);
+            if (!file_exists($dir)) {
+                mkdir($dir, 0755, true);
+            }
 
-            if ($pengajuan->file_surat_ttd && Storage::disk('public')->exists('surat_ttd/' . $pengajuan->file_surat_ttd)) {
-                Storage::disk('public')->delete('surat_ttd/' . $pengajuan->file_surat_ttd);
+            // Hapus file lama jika ada
+            if ($pengajuan->file_surat_ttd) {
+                $oldPath = storage_path('app/' . self::PATH_SURAT_TTD . '/' . $pengajuan->file_surat_ttd);
+                if (file_exists($oldPath)) {
+                    unlink($oldPath);
+                }
             }
 
             $file = $request->file('file_ttd');
             $filename = 'TTD_' . $pengajuan->nomor_pengajuan . '_' . time() . '.' . $file->getClientOriginalExtension();
-            $file->storeAs('surat_ttd', $filename, 'public');
+
+            // Simpan ke folder ttd
+            $file->move($dir, $filename);
 
             $pengajuan->update([
                 'file_surat_ttd' => $filename,
@@ -265,6 +283,54 @@ class SkpController extends Controller
         }
     }
 
+    public function sendNotification($id)
+    {
+        try {
+            DB::beginTransaction();
+
+            $pengajuan = PengajuanSurat::findOrFail($id);
+
+            // Validasi status harus approved dan sudah ada file TTD
+            if ($pengajuan->status !== 'approved') {
+                return back()->with('error', 'Hanya pengajuan dengan status Approved yang dapat dikirim notifikasi.');
+            }
+
+            if (!$pengajuan->file_surat_ttd) {
+                return back()->with('error', 'File surat bertanda tangan belum tersedia. Upload file TTD terlebih dahulu.');
+            }
+
+            // Cek apakah file TTD benar-benar ada
+            $filePath = storage_path('app/' . self::PATH_SURAT_TTD . '/' . $pengajuan->file_surat_ttd);
+            if (!file_exists($filePath)) {
+                return back()->with('error', 'File surat bertanda tangan tidak ditemukan di server.');
+            }
+
+            // Kirim email
+            try {
+                Mail::to($pengajuan->email_pemohon)->send(
+                    new PengajuanSelesaiMail($pengajuan)
+                );
+            } catch (\Exception $mailError) {
+                Log::error('Gagal mengirim email notifikasi: ' . $mailError->getMessage());
+                throw new \Exception('Gagal mengirim email: ' . $mailError->getMessage());
+            }
+
+            // Update status menjadi notified dan catat waktu notifikasi
+            $pengajuan->update([
+                'status' => 'notified',
+                'tanggal_notifikasi_warga' => now(),
+            ]);
+
+            DB::commit();
+
+            return back()->with('success', 'Notifikasi berhasil dikirim ke ' . $pengajuan->email_pemohon . '. Status berubah menjadi Notified.');
+        } catch (\Exception $e) {
+            DB::rollBack();
+            Log::error('Error send notification SKP: ' . $e->getMessage());
+            return back()->with('error', 'Terjadi kesalahan: ' . $e->getMessage());
+        }
+    }
+
     private function generateSuratFile($pengajuan, $skp, $nomorSurat)
     {
         $tanggalBerlaku = now()->addDays(90);
@@ -310,19 +376,18 @@ class SkpController extends Controller
         }
 
         if (!empty($data['keterangan_tambahan_html'])) {
-            $keteranganInline = trim(
-                preg_replace('/\s+/', ' ', strip_tags($data['keterangan_tambahan_html']))
-            );
+            $keteranganInline = trim(preg_replace('/\s+/', ' ', strip_tags($data['keterangan_tambahan_html'])));
             $templateProcessor->setValue('keterangan_tambahan', $keteranganInline);
         } else {
             $templateProcessor->setValue('keterangan_tambahan', '-');
         }
 
         $filename = 'SKP_' . $skp->nik . '_' . time() . '.docx';
-        $outputPath = storage_path('app/surat/skp/' . $filename);
+        $outputPath = storage_path('app/' . self::PATH_SURAT_CETAK . '/' . $filename);
 
-        if (!file_exists(storage_path('app/surat/skp'))) {
-            mkdir(storage_path('app/surat/skp'), 0755, true);
+        // Pastikan folder cetak ada
+        if (!file_exists(storage_path('app/' . self::PATH_SURAT_CETAK))) {
+            mkdir(storage_path('app/' . self::PATH_SURAT_CETAK), 0755, true);
         }
 
         $templateProcessor->saveAs($outputPath);
@@ -375,15 +440,14 @@ class SkpController extends Controller
         }
 
         if (!empty($data['keterangan_tambahan_html'])) {
-            $keteranganInline = trim(
-                preg_replace('/\s+/', ' ', strip_tags($data['keterangan_tambahan_html']))
-            );
+            $keteranganInline = trim(preg_replace('/\s+/', ' ', strip_tags($data['keterangan_tambahan_html'])));
             $templateProcessor->setValue('keterangan_tambahan', $keteranganInline);
         } else {
             $templateProcessor->setValue('keterangan_tambahan', '-');
         }
 
-        $outputPath = storage_path('app/surat/skp/' . $pengajuan->file_surat_cetak);
+        // Regenerate file di folder cetak dengan nama file yang sama
+        $outputPath = storage_path('app/' . self::PATH_SURAT_CETAK . '/' . $pengajuan->file_surat_cetak);
         $templateProcessor->saveAs($outputPath);
 
         $pengajuan->update(['tanggal_cetak' => now()]);
@@ -391,7 +455,7 @@ class SkpController extends Controller
 
     public function success($file)
     {
-        $filePath = storage_path('app/surat/skp/' . $file);
+        $filePath = storage_path('app/' . self::PATH_SURAT_CETAK . '/' . $file);
         if (!file_exists($filePath)) {
             abort(404, 'File tidak ditemukan');
         }
@@ -400,7 +464,7 @@ class SkpController extends Controller
 
     public function download($file)
     {
-        $filePath = storage_path('app/surat/skp/' . $file);
+        $filePath = storage_path('app/' . self::PATH_SURAT_CETAK . '/' . $file);
         if (!file_exists($filePath)) {
             abort(404, 'File tidak ditemukan');
         }
@@ -416,14 +480,13 @@ class SkpController extends Controller
                 return back()->with('error', 'File surat bertanda tangan belum tersedia.');
             }
 
-            $filePath = storage_path('app/public/surat_ttd/' . $pengajuan->file_surat_ttd);
+            $filePath = storage_path('app/' . self::PATH_SURAT_TTD . '/' . $pengajuan->file_surat_ttd);
 
             if (!file_exists($filePath)) {
                 return back()->with('error', 'File tidak ditemukan di server.');
             }
 
             return response()->download($filePath);
-
         } catch (\Exception $e) {
             return back()->with('error', 'Gagal mengunduh file: ' . $e->getMessage());
         }
@@ -459,10 +522,8 @@ class SkpController extends Controller
             if ($exists) {
                 $jenisSurat->increment('counter_terakhir');
             }
-
         } while ($exists);
 
         return $nomorSurat;
     }
-
 }

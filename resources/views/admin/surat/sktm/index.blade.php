@@ -111,11 +111,13 @@
                             </svg>
                             <span class="text-sm font-medium text-gray-700">
                                 @if (request()->get('status') == 'submitted')
-                                    Baru Diajukan
+                                    Diajukan
                                 @elseif(request()->get('status') == 'verified')
                                     Diverifikasi
                                 @elseif(request()->get('status') == 'approved')
-                                    Disetujui
+                                    Ditandatangani
+                                @elseif(request()->get('status') == 'notified')
+                                    Diberitahukan
                                 @elseif(request()->get('status') == 'rejected')
                                     Ditolak
                                 @else
@@ -146,7 +148,7 @@
                                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                                             d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
                                     </svg>
-                                    Baru Diajukan
+                                    Diajukan
                                 </a>
                                 <a href="{{ route('admin.sktm.index', ['status' => 'verified']) }}"
                                     class="flex items-center px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 transition {{ request()->get('status') == 'verified' ? 'bg-emerald-50 text-emerald-700 font-semibold' : '' }}">
@@ -162,15 +164,24 @@
                                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                                             d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
                                     </svg>
-                                    Disetujui
-                                    <a href="{{ route('admin.sktm.index', ['status' => 'rejected']) }}"
-                                        class="flex items-center px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 transition {{ request()->get('status') == 'rejected' ? 'bg-red-50 text-red-700 font-semibold' : '' }}">
-                                        <svg class="w-4 h-4 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                                d="M10 14l2-2m0 0l2-2m-2 2l-2-2m2 2l2 2m7-2a9 9 0 11-18 0 9 9 0 0118 0z" />
-                                        </svg>
-                                        Ditolak
-                                    </a>
+                                    Ditandatangani
+                                </a>
+                                <a href="{{ route('admin.sktm.index', ['status' => 'notified']) }}"
+                                    class="flex items-center px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 transition {{ request()->get('status') == 'notified' ? 'bg-emerald-50 text-emerald-700 font-semibold' : '' }}">
+                                    <svg class="w-4 h-4 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                            d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+                                    </svg>
+                                    Dinotifikasi
+                                </a>
+                                <a href="{{ route('admin.sktm.index', ['status' => 'rejected']) }}"
+                                    class="flex items-center px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 transition {{ request()->get('status') == 'rejected' ? 'bg-red-50 text-red-700 font-semibold' : '' }}">
+                                    <svg class="w-4 h-4 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                            d="M10 14l2-2m0 0l2-2m-2 2l-2-2m2 2l2 2m7-2a9 9 0 11-18 0 9 9 0 0118 0z" />
+                                    </svg>
+                                    Ditolak
+                                </a>
                             </div>
                         </div>
                     </div>
@@ -214,89 +225,93 @@
         @endif
 
         <!-- Statistics Cards -->
-        <div class="grid grid-cols-1 md:grid-cols-5 gap-3 mb-6">
-            <!-- Total Pengajuan -->
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-6 gap-4 mb-6">
+            <!-- Total Card -->
             <div
-                class="border border-emerald-200 bg-gradient-to-bl from-emerald-50 to-emerald-200 rounded-2xl shadow-sm p-6 text-emerald-600 card-stats">
-                <div class="flex items-center justify-between">
-                    <div>
-                        <p class="text-emerald-600 text-sm font-semibold">Total Pengajuan</p>
-                        <h3 class="text-3xl font-bold mt-2">{{ $pengajuanList->total() }}</h3>
-                    </div>
-                    <div class="bg-emerald-200 bg-opacity-30 rounded-full p-3">
-                        <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                class="border border-emerald-200 bg-gradient-to-br from-emerald-50 to-emerald-100 rounded-xl shadow-sm p-6 text-emerald-600 hover:shadow-md transition-shadow duration-200">
+                <p class="text-emerald-600 text-sm font-semibold mb-2">Total</p>
+                <div class="flex items-center gap-3">
+                    <div class="bg-emerald-200 bg-opacity-40 rounded-full p-2 flex-shrink-0">
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                                 d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
                         </svg>
                     </div>
+                    <h3 class="text-3xl font-bold">{{ $pengajuanList->total() }}</h3>
                 </div>
             </div>
 
-            <!-- Menunggu -->
+            <!-- Diajukan Card -->
             <div
-                class="border border-orange-200 bg-gradient-to-bl from-orange-50 to-orange-200 rounded-2xl shadow-xs p-6 text-orange-600 card-stats">
-                <div class="flex items-center justify-between">
-                    <div>
-                        <p class="text-sm font-semibold">Menunggu</p>
-                        <h3 class="text-3xl font-bold mt-2">{{ $submittedSktm }}</h3>
-                    </div>
-                    <div class="bg-orange-200 bg-opacity-30 rounded-full p-3">
-                        <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                class="border border-orange-200 bg-gradient-to-br from-orange-50 to-orange-100 rounded-xl shadow-sm p-6 text-orange-600 hover:shadow-md transition-shadow duration-200">
+                <p class="text-orange-600 text-sm font-semibold mb-2">Diajukan</p>
+                <div class="flex items-center gap-3">
+                    <div class="bg-orange-200 bg-opacity-40 rounded-full p-2 flex-shrink-0">
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                                 d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
                         </svg>
                     </div>
+                    <h3 class="text-3xl font-bold">{{ $submittedSktm }}</h3>
                 </div>
             </div>
 
-            <!-- Diproses -->
+            <!-- Diverifikasi Card -->
             <div
-                class="border border-blue-200 bg-gradient-to-bl from-blue-50 to-blue-200 rounded-2xl shadow-xs p-6 text-blue-600 card-stats">
-                <div class="flex items-center justify-between">
-                    <div>
-                        <p class="text-sm font-semibold">Diproses</p>
-                        <h3 class="text-3xl font-bold mt-2">{{ $verifiedSktm }}</h3>
-                    </div>
-                    <div class="bg-blue-200 bg-opacity-30 rounded-full p-3">
-                        <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                class="border border-blue-200 bg-gradient-to-br from-blue-50 to-blue-100 rounded-xl shadow-sm p-6 text-blue-600 hover:shadow-md transition-shadow duration-200">
+                <p class="text-blue-600 text-sm font-semibold mb-2">Diverifikasi</p>
+                <div class="flex items-center gap-3">
+                    <div class="bg-blue-200 bg-opacity-40 rounded-full p-2 flex-shrink-0">
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                                 d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
                         </svg>
                     </div>
+                    <h3 class="text-3xl font-bold">{{ $verifiedSktm }}</h3>
                 </div>
             </div>
 
-            <!-- Disetujui -->
+            <!-- Ditandatangani Card -->
             <div
-                class="border border-green-200 bg-gradient-to-bl from-green-50 to-green-200 rounded-2xl shadow-xs p-6 text-green-600 card-stats">
-                <div class="flex items-center justify-between">
-                    <div>
-                        <p class="text-sm font-semibold">Disetujui</p>
-                        <h3 class="text-3xl font-bold mt-2">{{ $approvedSktm }}</h3>
-                    </div>
-                    <div class="bg-green-200 bg-opacity-30 rounded-full p-3">
-                        <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                d="M5 13l4 4L19 7" />
+                class="border border-green-200 bg-gradient-to-br from-green-50 to-green-100 rounded-xl shadow-sm p-6 text-green-600 hover:shadow-md transition-shadow duration-200">
+                <p class="text-green-600 text-sm font-semibold mb-2">Ditandatangani</p>
+                <div class="flex items-center gap-3">
+                    <div class="bg-green-200 bg-opacity-40 rounded-full p-2 flex-shrink-0">
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
                         </svg>
                     </div>
+                    <h3 class="text-3xl font-bold">{{ $approvedSktm }}</h3>
                 </div>
             </div>
 
-            <!-- Ditolak -->
+            <!-- Dinotifikasi Card -->
             <div
-                class="border border-rose-200 bg-gradient-to-bl from-rose-50 to-rose-200 rounded-2xl shadow-xs p-6 text-rose-600 card-stats">
-                <div class="flex items-center justify-between">
-                    <div>
-                        <p class="text-sm font-semibold">Ditolak</p>
-                        <h3 class="text-3xl font-bold mt-2">{{ $rejectedSktm }}</h3>
+                class="border border-teal-200 bg-gradient-to-br from-teal-50 to-teal-100 rounded-xl shadow-sm p-6 text-teal-600 hover:shadow-md transition-shadow duration-200">
+                <p class="text-teal-600 text-sm font-semibold mb-2">Dinotifikasi</p>
+                <div class="flex items-center gap-3">
+                    <div class="bg-teal-200 bg-opacity-40 rounded-full p-2 flex-shrink-0">
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9" />
+                        </svg>
                     </div>
-                    <div class="bg-red-200 bg-opacity-30 rounded-full p-3">
-                        <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <h3 class="text-3xl font-bold">{{ $notifiedSktm }}</h3>
+                </div>
+            </div>
+
+            <!-- Ditolak Card -->
+            <div
+                class="border border-rose-200 bg-gradient-to-br from-rose-50 to-rose-100 rounded-xl shadow-sm p-6 text-rose-600 hover:shadow-md transition-shadow duration-200">
+                <p class="text-rose-600 text-sm font-semibold mb-2">Ditolak</p>
+                <div class="flex items-center gap-3">
+                    <div class="bg-rose-200 bg-opacity-40 rounded-full p-2 flex-shrink-0">
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                                 d="M10 14l2-2m0 0l2-2m-2 2l-2-2m2 2l2 2m7-2a9 9 0 11-18 0 9 9 0 0118 0z" />
                         </svg>
                     </div>
+                    <h3 class="text-3xl font-bold">{{ $rejectedSktm }}</h3>
                 </div>
             </div>
         </div>
@@ -411,6 +426,7 @@
                                         </button>
 
                                         <div id="dropdown-{{ $pengajuan->id }}" class="dropdown-menu">
+                                            <!-- Lihat Detail - Selalu tampil untuk semua status -->
                                             <a href="{{ route('admin.sktm.detail', $pengajuan->id) }}"
                                                 class="dropdown-item">
                                                 <svg class="w-4 h-4 text-emerald-600" fill="none"
@@ -422,6 +438,8 @@
                                                 </svg>
                                                 <span class="font-semibold">Lihat Detail</span>
                                             </a>
+
+                                            <!-- ========== STATUS: VERIFIED ========== -->
                                             @if ($pengajuan->status === 'verified')
                                                 <div class="dropdown-divider"></div>
 
@@ -435,10 +453,14 @@
                                                     </svg>
                                                     <span class="font-semibold">Upload Surat TTD</span>
                                                 </button>
-                                            @elseif ($pengajuan->status === 'approved')
+                                            @endif
+
+                                            <!-- ========== STATUS: APPROVED ========== -->
+                                            @if ($pengajuan->status === 'approved')
                                                 <div class="dropdown-divider"></div>
 
                                                 @if (!empty($pengajuan->file_surat_ttd))
+                                                    <!-- Download File TTD -->
                                                     <a href="{{ route('admin.sktm.download-ttd', $pengajuan->id) }}"
                                                         class="dropdown-item">
                                                         <svg class="w-4 h-4 text-green-600" fill="none"
@@ -449,6 +471,8 @@
                                                         </svg>
                                                         <span class="font-semibold">Download File TTD</span>
                                                     </a>
+
+                                                    <!-- Re-upload File TTD -->
                                                     <button onclick="openUploadModal({{ $pengajuan->id }})"
                                                         class="dropdown-item w-full text-left">
                                                         <svg class="w-4 h-4 text-orange-600" fill="none"
@@ -459,9 +483,12 @@
                                                         </svg>
                                                         <span class="font-semibold">Re-upload File TTD</span>
                                                     </button>
-                                                                                                        <button onclick=""
+
+                                                    <!-- Kirim Email Notifikasi -->
+                                                    <button
+                                                        onclick="openEmailModal({{ $pengajuan->id }}, '{{ $pengajuan->email_pemohon }}', '{{ $pengajuan->nama_pemohon }}')"
                                                         class="dropdown-item w-full text-left">
-                                                        <svg class="w-4 h-4 text-red-600" fill="none"
+                                                        <svg class="w-4 h-4 text-green-600" fill="none"
                                                             stroke="currentColor" viewBox="0 0 24 24">
                                                             <path stroke-linecap="round" stroke-linejoin="round"
                                                                 stroke-width="2"
@@ -470,6 +497,7 @@
                                                         <span class="font-semibold">Kirim Email</span>
                                                     </button>
                                                 @else
+                                                    <!-- Jika belum ada file TTD -->
                                                     <button onclick="openUploadModal({{ $pengajuan->id }})"
                                                         class="dropdown-item w-full text-left">
                                                         <svg class="w-4 h-4 text-blue-600" fill="none"
@@ -481,6 +509,23 @@
                                                         <span class="font-semibold">Upload Surat TTD</span>
                                                     </button>
                                                 @endif
+                                            @endif
+
+                                            <!-- ========== STATUS: NOTIFIED ========== -->
+                                            @if ($pengajuan->status === 'notified')
+                                                <div class="dropdown-divider"></div>
+
+                                                <!-- Download File TTD -->
+                                                <a href="{{ route('admin.sktm.download-ttd', $pengajuan->id) }}"
+                                                    class="dropdown-item">
+                                                    <svg class="w-4 h-4 text-green-600" fill="none"
+                                                        stroke="currentColor" viewBox="0 0 24 24">
+                                                        <path stroke-linecap="round" stroke-linejoin="round"
+                                                            stroke-width="2"
+                                                            d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+                                                    </svg>
+                                                    <span class="font-semibold">Download File TTD</span>
+                                                </a>
                                             @endif
                                         </div>
                                     </div>
@@ -635,6 +680,134 @@
             </form>
         </div>
     </div>
+
+    <!-- Modal Kirim Email -->
+    <div id="emailModal"
+        class="hidden fixed inset-0 z-50 flex items-center justify-center backdrop-brightness-50 backdrop-blur-sm modal-backdrop">
+        <div class="w-full max-w-lg mx-4 bg-white rounded-3xl shadow-xl overflow-hidden modal-content">
+            <div class="flex items-center gap-3 px-6 py-4 bg-gradient-to-r from-green-600 to-green-500 text-white">
+                <div class="w-12 h-12 rounded-full bg-white/20 flex items-center justify-center">
+                    <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
+                    </svg>
+                </div>
+                <div>
+                    <h3 class="text-base font-bold">Kirim Email Notifikasi</h3>
+                    <p class="text-xs text-green-100">Konfirmasi pengiriman email ke pemohon</p>
+                </div>
+            </div>
+
+            <form id="emailForm" method="POST" class="px-6 py-5">
+                @csrf
+                <div class="bg-green-50 border border-green-200 rounded-xl p-4 mb-4">
+                    <div class="flex items-start gap-3">
+                        <svg class="w-5 h-5 text-green-600 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor"
+                            viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                        </svg>
+                        <div class="flex-1">
+                            <h4 class="font-semibold text-green-800 mb-2">Detail Pengiriman Email</h4>
+                            <div class="space-y-2 text-sm text-green-700">
+                                <div class="flex items-start gap-2">
+                                    <svg class="w-4 h-4 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor"
+                                        viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                            d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
+                                    </svg>
+                                    <div>
+                                        <span class="font-medium">Penerima:</span>
+                                        <span id="emailRecipientName" class="font-semibold"></span>
+                                    </div>
+                                </div>
+                                <div class="flex items-start gap-2">
+                                    <svg class="w-4 h-4 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor"
+                                        viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                            d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
+                                    </svg>
+                                    <div>
+                                        <span class="font-medium">Email:</span>
+                                        <span id="emailRecipientEmail"
+                                            class="font-mono text-xs bg-green-100 px-2 py-0.5 rounded"></span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="bg-blue-50 border border-blue-200 rounded-xl p-4 mb-4">
+                    <h5 class="font-semibold text-blue-800 mb-2 flex items-center gap-2">
+                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+                        </svg>
+                        Isi Email
+                    </h5>
+                    <ul class="space-y-1.5 text-sm text-blue-700">
+                        <li class="flex items-start gap-2">
+                            <svg class="w-4 h-4 flex-shrink-0 mt-0.5 text-blue-500" fill="currentColor"
+                                viewBox="0 0 20 20">
+                                <path fill-rule="evenodd"
+                                    d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z"
+                                    clip-rule="evenodd" />
+                            </svg>
+                            <span>Informasi pengajuan telah disetujui</span>
+                        </li>
+                        <li class="flex items-start gap-2">
+                            <svg class="w-4 h-4 flex-shrink-0 mt-0.5 text-blue-500" fill="currentColor"
+                                viewBox="0 0 20 20">
+                                <path fill-rule="evenodd"
+                                    d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z"
+                                    clip-rule="evenodd" />
+                            </svg>
+                            <span>File PDF surat (lampiran)</span>
+                        </li>
+                        <li class="flex items-start gap-2">
+                            <svg class="w-4 h-4 flex-shrink-0 mt-0.5 text-blue-500" fill="currentColor"
+                                viewBox="0 0 20 20">
+                                <path fill-rule="evenodd"
+                                    d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z"
+                                    clip-rule="evenodd" />
+                            </svg>
+                            <span>Instruksi pengambilan di kantor desa</span>
+                        </li>
+                    </ul>
+                </div>
+
+                <div class="bg-amber-50 border border-amber-200 rounded-xl p-4 mb-5">
+                    <div class="flex items-start gap-3">
+                        <svg class="w-5 h-5 text-amber-600 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor"
+                            viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
+                        </svg>
+                        <p class="text-sm text-amber-700">
+                            Pastikan file surat sudah benar sebelum mengirim email.
+                            Email hanya dapat dikirim <strong>satu kali</strong>.
+                        </p>
+                    </div>
+                </div>
+
+                <div class="flex gap-3">
+                    <button type="button" onclick="closeEmailModal()"
+                        class="flex-1 px-4 py-2.5 rounded-xl bg-gray-200 hover:bg-gray-300 text-gray-800 font-semibold transition text-sm">
+                        Batal
+                    </button>
+                    <button type="submit"
+                        class="flex-1 px-4 py-2.5 rounded-xl bg-gradient-to-r from-green-600 to-green-500 hover:from-green-700 hover:to-green-600 text-white font-bold shadow-lg hover:shadow-xl transition text-sm flex items-center justify-center gap-2">
+                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8" />
+                        </svg>
+                        Kirim Email
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
 @endsection
 
 @push('scripts')
@@ -759,6 +932,27 @@
         document.getElementById('uploadModal')?.addEventListener('click', function(event) {
             if (event.target === this) {
                 closeUploadModal();
+            }
+        });
+
+        function openEmailModal(id, email, name) {
+            document.getElementById('emailModal').classList.remove('hidden');
+            document.getElementById('emailForm').action = `/admin/sktm/${id}/send-notification`;
+            document.getElementById('emailRecipientName').textContent = name;
+            document.getElementById('emailRecipientEmail').textContent = email;
+
+            document.querySelectorAll('.dropdown-menu').forEach(menu => {
+                menu.classList.remove('show');
+            });
+        }
+
+        function closeEmailModal() {
+            document.getElementById('emailModal').classList.add('hidden');
+        }
+
+        document.getElementById('emailModal')?.addEventListener('click', function(event) {
+            if (event.target === this) {
+                closeEmailModal();
             }
         });
     </script>

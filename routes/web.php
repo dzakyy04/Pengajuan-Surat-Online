@@ -46,6 +46,7 @@ Route::prefix('admin')->name('admin.')->group(function () {
             Route::put('/{id}', [SktmController::class, 'update'])->name('update');
             Route::post('/{id}/verify', [SktmController::class, 'verify'])->name('verify');
             Route::put('/{id}/reject', [SktmController::class, 'reject'])->name('reject');
+            Route::post('/{id}/send-notification', [SktmController::class, 'sendNotification'])->name('send-notification');
             Route::post('/{id}/upload-ttd', [SktmController::class, 'uploadTtd'])->name('upload-ttd');
             Route::get('/{id}/download-ttd', [SktmController::class, 'downloadTtd'])->name('download-ttd');
             Route::get('/{id}/print', [SktmController::class, 'print'])->name('print');
@@ -77,6 +78,7 @@ Route::prefix('admin')->name('admin.')->group(function () {
             Route::put('/{id}', [SkuController::class, 'update'])->name('update');
             Route::post('/{id}/verify', [SkuController::class, 'verify'])->name('verify');
             Route::put('/{id}/reject', [SkuController::class, 'reject'])->name('reject');
+            Route::post('/{id}/send-notification', [SkuController::class, 'sendNotification'])->name('send-notification');
             Route::post('/{id}/upload-ttd', [SkuController::class, 'uploadTtd'])->name('upload-ttd');
             Route::get('/{id}/download-ttd', [SkuController::class, 'downloadTtd'])->name('download-ttd');
             Route::get('/{id}/print', [SkuController::class, 'print'])->name('print');
@@ -92,6 +94,7 @@ Route::prefix('admin')->name('admin.')->group(function () {
             Route::put('/{id}', [SkpController::class, 'update'])->name('update');
             Route::post('/{id}/verify', [SkpController::class, 'verify'])->name('verify');
             Route::put('/{id}/reject', [SkpController::class, 'reject'])->name('reject');
+            Route::post('/{id}/send-notification', [SkpController::class, 'sendNotification'])->name('send-notification');
             Route::post('/{id}/upload-ttd', [SkpController::class, 'uploadTtd'])->name('upload-ttd');
             Route::get('/{id}/download-ttd', [SkpController::class, 'downloadTtd'])->name('download-ttd');
             Route::get('/{id}/print', [SkpController::class, 'print'])->name('print');

@@ -17,7 +17,6 @@ use App\Mail\PengajuanSelesaiMail;
 
 class SkdController extends Controller
 {
-    // Konstanta untuk path folder
     private const PATH_SURAT_CETAK = 'surat/cetak';
     private const PATH_SURAT_TTD = 'surat/ttd';
 
@@ -64,6 +63,10 @@ class SkdController extends Controller
             $q->where('kode', 'SKD');
         })->where('status', 'approved')->count();
 
+        $notifiedSkd = PengajuanSurat::whereHas('jenisSurat', function ($q) {
+            $q->where('kode', 'SKD');
+        })->where('status', 'notified')->count();
+
         $rejectedSkd = PengajuanSurat::whereHas('jenisSurat', function ($q) {
             $q->where('kode', 'SKD');
         })->where('status', 'rejected')->count();
@@ -73,6 +76,7 @@ class SkdController extends Controller
             'submittedSkd',
             'verifiedSkd',
             'approvedSkd',
+            'notifiedSkd',
             'rejectedSkd'
         ));
     }

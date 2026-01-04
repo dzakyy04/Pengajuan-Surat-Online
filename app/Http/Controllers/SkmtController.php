@@ -17,7 +17,6 @@ use PhpOffice\PhpWord\TemplateProcessor;
 
 class SkmtController extends Controller
 {
-    // Konstanta untuk path folder
     private const PATH_SURAT_CETAK = 'surat/cetak';
     private const PATH_SURAT_TTD = 'surat/ttd';
 
@@ -64,6 +63,10 @@ class SkmtController extends Controller
             $q->where('kode', 'SKMT');
         })->where('status', 'approved')->count();
 
+        $notifiedSkmt = PengajuanSurat::whereHas('jenisSurat', function ($q) {
+            $q->where('kode', 'SKMT');
+        })->where('status', 'notified')->count();
+
         $rejectedSkmt = PengajuanSurat::whereHas('jenisSurat', function ($q) {
             $q->where('kode', 'SKMT');
         })->where('status', 'rejected')->count();
@@ -73,6 +76,7 @@ class SkmtController extends Controller
             'submittedSkmt',
             'verifiedSkmt',
             'approvedSkmt',
+            'notifiedSkmt',
             'rejectedSkmt'
         ));
     }
