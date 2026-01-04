@@ -3,113 +3,238 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Konfirmasi Pengajuan Surat</title>
+    <title>Pengajuan Surat Berhasil</title>
     <style>
         body {
-            font-family: Arial, sans-serif;
-            line-height: 1.6;
-            color: #333;
-            max-width: 600px;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.8;
+            color: #2c3e50;
+            max-width: 650px;
             margin: 0 auto;
-            padding: 20px;
+            padding: 0;
+            background-color: #f4f6f9;
+        }
+        .email-container {
+            background-color: #ffffff;
+            margin: 30px auto;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
         }
         .header {
-            background-color: #4CAF50;
+            background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%);
             color: white;
-            padding: 20px;
+            padding: 40px 30px;
             text-align: center;
-            border-radius: 5px 5px 0 0;
+            border-bottom: 4px solid #1a2f5a;
+        }
+        .header h1 {
+            margin: 0;
+            font-size: 24px;
+            font-weight: 600;
+            letter-spacing: 0.5px;
+        }
+        .header p {
+            margin: 8px 0 0 0;
+            font-size: 14px;
+            opacity: 0.9;
         }
         .content {
-            background-color: #f9f9f9;
-            padding: 30px;
-            border: 1px solid #ddd;
-            border-top: none;
+            padding: 40px 35px;
+            background-color: #ffffff;
         }
-        .info-box {
-            background-color: white;
-            padding: 15px;
-            margin: 20px 0;
-            border-left: 4px solid #4CAF50;
-            border-radius: 3px;
+        .salutation {
+            font-size: 15px;
+            margin-bottom: 20px;
+            color: #2c3e50;
         }
-        .info-row {
-            margin: 10px 0;
+        .intro-text {
+            font-size: 15px;
+            color: #34495e;
+            margin-bottom: 30px;
+            text-align: justify;
         }
-        .label {
+        .details-card {
+            background-color: #f8f9fa;
+            border: 1px solid #e1e8ed;
+            border-radius: 6px;
+            padding: 25px;
+            margin: 25px 0;
+        }
+        .detail-item {
+            display: flex;
+            padding: 12px 0;
+            border-bottom: 1px solid #e9ecef;
+        }
+        .detail-item:last-child {
+            border-bottom: none;
+        }
+        .detail-label {
+            font-weight: 600;
+            color: #5a6c7d;
+            min-width: 160px;
+            font-size: 14px;
+        }
+        .detail-value {
+            color: #2c3e50;
+            font-size: 14px;
+            flex: 1;
+        }
+        .highlight-box {
+            background-color: #fff8e1;
+            border-left: 4px solid #ffc107;
+            padding: 18px 20px;
+            margin: 25px 0;
+            border-radius: 4px;
+        }
+        .highlight-box strong {
+            color: #f57c00;
+            font-size: 14px;
+        }
+        .highlight-box p {
+            margin: 8px 0 0 0;
+            font-size: 14px;
+            color: #5d4037;
+        }
+        .section-title {
+            font-size: 16px;
+            font-weight: 600;
+            color: #2c3e50;
+            margin: 30px 0 15px 0;
+            padding-bottom: 8px;
+            border-bottom: 2px solid #e1e8ed;
+        }
+        .process-list {
+            list-style: none;
+            padding: 0;
+            margin: 15px 0;
+        }
+        .process-list li {
+            padding: 10px 0 10px 30px;
+            position: relative;
+            font-size: 14px;
+            color: #34495e;
+        }
+        .process-list li:before {
+            content: "▸";
+            position: absolute;
+            left: 10px;
+            color: #2a5298;
             font-weight: bold;
-            color: #555;
         }
-        .value {
-            color: #333;
+        .closing-text {
+            margin-top: 30px;
+            font-size: 14px;
+            color: #34495e;
+            line-height: 1.6;
+        }
+        .signature {
+            margin-top: 30px;
+            padding-top: 20px;
+            border-top: 1px solid #e1e8ed;
+        }
+        .signature p {
+            margin: 5px 0;
+            font-size: 14px;
+            color: #5a6c7d;
+        }
+        .signature strong {
+            color: #2c3e50;
         }
         .footer {
-            background-color: #f1f1f1;
-            padding: 15px;
-            text-align: center;
+            background-color: #2c3e50;
+            color: #bdc3c7;
+            padding: 25px 35px;
             font-size: 12px;
-            color: #666;
-            border-radius: 0 0 5px 5px;
+            line-height: 1.6;
         }
-        .button {
-            display: inline-block;
-            padding: 12px 30px;
-            background-color: #4CAF50;
-            color: white;
-            text-decoration: none;
-            border-radius: 5px;
-            margin-top: 15px;
+        .footer p {
+            margin: 8px 0;
         }
-        .alert {
-            background-color: #fff3cd;
-            border: 1px solid #ffc107;
-            padding: 15px;
-            border-radius: 5px;
-            margin: 20px 0;
+        .footer-divider {
+            border-top: 1px solid #4a5f7f;
+            margin: 15px 0;
+        }
+        .text-center {
+            text-align: center;
+        }
+        @media only screen and (max-width: 600px) {
+            .content {
+                padding: 25px 20px;
+            }
+            .detail-item {
+                flex-direction: column;
+            }
+            .detail-label {
+                margin-bottom: 5px;
+            }
         }
     </style>
 </head>
 <body>
-    <div class="header">
-        <h1>✓ Pengajuan Surat Berhasil</h1>
-    </div>
-    
-    <div class="content">
-        <p>Yth. <strong>{{ $namaPemohon }}</strong>,</p>
+    <div class="email-container">
+        <div class="header">
+            <h1>PENGAJUAN SURAT BERHASIL</h1>
+            <p>Sistem Pengajuan Surat Online Desa Sungai Rebo</p>
+        </div>
         
-        <p>Terima kasih telah mengajukan permohonan surat melalui sistem kami. Pengajuan Anda telah berhasil kami terima dan sedang dalam proses verifikasi.</p>
-        
-        <div class="info-box">
-            <div class="info-row">
-                <span class="label">Nomor Pengajuan:</span><br>
-                <span class="value" style="font-size: 18px; color: #4CAF50;"><strong>{{ $nomorPengajuan }}</strong></span>
+        <div class="content">
+            <div class="salutation">
+                Kepada Yth.<br>
+                <strong>{{ $namaPemohon }}</strong>
             </div>
-            <div class="info-row">
-                <span class="label">Jenis Surat:</span><br>
-                <span class="value">{{ $jenisSurat }}</span>
+            
+            <div class="intro-text">
+                Dengan hormat,<br><br>
+                Melalui email ini, kami sampaikan bahwa permohonan surat yang Bapak/Ibu ajukan telah diterima dengan baik oleh sistem kami dan saat ini sedang dalam tahap pemrosesan. Kami mengucapkan terima kasih atas kepercayaan Anda menggunakan layanan pengajuan surat online Desa Sungai Rebo.
             </div>
-            <div class="info-row">
-                <span class="label">Tanggal Pengajuan:</span><br>
-                <span class="value">{{ $tanggalPengajuan }}</span>
+            
+            <div class="details-card">
+                <div class="detail-item">
+                    <div class="detail-label">Nomor Pengajuan</div>
+                    <div class="detail-value"><strong style="color: #2a5298; font-size: 15px;">{{ $nomorPengajuan }}</strong></div>
+                </div>
+                <div class="detail-item">
+                    <div class="detail-label">Jenis Permohonan</div>
+                    <div class="detail-value">{{ $jenisSurat }}</div>
+                </div>
+                <div class="detail-item">
+                    <div class="detail-label">Tanggal Pengajuan</div>
+                    <div class="detail-value">{{ $tanggalPengajuan }}</div>
+                </div>
+            </div>
+
+            <div class="highlight-box">
+                <strong>PERHATIAN</strong>
+                <p>Harap menyimpan nomor pengajuan di atas untuk keperluan pelacakan status permohonan dan korespondensi selanjutnya dengan kantor kami.</p>
+            </div>
+
+            <div class="section-title">Tahapan Pemrosesan</div>
+            <ul class="process-list">
+                <li>Permohonan Anda akan diverifikasi oleh petugas yang berwenang sesuai dengan prosedur yang berlaku.</li>
+                <li>Pembaruan status permohonan akan disampaikan kepada Anda melalui email secara berkala.</li>
+                <li>Apabila diperlukan informasi atau dokumen tambahan, petugas kami akan menghubungi Anda melalui kontak yang telah terdaftar.</li>
+            </ul>
+
+            <div class="closing-text">
+                Apabila terdapat pertanyaan atau memerlukan bantuan lebih lanjut, Bapak/Ibu dapat menghubungi kami melalui saluran komunikasi resmi yang tersedia di portal layanan kami.
+            </div>
+
+            <div class="signature">
+                <p><strong>Hormat kami,</strong></p>
+                <p><strong>Pemerintah Desa Sungai Rebo</strong></p>
+                <p>Kecamatan Banyuasin I, Kabupaten Banyuasin</p>
             </div>
         </div>
-
-        <div class="alert">
-            <strong>⚠️ Penting!</strong><br>
-            Simpan nomor pengajuan Anda untuk melakukan pengecekan status atau keperluan lainnya.
+        
+        <div class="footer">
+            <p style="margin-bottom: 15px;"><strong>Catatan Penting:</strong></p>
+            <p>Email ini dibuat dan dikirimkan secara otomatis oleh sistem. Mohon untuk tidak membalas langsung ke alamat email ini.</p>
+            
+            <div class="footer-divider"></div>
+            
+            <p class="text-center">
+                &copy; {{ date('Y') }} Sistem Pengajuan Surat Desa. Seluruh hak cipta dilindungi undang-undang.
+            </p>
         </div>
-
-        <p><strong>Langkah Selanjutnya:</strong></p>
-        <ul>
-            <li>Pengajuan Anda akan diverifikasi oleh petugas kami</li>
-            <li>Anda akan menerima notifikasi email jika ada update status pengajuan</li>
-        </ul>
-    </div>
-    
-    <div class="footer">
-        <p>Email ini dikirim secara otomatis, mohon untuk tidak membalas email ini.</p>
-        <p>Jika Anda memiliki pertanyaan, silakan hubungi kami melalui kontak yang tersedia di website.</p>
-        <p>&copy; {{ date('Y') }} Sistem Pengajuan Surat Desa</p>
     </div>
 </body>
 </html>

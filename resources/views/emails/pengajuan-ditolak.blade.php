@@ -6,163 +6,311 @@
     <title>Pengajuan Ditolak</title>
     <style>
         body {
-            font-family: Arial, sans-serif;
-            line-height: 1.6;
-            color: #333;
-            max-width: 600px;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.8;
+            color: #2c3e50;
+            max-width: 650px;
             margin: 0 auto;
-            padding: 20px;
+            padding: 0;
+            background-color: #f4f6f9;
+        }
+        .email-container {
+            background-color: #ffffff;
+            margin: 30px auto;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
         }
         .header {
-            background: linear-gradient(135deg, #dc2626 0%, #ef4444 100%);
+            background: linear-gradient(135deg, #b91c1c 0%, #dc2626 100%);
             color: white;
-            padding: 30px;
+            padding: 40px 30px;
             text-align: center;
-            border-radius: 10px 10px 0 0;
+            border-bottom: 4px solid #991b1b;
         }
         .header h1 {
             margin: 0;
             font-size: 24px;
+            font-weight: 600;
+            letter-spacing: 0.5px;
+        }
+        .header p {
+            margin: 8px 0 0 0;
+            font-size: 14px;
+            opacity: 0.9;
         }
         .content {
-            background: #ffffff;
-            padding: 30px;
-            border: 1px solid #e5e7eb;
-            border-top: none;
+            padding: 40px 35px;
+            background-color: #ffffff;
         }
-        .info-box {
-            background: #fef2f2;
-            border-left: 4px solid #dc2626;
-            padding: 15px;
-            margin: 20px 0;
-            border-radius: 4px;
+        .salutation {
+            font-size: 15px;
+            margin-bottom: 20px;
+            color: #2c3e50;
         }
-        .info-row {
-            margin: 10px 0;
-            display: flex;
-            border-bottom: 1px solid #f3f4f6;
-            padding-bottom: 8px;
+        .intro-text {
+            font-size: 15px;
+            color: #34495e;
+            margin-bottom: 30px;
+            text-align: justify;
         }
-        .info-label {
-            font-weight: bold;
-            color: #6b7280;
-            min-width: 180px;
-        }
-        .info-value {
-            color: #111827;
-        }
-        .catatan-box {
-            background: #fff7ed;
-            border: 1px solid #fed7aa;
-            padding: 15px;
-            margin: 20px 0;
+        .status-announcement {
+            background: linear-gradient(135deg, #fef2f2 0%, #fee2e2 100%);
+            border: 2px solid #dc2626;
             border-radius: 8px;
+            padding: 20px;
+            margin: 25px 0;
+            text-align: center;
         }
-        .catatan-box h3 {
-            margin-top: 0;
-            color: #c2410c;
+        .status-announcement .status-label {
+            font-size: 14px;
+            color: #991b1b;
+            font-weight: 600;
+            margin-bottom: 8px;
+        }
+        .status-announcement .status-value {
+            font-size: 22px;
+            font-weight: 700;
+            color: #dc2626;
+            letter-spacing: 1px;
+        }
+        .details-card {
+            background-color: #f8f9fa;
+            border: 1px solid #e1e8ed;
+            border-radius: 6px;
+            padding: 25px;
+            margin: 25px 0;
+        }
+        .detail-item {
+            display: flex;
+            padding: 12px 0;
+            border-bottom: 1px solid #e9ecef;
+        }
+        .detail-item:last-child {
+            border-bottom: none;
+        }
+        .detail-label {
+            font-weight: 600;
+            color: #5a6c7d;
+            min-width: 180px;
+            font-size: 14px;
+        }
+        .detail-value {
+            color: #2c3e50;
+            font-size: 14px;
+            flex: 1;
+        }
+        .rejection-reason {
+            background-color: #fff7ed;
+            border: 1px solid #fed7aa;
+            border-radius: 6px;
+            padding: 25px;
+            margin: 25px 0;
+        }
+        .section-title {
             font-size: 16px;
+            font-weight: 600;
+            color: #c2410c;
+            margin: 0 0 15px 0;
+            padding-bottom: 8px;
+            border-bottom: 2px solid #fed7aa;
         }
-        .catatan-text {
+        .reason-text {
+            font-size: 14px;
             color: #78350f;
+            line-height: 1.8;
             white-space: pre-wrap;
             word-wrap: break-word;
+            background-color: #fffbeb;
+            padding: 15px;
+            border-radius: 4px;
+            border-left: 3px solid #f59e0b;
         }
-        .footer {
-            background: #f9fafb;
+        .info-notice {
+            background-color: #fef2f2;
+            border-left: 4px solid #ef4444;
+            padding: 18px 20px;
+            margin: 25px 0;
+            border-radius: 4px;
+        }
+        .info-notice strong {
+            color: #991b1b;
+            font-size: 14px;
+            display: block;
+            margin-bottom: 8px;
+        }
+        .info-notice p {
+            margin: 0;
+            font-size: 14px;
+            color: #7f1d1d;
+            line-height: 1.6;
+        }
+        .action-section {
+            background-color: #f0fdf4;
+            border: 1px solid #bbf7d0;
+            border-radius: 6px;
             padding: 20px;
+            margin: 25px 0;
             text-align: center;
-            border-radius: 0 0 10px 10px;
-            border: 1px solid #e5e7eb;
-            border-top: none;
-            font-size: 12px;
-            color: #6b7280;
         }
-        .button {
+        .action-section p {
+            margin: 0 0 15px 0;
+            font-size: 14px;
+            color: #166534;
+            font-weight: 600;
+        }
+        .action-button {
             display: inline-block;
             padding: 12px 30px;
-            background: #059669;
+            background: linear-gradient(135deg, #059669 0%, #10b981 100%);
             color: white;
             text-decoration: none;
-            border-radius: 8px;
-            margin: 20px 0;
-            font-weight: bold;
-        }
-        .alert {
-            background: #fef2f2;
-            border: 1px solid #fecaca;
-            color: #991b1b;
-            padding: 12px;
             border-radius: 6px;
-            margin: 15px 0;
+            font-weight: 600;
             font-size: 14px;
+            box-shadow: 0 2px 4px rgba(5, 150, 105, 0.3);
+            transition: all 0.3s ease;
+        }
+        .closing-text {
+            margin-top: 30px;
+            font-size: 14px;
+            color: #34495e;
+            line-height: 1.6;
+        }
+        .signature {
+            margin-top: 30px;
+            padding-top: 20px;
+            border-top: 1px solid #e1e8ed;
+        }
+        .signature p {
+            margin: 5px 0;
+            font-size: 14px;
+            color: #5a6c7d;
+        }
+        .signature strong {
+            color: #2c3e50;
+        }
+        .footer {
+            background-color: #2c3e50;
+            color: #bdc3c7;
+            padding: 25px 35px;
+            font-size: 12px;
+            line-height: 1.6;
+        }
+        .footer p {
+            margin: 8px 0;
+        }
+        .footer-divider {
+            border-top: 1px solid #4a5f7f;
+            margin: 15px 0;
+        }
+        .text-center {
+            text-align: center;
+        }
+        .rejection-badge {
+            display: inline-block;
+            background: #fee2e2;
+            color: #991b1b;
+            padding: 6px 16px;
+            border-radius: 20px;
+            font-size: 13px;
+            font-weight: 700;
+            letter-spacing: 0.5px;
+        }
+        @media only screen and (max-width: 600px) {
+            .content {
+                padding: 25px 20px;
+            }
+            .detail-item {
+                flex-direction: column;
+            }
+            .detail-label {
+                margin-bottom: 5px;
+                min-width: auto;
+            }
         }
     </style>
 </head>
 <body>
-    <div class="header">
-        <h1>❌ Pengajuan Ditolak</h1>
-        <p style="margin: 10px 0 0 0; opacity: 0.9;">Sistem Administrasi Desa Sungai Rebo</p>
-    </div>
-
-    <div class="content">
-        <p>Yth. <strong>{{ $pengajuan->nama_pemohon }}</strong>,</p>
+    <div class="email-container">
+        <div class="header">
+            <h1>PEMBERITAHUAN PENGAJUAN DITOLAK</h1>
+            <p>Sistem Pengajuan Surat Online Desa Sungai Rebo</p>
+        </div>
         
-        <p>Mohon maaf, pengajuan surat Anda telah <strong style="color: #dc2626;">DITOLAK</strong> oleh admin desa.</p>
+        <div class="content">
+            <div class="salutation">
+                Kepada Yth.<br>
+                <strong>{{ $pengajuan->nama_pemohon }}</strong>
+            </div>
+            
+            <div class="intro-text">
+                Dengan hormat,<br><br>
+                Melalui email ini, kami sampaikan bahwa permohonan surat yang Bapak/Ibu ajukan telah melalui proses verifikasi oleh petugas yang berwenang. Setelah dilakukan peninjauan secara menyeluruh, dengan sangat menyesal kami informasikan bahwa permohonan tersebut belum dapat disetujui pada tahap ini.
+            </div>
 
-        <div class="info-box">
-            <div class="info-row">
-                <span class="info-label">Nomor Pengajuan:</span>
-                <span class="info-value"><strong>{{ $pengajuan->no_pengajuan }}</strong></span>
+            <div class="status-announcement">
+                <div class="status-label">STATUS PERMOHONAN</div>
+                <div class="status-value">TIDAK DISETUJUI</div>
             </div>
-            <div class="info-row">
-                <span class="info-label">Jenis Surat:</span>
-                <span class="info-value">{{ $pengajuan->jenisSurat->nama ?? '-' }}</span>
+            
+            <div class="details-card">
+                <div class="detail-item">
+                    <div class="detail-label">Nomor Pengajuan</div>
+                    <div class="detail-value"><strong>{{ $pengajuan->no_pengajuan }}</strong></div>
+                </div>
+                <div class="detail-item">
+                    <div class="detail-label">Jenis Permohonan</div>
+                    <div class="detail-value">{{ $pengajuan->jenisSurat->nama ?? '-' }}</div>
+                </div>
+                <div class="detail-item">
+                    <div class="detail-label">Tanggal Pengajuan</div>
+                    <div class="detail-value">{{ \Carbon\Carbon::parse($pengajuan->created_at)->translatedFormat('d F Y, H:i') }} WIB</div>
+                </div>
+                <div class="detail-item">
+                    <div class="detail-label">Tanggal Diproses</div>
+                    <div class="detail-value">{{ \Carbon\Carbon::parse($pengajuan->tanggal_diproses)->translatedFormat('d F Y, H:i') }} WIB</div>
+                </div>
+                <div class="detail-item">
+                    <div class="detail-label">Status Terkini</div>
+                    <div class="detail-value"><span class="rejection-badge">TIDAK DISETUJUI</span></div>
+                </div>
             </div>
-            <div class="info-row">
-                <span class="info-label">Tanggal Pengajuan:</span>
-                <span class="info-value">{{ \Carbon\Carbon::parse($pengajuan->created_at)->translatedFormat('d F Y, H:i') }} WIB</span>
+
+            <div class="rejection-reason">
+                <div class="section-title">Catatan dari Petugas Verifikasi</div>
+                <div class="reason-text">{{ $catatan }}</div>
             </div>
-            <div class="info-row">
-                <span class="info-label">Tanggal Diproses:</span>
-                <span class="info-value">{{ \Carbon\Carbon::parse($pengajuan->tanggal_diproses)->translatedFormat('d F Y, H:i') }} WIB</span>
+
+            <div class="info-notice">
+                <strong>Informasi Penting</strong>
+                <p>Bapak/Ibu dapat melakukan pengajuan ulang setelah melengkapi atau memperbaiki dokumen dan persyaratan sesuai dengan catatan yang telah disampaikan di atas. Kami siap membantu proses pengajuan berikutnya.</p>
             </div>
-            <div class="info-row">
-                <span class="info-label">Status:</span>
-                <span class="info-value"><strong style="color: #dc2626;">DITOLAK</strong></span>
+
+            <div class="action-section">
+                <p>Siap untuk mengajukan kembali dengan dokumen yang telah diperbaiki?</p>
+                <a href="{{ route('pengajuan') }}" class="action-button">Ajukan Permohonan Baru</a>
+            </div>
+
+            <div class="closing-text">
+                Kami mohon maaf atas ketidaknyamanan ini dan berharap dapat melayani permohonan Bapak/Ibu dengan lebih baik di kesempatan berikutnya. Terima kasih atas pengertian dan kerjasamanya.
+            </div>
+
+            <div class="signature">
+                <p><strong>Hormat kami,</strong></p>
+                <p><strong>Pemerintah Desa Sungai Rebo</strong></p>
+                <p>Kecamatan Banyuasin I, Kabupaten Banyuasin</p>
             </div>
         </div>
-
-        <div class="catatan-box">
-            <h3>📝 Alasan Penolakan:</h3>
-            <p class="catatan-text">{{ $catatan }}</p>
+        
+        <div class="footer">
+            <p style="margin-bottom: 15px;"><strong>Catatan Penting:</strong></p>
+            <p>Email ini dibuat dan dikirimkan secara otomatis oleh sistem. Mohon untuk tidak membalas langsung ke alamat email ini.</p>
+            
+            <div class="footer-divider"></div>
+            
+            <p class="text-center">
+                &copy; {{ date('Y') }} Desa Sungai Rebo. Seluruh hak cipta dilindungi undang-undang.
+            </p>
         </div>
-
-        <div class="alert">
-            <strong>ℹ️ Informasi:</strong><br>
-            Anda dapat melakukan pengajuan ulang dengan melengkapi atau memperbaiki dokumen sesuai catatan di atas.
-        </div>
-
-        <p style="margin-top: 25px;">Jika ada pertanyaan lebih lanjut, silakan hubungi kantor desa atau balas email ini.</p>
-
-        <p style="margin-top: 25px;">
-            Terima kasih atas pengertiannya.
-        </p>
-
-        <p style="margin-top: 30px; color: #6b7280;">
-            Hormat kami,<br>
-            <strong>Admin Desa Sungai Rebo</strong><br>
-            Kecamatan Banyuasin I, Kabupaten Banyuasin
-        </p>
-    </div>
-
-    <div class="footer">
-        <p style="margin: 0;">
-            Email ini dikirim secara otomatis oleh sistem. Mohon tidak membalas langsung ke email ini.
-        </p>
-        <p style="margin: 10px 0 0 0;">
-            © {{ date('Y') }} Desa Sungai Rebo. All rights reserved.
-        </p>
     </div>
 </body>
 </html>

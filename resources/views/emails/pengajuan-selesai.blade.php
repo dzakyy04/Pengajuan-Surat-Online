@@ -1,212 +1,398 @@
 <!DOCTYPE html>
 <html lang="id">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Pengajuan Disetujui</title>
     <style>
         body {
-            font-family: Arial, sans-serif;
-            line-height: 1.6;
-            color: #333;
-            max-width: 600px;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.8;
+            color: #2c3e50;
+            max-width: 650px;
             margin: 0 auto;
-            padding: 20px;
+            padding: 0;
+            background-color: #f4f6f9;
         }
+
+        .email-container {
+            background-color: #ffffff;
+            margin: 30px auto;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+        }
+
         .header {
-            background: linear-gradient(135deg, #059669 0%, #10b981 100%);
+            background: linear-gradient(135deg, #0d7c4d 0%, #10b981 100%);
             color: white;
-            padding: 30px;
+            padding: 40px 30px;
             text-align: center;
-            border-radius: 10px 10px 0 0;
+            border-bottom: 4px solid #065f3e;
         }
+
         .header h1 {
             margin: 0;
             font-size: 24px;
+            font-weight: 600;
+            letter-spacing: 0.5px;
         }
-        .content {
-            background: #ffffff;
-            padding: 30px;
-            border: 1px solid #e5e7eb;
-            border-top: none;
-        }
-        .info-box {
-            background: #f0fdf4;
-            border-left: 4px solid #059669;
-            padding: 15px;
-            margin: 20px 0;
-            border-radius: 4px;
-        }
-        .info-row {
-            margin: 10px 0;
-            display: flex;
-            border-bottom: 1px solid #f3f4f6;
-            padding-bottom: 8px;
-        }
-        .info-label {
-            font-weight: bold;
-            color: #6b7280;
-            min-width: 180px;
-        }
-        .info-value {
-            color: #111827;
-        }
-        .success-badge {
-            display: inline-block;
-            background: #dcfce7;
-            color: #166534;
-            padding: 6px 12px;
-            border-radius: 20px;
+
+        .header p {
+            margin: 8px 0 0 0;
             font-size: 14px;
-            font-weight: bold;
+            opacity: 0.9;
         }
-        .instruction-box {
-            background: #eff6ff;
-            border: 1px solid #bfdbfe;
+
+        .content {
+            padding: 40px 35px;
+            background-color: #ffffff;
+        }
+
+        .salutation {
+            font-size: 15px;
+            margin-bottom: 20px;
+            color: #2c3e50;
+        }
+
+        .intro-text {
+            font-size: 15px;
+            color: #34495e;
+            margin-bottom: 30px;
+            text-align: justify;
+        }
+
+        .status-announcement {
+            background: linear-gradient(135deg, #ecfdf5 0%, #d1fae5 100%);
+            border: 2px solid #10b981;
+            border-radius: 8px;
             padding: 20px;
-            margin: 20px 0;
-            border-radius: 8px;
-        }
-        .instruction-box h3 {
-            margin-top: 0;
-            color: #1e40af;
-            font-size: 16px;
-        }
-        .instruction-list {
-            color: #1e3a8a;
-            margin: 10px 0;
-            padding-left: 20px;
-        }
-        .instruction-list li {
-            margin: 8px 0;
-        }
-        .attachment-box {
-            background: #fef3c7;
-            border: 2px dashed #f59e0b;
-            padding: 15px;
-            margin: 20px 0;
-            border-radius: 8px;
+            margin: 25px 0;
             text-align: center;
         }
-        .attachment-box strong {
+
+        .status-announcement .status-label {
+            font-size: 14px;
+            color: #065f3e;
+            font-weight: 600;
+            margin-bottom: 8px;
+        }
+
+        .status-announcement .status-value {
+            font-size: 22px;
+            font-weight: 700;
+            color: #059669;
+            letter-spacing: 1px;
+        }
+
+        .details-card {
+            background-color: #f8f9fa;
+            border: 1px solid #e1e8ed;
+            border-radius: 6px;
+            padding: 25px;
+            margin: 25px 0;
+        }
+
+        .detail-item {
+            display: flex;
+            padding: 12px 0;
+            border-bottom: 1px solid #e9ecef;
+        }
+
+        .detail-item:last-child {
+            border-bottom: none;
+        }
+
+        .detail-label {
+            font-weight: 600;
+            color: #5a6c7d;
+            min-width: 180px;
+            font-size: 14px;
+        }
+
+        .detail-value {
+            color: #2c3e50;
+            font-size: 14px;
+            flex: 1;
+        }
+
+        .attachment-notice {
+            background-color: #fffbeb;
+            border: 2px solid #fbbf24;
+            border-radius: 6px;
+            padding: 20px;
+            margin: 25px 0;
+            text-align: center;
+        }
+
+        .attachment-notice .icon {
+            font-size: 32px;
+            margin-bottom: 10px;
+        }
+
+        .attachment-notice strong {
             color: #92400e;
             font-size: 16px;
+            display: block;
+            margin-bottom: 8px;
         }
-        .footer {
-            background: #f9fafb;
-            padding: 20px;
-            text-align: center;
-            border-radius: 0 0 10px 10px;
-            border: 1px solid #e5e7eb;
-            border-top: none;
-            font-size: 12px;
-            color: #6b7280;
-        }
-        .alert-info {
-            background: #dbeafe;
-            border: 1px solid #93c5fd;
-            color: #1e40af;
-            padding: 12px;
-            border-radius: 6px;
-            margin: 15px 0;
+
+        .attachment-notice p {
+            margin: 0;
             font-size: 14px;
+            color: #78350f;
         }
-        .highlight {
-            background: #fef3c7;
-            padding: 2px 6px;
-            border-radius: 3px;
+
+        .instruction-section {
+            background-color: #eff6ff;
+            border: 1px solid #bfdbfe;
+            border-radius: 6px;
+            padding: 25px;
+            margin: 25px 0;
+        }
+
+        .section-title {
+            font-size: 16px;
+            font-weight: 600;
+            color: #1e40af;
+            margin: 0 0 15px 0;
+            padding-bottom: 8px;
+            border-bottom: 2px solid #dbeafe;
+        }
+
+        .instruction-list {
+            list-style: none;
+            padding: 0;
+            margin: 15px 0;
+        }
+
+        .instruction-list li {
+            padding: 10px 0 10px 30px;
+            position: relative;
+            font-size: 14px;
+            color: #1e3a8a;
+        }
+
+        .instruction-list li:before {
+            content: "▸";
+            position: absolute;
+            left: 10px;
+            color: #1e40af;
             font-weight: bold;
+        }
+
+        .highlight {
+            background-color: #fef3c7;
+            padding: 2px 8px;
+            border-radius: 3px;
+            font-weight: 600;
+            color: #92400e;
+        }
+
+        .info-notice {
+            background-color: #dbeafe;
+            border-left: 4px solid #3b82f6;
+            padding: 18px 20px;
+            margin: 25px 0;
+            border-radius: 4px;
+        }
+
+        .info-notice strong {
+            color: #1e40af;
+            font-size: 14px;
+            display: block;
+            margin-bottom: 10px;
+        }
+
+        .info-notice ul {
+            margin: 0;
+            padding-left: 20px;
+            font-size: 14px;
+            color: #1e3a8a;
+        }
+
+        .info-notice ul li {
+            margin: 6px 0;
+        }
+
+        .closing-text {
+            margin-top: 30px;
+            font-size: 14px;
+            color: #34495e;
+            line-height: 1.6;
+        }
+
+        .signature {
+            margin-top: 30px;
+            padding-top: 20px;
+            border-top: 1px solid #e1e8ed;
+        }
+
+        .signature p {
+            margin: 5px 0;
+            font-size: 14px;
+            color: #5a6c7d;
+        }
+
+        .signature strong {
+            color: #2c3e50;
+        }
+
+        .footer {
+            background-color: #2c3e50;
+            color: #bdc3c7;
+            padding: 25px 35px;
+            font-size: 12px;
+            line-height: 1.6;
+        }
+
+        .footer p {
+            margin: 8px 0;
+        }
+
+        .footer-divider {
+            border-top: 1px solid #4a5f7f;
+            margin: 15px 0;
+        }
+
+        .text-center {
+            text-align: center;
+        }
+
+        .success-badge {
+            display: inline-block;
+            background: #d1fae5;
+            color: #065f3e;
+            padding: 6px 16px;
+            border-radius: 20px;
+            font-size: 13px;
+            font-weight: 700;
+            letter-spacing: 0.5px;
+        }
+
+        @media only screen and (max-width: 600px) {
+            .content {
+                padding: 25px 20px;
+            }
+
+            .detail-item {
+                flex-direction: column;
+            }
+
+            .detail-label {
+                margin-bottom: 5px;
+                min-width: auto;
+            }
         }
     </style>
 </head>
+
 <body>
-    <div class="header">
-        <h1>✅ Pengajuan Disetujui</h1>
-        <p style="margin: 10px 0 0 0; opacity: 0.9;">Sistem Administrasi Desa Sungai Rebo</p>
-    </div>
+    <div class="email-container">
+        <div class="header">
+            <h1>PEMBERITAHUAN PENGAJUAN SELESAI</h1>
+            <p>Sistem Pengajuan Surat Online Desa Sungai Rebo</p>
+        </div>
 
-    <div class="content">
-        <p>Yth. <strong>{{ $pengajuan->nama_pemohon }}</strong>,</p>
-        
-        <p>Selamat! Pengajuan surat Anda telah <strong style="color: #059669;">DISETUJUI</strong> dan surat sudah ditandatangani.</p>
+        <div class="content">
+            <div class="salutation">
+                Kepada Yth.<br>
+                <strong>{{ $pengajuan->nama_pemohon }}</strong>
+            </div>
 
-        <div class="info-box">
-            <div class="info-row">
-                <span class="info-label">Nomor Pengajuan:</span>
-                <span class="info-value"><strong>{{ $pengajuan->nomor_pengajuan }}</strong></span>
+            <div class="intro-text">
+                Dengan hormat,<br><br>
+                Melalui email ini, kami dengan senang hati menyampaikan bahwa permohonan surat yang Bapak/Ibu ajukan
+                telah melalui proses verifikasi dan telah mendapatkan persetujuan resmi dari pihak yang berwenang.
             </div>
-            <div class="info-row">
-                <span class="info-label">Nomor Surat:</span>
-                <span class="info-value"><strong style="color: #059669;">{{ $pengajuan->nomor_surat }}</strong></span>
+
+            <div class="status-announcement">
+                <div class="status-label">STATUS PERMOHONAN</div>
+                <div class="status-value">DISETUJUI</div>
             </div>
-            <div class="info-row">
-                <span class="info-label">Jenis Surat:</span>
-                <span class="info-value">{{ $pengajuan->jenisSurat->nama ?? '-' }}</span>
+
+            <div class="details-card">
+                <div class="detail-item">
+                    <div class="detail-label">Nomor Pengajuan</div>
+                    <div class="detail-value"><strong>{{ $pengajuan->nomor_pengajuan }}</strong></div>
+                </div>
+                <div class="detail-item">
+                    <div class="detail-label">Nomor Surat Resmi</div>
+                    <div class="detail-value"><strong style="color: #059669;">{{ $pengajuan->nomor_surat }}</strong>
+                    </div>
+                </div>
+                <div class="detail-item">
+                    <div class="detail-label">Jenis Permohonan</div>
+                    <div class="detail-value">{{ $pengajuan->jenisSurat->nama ?? '-' }}</div>
+                </div>
+                <div class="detail-item">
+                    <div class="detail-label">Tanggal Pengajuan</div>
+                    <div class="detail-value">
+                        {{ \Carbon\Carbon::parse($pengajuan->created_at)->translatedFormat('d F Y, H:i') }} WIB</div>
+                </div>
+                <div class="detail-item">
+                    <div class="detail-label">Tanggal Persetujuan</div>
+                    <div class="detail-value">
+                        {{ \Carbon\Carbon::parse($pengajuan->tanggal_upload_ttd)->translatedFormat('d F Y, H:i') }} WIB
+                    </div>
+                </div>
             </div>
-            <div class="info-row">
-                <span class="info-label">Tanggal Pengajuan:</span>
-                <span class="info-value">{{ \Carbon\Carbon::parse($pengajuan->created_at)->translatedFormat('d F Y, H:i') }} WIB</span>
+
+            <div class="attachment-notice">
+                <div class="icon">📎</div>
+                <strong>Dokumen Surat Terlampir</strong>
+                <p>Surat resmi yang telah ditandatangani terlampir dalam email ini dalam format PDF dan dapat digunakan
+                    untuk keperluan administrasi digital.</p>
             </div>
-            <div class="info-row">
-                <span class="info-label">Tanggal Disetujui:</span>
-                <span class="info-value">{{ \Carbon\Carbon::parse($pengajuan->tanggal_upload_ttd)->translatedFormat('d F Y, H:i') }} WIB</span>
+
+            <div class="instruction-section">
+                <div class="section-title">Prosedur Pengambilan Surat Fisik</div>
+                <ul class="instruction-list">
+                    <li>Surat dalam bentuk fisik dapat diambil di <strong>Kantor Desa Sungai Rebo</strong>, Kecamatan
+                        Banyuasin I, Kabupaten Banyuasin.</li>
+                    <li>Waktu pelayanan pengambilan: <span class="highlight">Senin - Jumat, pukul 08:00 - 16:00
+                            WIB</span>.</li>
+                    <li>Pemohon wajib membawa Kartu Tanda Penduduk (KTP) asli sebagai dokumen identitas.</li>
+                    <li>Tunjukkan email ini atau sebutkan nomor pengajuan
+                        <strong>{{ $pengajuan->nomor_pengajuan }}</strong> kepada petugas.</li>
+                    <li>Surat sudah dapat diambil terhitung mulai hari ini.</li>
+                </ul>
             </div>
-            <div class="info-row">
-                <span class="info-label">Status:</span>
-                <span class="info-value"><span class="success-badge">DISETUJUI</span></span>
+
+            <div class="info-notice">
+                <strong>Informasi Penting</strong>
+                <ul>
+                    <li>Dokumen PDF yang terlampir telah memiliki tanda tangan elektronik resmi dan sah untuk digunakan
+                        dalam keperluan administrasi digital.</li>
+                    <li>Untuk keperluan yang memerlukan dokumen fisik bermeterai, silakan melakukan pengambilan langsung
+                        di kantor desa.</li>
+                </ul>
+            </div>
+
+            <div class="closing-text">
+                Kami mengucapkan terima kasih atas kepercayaan Bapak/Ibu dalam menggunakan layanan pengajuan surat
+                online Desa Sungai Rebo. Semoga surat yang telah dikeluarkan dapat bermanfaat sesuai dengan
+                keperluannya.
+            </div>
+
+            <div class="signature">
+                <p><strong>Hormat kami,</strong></p>
+                <p><strong>Pemerintah Desa Sungai Rebo</strong></p>
+                <p>Kecamatan Banyuasin I, Kabupaten Banyuasin</p>
             </div>
         </div>
 
-        <div class="attachment-box">
-            <strong>📎 File Surat Terlampir</strong>
-            <p style="margin: 10px 0 0 0; color: #92400e;">
-                Surat yang telah ditandatangani terlampir dalam email ini dalam format PDF.
+        <div class="footer">
+            <p style="margin-bottom: 15px;"><strong>Catatan Penting:</strong></p>
+            <p>Email ini dibuat dan dikirimkan secara otomatis oleh sistem. Mohon untuk tidak membalas langsung ke
+                alamat email ini.</p>
+
+            <div class="footer-divider"></div>
+
+            <p class="text-center">
+                &copy; {{ date('Y') }} Desa Sungai Rebo. Seluruh hak cipta dilindungi undang-undang.
             </p>
         </div>
-
-        <div class="instruction-box">
-            <h3>📋 Cara Pengambilan Surat Fisik:</h3>
-            <ul class="instruction-list">
-                <li>Surat fisik dapat diambil di <strong>Kantor Desa Sungai Rebo</strong></li>
-                <li>Jam pelayanan: <span class="highlight">Senin - Jumat, 08:00 - 15:00 WIB</span></li>
-                <li>Bawa KTP asli sebagai identitas</li>
-                <li>Tunjukkan email ini atau nomor pengajuan: <strong>{{ $pengajuan->nomor_pengajuan }}</strong></li>
-                <li>Surat dapat diambil mulai <strong>hari ini</strong></li>
-            </ul>
-        </div>
-
-        <div class="alert-info">
-            <strong>ℹ️ Informasi Penting:</strong><br>
-            • File PDF yang terlampir sudah memiliki tanda tangan resmi dan dapat digunakan untuk keperluan digital<br>
-            • Untuk keperluan yang membutuhkan surat fisik, silakan ambil di kantor desa<br>
-            • Jika dalam 30 hari surat fisik tidak diambil, silakan hubungi kantor desa
-        </div>
-
-        <p style="margin-top: 25px;">Jika ada pertanyaan, silakan hubungi:</p>
-        <ul style="color: #6b7280; margin-top: 10px;">
-            <li>Kantor Desa Sungai Rebo</li>
-            <li>Telepon: (0711) XXX-XXXX</li>
-            <li>Email: desasungairebo@example.com</li>
-        </ul>
-
-        <p style="margin-top: 25px;">
-            Terima kasih atas kepercayaan Anda menggunakan layanan kami.
-        </p>
-
-        <p style="margin-top: 30px; color: #6b7280;">
-            Hormat kami,<br>
-            <strong>Admin Desa Sungai Rebo</strong><br>
-            Kecamatan Banyuasin I, Kabupaten Banyuasin
-        </p>
-    </div>
-
-    <div class="footer">
-        <p style="margin: 0;">
-            Email ini dikirim secara otomatis oleh sistem. Mohon tidak membalas langsung ke email ini.
-        </p>
-        <p style="margin: 10px 0 0 0;">
-            © {{ date('Y') }} Desa Sungai Rebo. All rights reserved.
-        </p>
     </div>
 </body>
+
 </html>
