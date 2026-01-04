@@ -96,9 +96,9 @@
                     </svg>
                 </div>
                 <h3 class="text-4xl font-bold mb-1">{{ $diberitakan }}</h3>
-                <p class="text-sm text-emerald-100 font-semibold">Diberitahu</p>
+                <p class="text-sm text-emerald-100 font-semibold">Dinotifikasi</p>
                 <span class="text-xs text-emerald-100 opacity-80 mt-2 block">
-                    Surat Dinotifikasikan
+                    Dinotifikasikan ke pemohon
                 </span>
             </div>
         </div>
@@ -230,7 +230,7 @@
                                 @elseif($pengajuan->status == 'approved')
                                     Disetujui
                                 @elseif($pengajuan->status == 'notified')
-                                    Diberitahu
+                                    Dinotifikasi
                                 @elseif($pengajuan->status == 'rejected')
                                     Ditolak
                                 @else
@@ -396,7 +396,7 @@
         new Chart(statusCtx, {
             type: 'doughnut',
             data: {
-                labels: ['Diajukan', 'Diverifikasi', 'Disetujui', 'Diberitahu', 'Ditolak'],
+                labels: ['Diajukan', 'Diverifikasi', 'Disetujui', 'Dinotifikasi', 'Ditolak'],
                 datasets: [{
                     data: [
                         {{ $statistikStatus['submitted'] }},
