@@ -33,7 +33,7 @@ Route::prefix('admin')->name('admin.')->group(function () {
     Route::post('/login', [AdminAuthController::class, 'login'])->name('login.submit');
 
     Route::middleware('auth:admin')->group(function () {
-    Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
+        Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
         Route::post('/logout', [AdminAuthController::class, 'logout'])->name('logout');
 
         // Surat Keterangan Tidak Mampu (SKTM)
@@ -61,6 +61,7 @@ Route::prefix('admin')->name('admin.')->group(function () {
             Route::put('/{id}', [SkdController::class, 'update'])->name('update');
             Route::post('/{id}/verify', [SkdController::class, 'verify'])->name('verify');
             Route::put('/{id}/reject', [SkdController::class, 'reject'])->name('reject');
+            Route::post('/{id}/send-notification', [SkdController::class, 'sendNotification'])->name('send-notification');
             Route::post('/{id}/upload-ttd', [SkdController::class, 'uploadTtd'])->name('upload-ttd');
             Route::get('/{id}/download-ttd', [SkdController::class, 'downloadTtd'])->name('download-ttd');
             Route::get('/{id}/print', [SkdController::class, 'print'])->name('print');
@@ -106,6 +107,7 @@ Route::prefix('admin')->name('admin.')->group(function () {
             Route::put('/{id}', [SkmtController::class, 'update'])->name('update');
             Route::post('/{id}/verify', [SkmtController::class, 'verify'])->name('verify');
             Route::put('/{id}/reject', [SkmtController::class, 'reject'])->name('reject');
+            Route::post('/{id}/send-notification', [SkmtController::class, 'sendNotification'])->name('send-notification');
             Route::post('/{id}/upload-ttd', [SkmtController::class, 'uploadTtd'])->name('upload-ttd');
             Route::get('/{id}/download-ttd', [SkmtController::class, 'downloadTtd'])->name('download-ttd');
             Route::get('/{id}/print', [SkmtController::class, 'print'])->name('print');
@@ -120,7 +122,6 @@ Route::prefix('admin')->name('admin.')->group(function () {
 
             Route::get('/', [ArsipSuratController::class, 'index'])->name('index');
             Route::get('/{id}', [ArsipSuratController::class, 'show'])->name('show');
-
         });
 
         Route::get('/pengajuan/{pengajuan}/dokumen/view', [PengajuanDokumenController::class, 'view'])

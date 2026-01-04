@@ -106,7 +106,7 @@
     </div>
 
     <div class="content">
-        <p>Yth. <strong>{{ $pengajuan->nama }}</strong>,</p>
+        <p>Yth. <strong>{{ $pengajuan->nama_pemohon }}</strong>,</p>
         
         <p>Mohon maaf, pengajuan surat Anda telah <strong style="color: #dc2626;">DITOLAK</strong> oleh admin desa.</p>
 

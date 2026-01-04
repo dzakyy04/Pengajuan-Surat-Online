@@ -35,7 +35,7 @@ class PengajuanSuratMail extends Mailable
     public function envelope(): Envelope
     {
         return new Envelope(
-            subject: 'Konfirmasi Pengajuan Surat - ' . $this->nomorPengajuan,
+            subject: 'Pengajuan Surat - ' . $this->nomorPengajuan,
         );
     }
 

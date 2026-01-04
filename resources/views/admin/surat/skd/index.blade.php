@@ -410,7 +410,8 @@
                                         </button>
 
                                         <div id="dropdown-{{ $pengajuan->id }}" class="dropdown-menu">
-                                            <a href="{{ route('admin.skd.detail', $pengajuan->id) }}"
+                                            <!-- Lihat Detail - Selalu tampil untuk semua status -->
+                                            <a href="{{ route('admin.skmt.detail', $pengajuan->id) }}"
                                                 class="dropdown-item">
                                                 <svg class="w-4 h-4 text-emerald-600" fill="none"
                                                     stroke="currentColor" viewBox="0 0 24 24">
@@ -421,6 +422,8 @@
                                                 </svg>
                                                 <span class="font-semibold">Lihat Detail</span>
                                             </a>
+
+                                            <!-- ========== STATUS: VERIFIED ========== -->
                                             @if ($pengajuan->status === 'verified')
                                                 <div class="dropdown-divider"></div>
 
@@ -434,11 +437,15 @@
                                                     </svg>
                                                     <span class="font-semibold">Upload Surat TTD</span>
                                                 </button>
-                                            @elseif ($pengajuan->status === 'approved')
+                                            @endif
+
+                                            <!-- ========== STATUS: APPROVED ========== -->
+                                            @if ($pengajuan->status === 'approved')
                                                 <div class="dropdown-divider"></div>
 
                                                 @if (!empty($pengajuan->file_surat_ttd))
-                                                    <a href="{{ route('admin.skd.download-ttd', $pengajuan->id) }}"
+                                                    <!-- Download File TTD -->
+                                                    <a href="{{ route('admin.skmt.download-ttd', $pengajuan->id) }}"
                                                         class="dropdown-item">
                                                         <svg class="w-4 h-4 text-green-600" fill="none"
                                                             stroke="currentColor" viewBox="0 0 24 24">
@@ -448,6 +455,8 @@
                                                         </svg>
                                                         <span class="font-semibold">Download File TTD</span>
                                                     </a>
+
+                                                    <!-- Re-upload File TTD -->
                                                     <button onclick="openUploadModal({{ $pengajuan->id }})"
                                                         class="dropdown-item w-full text-left">
                                                         <svg class="w-4 h-4 text-orange-600" fill="none"
@@ -458,9 +467,12 @@
                                                         </svg>
                                                         <span class="font-semibold">Re-upload File TTD</span>
                                                     </button>
-                                                    <button onclick=""
+
+                                                    <!-- Kirim Email Notifikasi -->
+                                                    <button
+                                                        onclick="openEmailModal({{ $pengajuan->id }}, '{{ $pengajuan->email_pemohon }}', '{{ $pengajuan->nama_pemohon }}')"
                                                         class="dropdown-item w-full text-left">
-                                                        <svg class="w-4 h-4 text-red-600" fill="none"
+                                                        <svg class="w-4 h-4 text-green-600" fill="none"
                                                             stroke="currentColor" viewBox="0 0 24 24">
                                                             <path stroke-linecap="round" stroke-linejoin="round"
                                                                 stroke-width="2"
@@ -468,8 +480,8 @@
                                                         </svg>
                                                         <span class="font-semibold">Kirim Email</span>
                                                     </button>
-
                                                 @else
+                                                    <!-- Jika belum ada file TTD -->
                                                     <button onclick="openUploadModal({{ $pengajuan->id }})"
                                                         class="dropdown-item w-full text-left">
                                                         <svg class="w-4 h-4 text-blue-600" fill="none"
@@ -482,8 +494,24 @@
                                                     </button>
                                                 @endif
                                             @endif
-                                        </div>
 
+                                            <!-- ========== STATUS: NOTIFIED ========== -->
+                                            @if ($pengajuan->status === 'notified')
+                                                <div class="dropdown-divider"></div>
+
+                                                <!-- Download File TTD -->
+                                                <a href="{{ route('admin.skmt.download-ttd', $pengajuan->id) }}"
+                                                    class="dropdown-item">
+                                                    <svg class="w-4 h-4 text-green-600" fill="none"
+                                                        stroke="currentColor" viewBox="0 0 24 24">
+                                                        <path stroke-linecap="round" stroke-linejoin="round"
+                                                            stroke-width="2"
+                                                            d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+                                                    </svg>
+                                                    <span class="font-semibold">Download File TTD</span>
+                                                </a>
+                                            @endif
+                                        </div>
                                     </div>
                                 </td>
                             </tr>
@@ -634,6 +662,134 @@
             </form>
         </div>
     </div>
+
+        <!-- Modal Kirim Email -->
+    <div id="emailModal"
+        class="hidden fixed inset-0 z-50 flex items-center justify-center backdrop-brightness-50 backdrop-blur-sm modal-backdrop">
+        <div class="w-full max-w-lg mx-4 bg-white rounded-3xl shadow-xl overflow-hidden modal-content">
+            <div class="flex items-center gap-3 px-6 py-4 bg-gradient-to-r from-green-600 to-green-500 text-white">
+                <div class="w-12 h-12 rounded-full bg-white/20 flex items-center justify-center">
+                    <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
+                    </svg>
+                </div>
+                <div>
+                    <h3 class="text-base font-bold">Kirim Email Notifikasi</h3>
+                    <p class="text-xs text-green-100">Konfirmasi pengiriman email ke pemohon</p>
+                </div>
+            </div>
+
+            <form id="emailForm" method="POST" class="px-6 py-5">
+                @csrf
+                <div class="bg-green-50 border border-green-200 rounded-xl p-4 mb-4">
+                    <div class="flex items-start gap-3">
+                        <svg class="w-5 h-5 text-green-600 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor"
+                            viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                        </svg>
+                        <div class="flex-1">
+                            <h4 class="font-semibold text-green-800 mb-2">Detail Pengiriman Email</h4>
+                            <div class="space-y-2 text-sm text-green-700">
+                                <div class="flex items-start gap-2">
+                                    <svg class="w-4 h-4 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor"
+                                        viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                            d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
+                                    </svg>
+                                    <div>
+                                        <span class="font-medium">Penerima:</span>
+                                        <span id="emailRecipientName" class="font-semibold"></span>
+                                    </div>
+                                </div>
+                                <div class="flex items-start gap-2">
+                                    <svg class="w-4 h-4 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor"
+                                        viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                            d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
+                                    </svg>
+                                    <div>
+                                        <span class="font-medium">Email:</span>
+                                        <span id="emailRecipientEmail"
+                                            class="font-mono text-xs bg-green-100 px-2 py-0.5 rounded"></span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="bg-blue-50 border border-blue-200 rounded-xl p-4 mb-4">
+                    <h5 class="font-semibold text-blue-800 mb-2 flex items-center gap-2">
+                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+                        </svg>
+                        Isi Email
+                    </h5>
+                    <ul class="space-y-1.5 text-sm text-blue-700">
+                        <li class="flex items-start gap-2">
+                            <svg class="w-4 h-4 flex-shrink-0 mt-0.5 text-blue-500" fill="currentColor"
+                                viewBox="0 0 20 20">
+                                <path fill-rule="evenodd"
+                                    d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z"
+                                    clip-rule="evenodd" />
+                            </svg>
+                            <span>Informasi pengajuan telah disetujui</span>
+                        </li>
+                        <li class="flex items-start gap-2">
+                            <svg class="w-4 h-4 flex-shrink-0 mt-0.5 text-blue-500" fill="currentColor"
+                                viewBox="0 0 20 20">
+                                <path fill-rule="evenodd"
+                                    d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z"
+                                    clip-rule="evenodd" />
+                            </svg>
+                            <span>File PDF surat (lampiran)</span>
+                        </li>
+                        <li class="flex items-start gap-2">
+                            <svg class="w-4 h-4 flex-shrink-0 mt-0.5 text-blue-500" fill="currentColor"
+                                viewBox="0 0 20 20">
+                                <path fill-rule="evenodd"
+                                    d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z"
+                                    clip-rule="evenodd" />
+                            </svg>
+                            <span>Instruksi pengambilan di kantor desa</span>
+                        </li>
+                    </ul>
+                </div>
+
+                <div class="bg-amber-50 border border-amber-200 rounded-xl p-4 mb-5">
+                    <div class="flex items-start gap-3">
+                        <svg class="w-5 h-5 text-amber-600 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor"
+                            viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
+                        </svg>
+                        <p class="text-sm text-amber-700">
+                            Pastikan file surat sudah benar sebelum mengirim email.
+                            Email hanya dapat dikirim <strong>satu kali</strong>.
+                        </p>
+                    </div>
+                </div>
+
+                <div class="flex gap-3">
+                    <button type="button" onclick="closeEmailModal()"
+                        class="flex-1 px-4 py-2.5 rounded-xl bg-gray-200 hover:bg-gray-300 text-gray-800 font-semibold transition text-sm">
+                        Batal
+                    </button>
+                    <button type="submit"
+                        class="flex-1 px-4 py-2.5 rounded-xl bg-gradient-to-r from-green-600 to-green-500 hover:from-green-700 hover:to-green-600 text-white font-bold shadow-lg hover:shadow-xl transition text-sm flex items-center justify-center gap-2">
+                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8" />
+                        </svg>
+                        Kirim Email
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
 @endsection
 
 @push('scripts')
@@ -758,6 +914,27 @@
         document.getElementById('uploadModal')?.addEventListener('click', function(event) {
             if (event.target === this) {
                 closeUploadModal();
+            }
+        });
+
+        function openEmailModal(id, email, name) {
+            document.getElementById('emailModal').classList.remove('hidden');
+            document.getElementById('emailForm').action = `/admin/skd/${id}/send-notification`;
+            document.getElementById('emailRecipientName').textContent = name;
+            document.getElementById('emailRecipientEmail').textContent = email;
+
+            document.querySelectorAll('.dropdown-menu').forEach(menu => {
+                menu.classList.remove('show');
+            });
+        }
+
+        function closeEmailModal() {
+            document.getElementById('emailModal').classList.add('hidden');
+        }
+
+        document.getElementById('emailModal')?.addEventListener('click', function(event) {
+            if (event.target === this) {
+                closeEmailModal();
             }
         });
     </script>
