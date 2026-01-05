@@ -26,24 +26,33 @@
     </div>
 
     <nav class="flex-1 overflow-y-auto px-4 scrollbar-hide">
+        @php
+            $admin = auth('admin')->user();
+            $isAdmin = $admin && $admin->role === 'admin';
+            $isKades = $admin && $admin->role === 'kades';
+        @endphp
+
 
         @php
-            // Rute spesifik untuk Dashboard
             $isDashboardActive =
                 request()->routeIs('dashboard.welcome') ||
                 request()->routeIs('user.dashboard') ||
                 request()->routeIs('admin.dashboard');
         @endphp
-        <a href="{{ route('admin.dashboard') }}"
-            class="flex items-center px-3 py-2.5 mb-1 rounded-lg hover:bg-gray-50 transition-colors duration-200 group {{ $isDashboardActive ? 'bg-emerald-50 text-emerald-600 font-semibold' : 'text-gray-500' }}">
-            <svg class="w-5 h-5 mr-3 flex-shrink-0 {{ $isDashboardActive ? 'text-emerald-600' : 'text-gray-400 group-hover:text-gray-600' }}"
-                fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                    d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6">
-                </path>
-            </svg>
-            <span class="text-sm sidebar-text {{ $isDashboardActive ? 'font-semibold' : '' }}">Dashboard</span>
-        </a>
+
+        @if ($isAdmin)
+            <a href="{{ route('admin.dashboard') }}"
+                class="flex items-center px-3 py-2.5 mb-1 rounded-lg hover:bg-gray-50 transition-colors duration-200 group {{ $isDashboardActive ? 'bg-emerald-50 text-emerald-600 font-semibold' : 'text-gray-500' }}">
+                <svg class="w-5 h-5 mr-3 flex-shrink-0 {{ $isDashboardActive ? 'text-emerald-600' : 'text-gray-400 group-hover:text-gray-600' }}"
+                    fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                        d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6">
+                    </path>
+                </svg>
+                <span class="text-sm sidebar-text {{ $isDashboardActive ? 'font-semibold' : '' }}">Dashboard</span>
+            </a>
+        @endif
+
 
         @php
             // Rute spesifik untuk Kelola Surat
@@ -59,143 +68,148 @@
         @endphp
 
         <!-- Kelola Surat dengan Subsidebar -->
-        <div class="mb-1">
-            <button type="button" onclick="toggleSubSidebar('kelolaSuratSub')"
-                class="w-full flex items-center justify-between px-3 py-2.5 rounded-lg hover:bg-gray-50 transition-colors duration-200 group {{ $isKelolaSuratActive ? 'bg-emerald-50 text-emerald-600' : 'text-gray-500' }}">
-                <div class="flex items-center">
-                    <svg class="w-5 h-5 mr-3 flex-shrink-0 {{ $isKelolaSuratActive ? 'text-emerald-600 font-semibold' : 'text-gray-400 group-hover:text-gray-600' }}"
+        @if ($isAdmin)
+            <div class="mb-1">
+                <button type="button" onclick="toggleSubSidebar('kelolaSuratSub')"
+                    class="w-full flex items-center justify-between px-3 py-2.5 rounded-lg hover:bg-gray-50 transition-colors duration-200 group {{ $isKelolaSuratActive ? 'bg-emerald-50 text-emerald-600' : 'text-gray-500' }}">
+                    <div class="flex items-center">
+                        <svg class="w-5 h-5 mr-3 flex-shrink-0 {{ $isKelolaSuratActive ? 'text-emerald-600 font-semibold' : 'text-gray-400 group-hover:text-gray-600' }}"
+                            fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z">
+                            </path>
+                        </svg>
+                        <span
+                            class="text-sm sidebar-text {{ $isKelolaSuratActive ? 'text-emerald-600 font-semibold' : 'text-gray-500 group-hover:text-gray-600' }}">Kelola
+                            Surat</span>
+                    </div>
+                    <svg id="kelolaSuratSubIcon"
+                        class="w-4 h-4 transition-transform duration-200 text-gray-400 {{ $isSubSidebarOpen ? 'rotate-180' : '' }}"
                         fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                            d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z">
-                        </path>
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
                     </svg>
-                    <span
-                        class="text-sm sidebar-text {{ $isKelolaSuratActive ? 'text-emerald-600 font-semibold' : 'text-gray-500 group-hover:text-gray-600' }}">Kelola
-                        Surat</span>
+                </button>
+
+                <!-- Subsidebar dengan Garis Vertikal -->
+                <div id="kelolaSuratSub"
+                    class="relative ml-8 mt-1 space-y-1 sidebar-text {{ $isSubSidebarOpen ? '' : 'hidden' }}">
+                    <!-- Garis Vertikal -->
+                    <div
+                        class="absolute -left-2 top-4 bottom-4 w-0.5 bg-gradient-to-b from-emerald-300 via-emerald-400 to-emerald-500 rounded-full">
+                    </div>
+
+                    @php
+                        $isSktmActive = request()->routeIs('admin.sktm.*');
+                        $isSkpActive = request()->routeIs('admin.skp.*');
+                        $isSkdActive = request()->routeIs('admin.skd.*');
+                        $isSkuActive = request()->routeIs('admin.sku.*');
+                        $isSkmtActive = request()->routeIs('admin.skmt.*');
+                    @endphp
+
+                    <!-- SKTM -->
+                    <a href="{{ route('admin.sktm.index') }}"
+                        class="flex items-center justify-between px-3 py-2 rounded-lg hover:bg-gray-50 transition-colors duration-200 group {{ $isSktmActive ? 'text-emerald-600' : 'text-gray-400' }}">
+                        <div class="flex items-center">
+                            <svg class="w-4 h-4 mr-2 flex-shrink-0 {{ $isSktmActive ? 'text-emerald-600' : 'text-gray-400 group-hover:text-gray-600' }}"
+                                fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                    d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z">
+                                </path>
+                            </svg>
+                            <span class="text-xs {{ $isSktmActive ? 'font-semibold' : '' }}">Surat Keterangan
+                                Miskin</span>
+                        </div>
+                        @if (isset($pendingSktm) && $pendingSktm > 0)
+                            <span
+                                class="inline-flex items-center justify-center ml-2 w-5 h-5 text-xs font-bold leading-none text-white bg-amber-500 rounded-full">
+                                {{ $pendingSktm }}
+                            </span>
+                        @endif
+                    </a>
+
+                    <a href="{{ route('admin.skd.index') }}"
+                        class="flex items-center justify-between px-3 py-2 rounded-lg hover:bg-gray-50 transition-colors duration-200 group {{ $isSkdActive ? 'text-emerald-600' : 'text-gray-400' }}">
+                        <div class="flex items-center">
+                            <svg class="w-4 h-4 mr-2 flex-shrink-0 {{ $isSkdActive ? 'text-emerald-600' : 'text-gray-400 group-hover:text-gray-600' }}"
+                                fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                    d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z">
+                                </path>
+                            </svg>
+                            <span class="text-xs {{ $isSkdActive ? 'font-semibold' : '' }}">Surat Keterangan
+                                Domisili</span>
+                        </div>
+                        @if (isset($pendingSkd) && $pendingSkd > 0)
+                            <span
+                                class="inline-flex items-center justify-center ml-2 w-5 h-5 text-xs font-bold leading-none text-white bg-amber-500 rounded-full">
+                                {{ $pendingSkd }}
+                            </span>
+                        @endif
+                    </a>
+
+                    <a href="{{ route('admin.sku.index') }}"
+                        class="flex items-center justify-between px-3 py-2 rounded-lg hover:bg-gray-50 transition-colors duration-200 group {{ $isSkuActive ? 'text-emerald-600' : 'text-gray-400' }}">
+                        <div class="flex items-center">
+                            <svg class="w-4 h-4 mr-2 flex-shrink-0 {{ $isSkuActive ? 'text-emerald-600' : 'text-gray-400 group-hover:text-gray-600' }}"
+                                fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                    d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z">
+                                </path>
+                            </svg>
+                            <span class="text-xs {{ $isSkuActive ? 'font-semibold' : '' }}">Surat Keterangan
+                                Usaha</span>
+                        </div>
+                        @if (isset($pendingSku) && $pendingSku > 0)
+                            <span
+                                class="inline-flex items-center justify-center ml-2 w-5 h-5 text-xs font-bold leading-none text-white bg-amber-500 rounded-full">
+                                {{ $pendingSku }}
+                            </span>
+                        @endif
+                    </a>
+
+                    <a href="{{ route('admin.skp.index') }}"
+                        class="flex items-center justify-between px-3 py-2 rounded-lg hover:bg-gray-50 transition-colors duration-200 group {{ $isSkpActive ? 'text-emerald-600' : 'text-gray-400' }}">
+                        <div class="flex items-center">
+                            <svg class="w-4 h-4 mr-2 flex-shrink-0 {{ $isSkpActive ? 'text-emerald-600' : 'text-gray-400 group-hover:text-gray-600' }}"
+                                fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                    d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z">
+                                </path>
+                            </svg>
+                            <span class="text-xs {{ $isSkpActive ? 'font-semibold' : '' }}">Surat Keterangan
+                                Penghasilan</span>
+                        </div>
+                        @if (isset($pendingSkp) && $pendingSkp > 0)
+                            <span
+                                class="inline-flex items-center justify-center ml-2 w-5 h-5 text-xs font-bold leading-none text-white bg-amber-500 rounded-full">
+                                {{ $pendingSkp }}
+                            </span>
+                        @endif
+                    </a>
+
+                    <a href="{{ route('admin.skmt.index') }}"
+                        class="flex items-center justify-between px-3 py-2 rounded-lg hover:bg-gray-50 transition-colors duration-200 group {{ $isSkmtActive ? 'text-emerald-600' : 'text-gray-400' }}">
+                        <div class="flex items-center">
+                            <svg class="w-4 h-4 mr-2 flex-shrink-0 {{ $isSkmtActive ? 'text-emerald-600' : 'text-gray-400 group-hover:text-gray-600' }}"
+                                fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                    d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z">
+                                </path>
+                            </svg>
+                            <span class="text-xs {{ $isSkmtActive ? 'font-semibold' : '' }}">Surat Keterangan
+                                Kematian</span>
+                        </div>
+                        @if (isset($pendingSkmt) && $pendingSkmt > 0)
+                            <span
+                                class="inline-flex items-center justify-center ml-2 w-5 h-5 text-xs font-bold leading-none text-white bg-amber-500 rounded-full">
+                                {{ $pendingSkmt }}
+                            </span>
+                        @endif
+                    </a>
                 </div>
-                <svg id="kelolaSuratSubIcon"
-                    class="w-4 h-4 transition-transform duration-200 text-gray-400 {{ $isSubSidebarOpen ? 'rotate-180' : '' }}"
-                    fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
-                </svg>
-            </button>
-
-            <!-- Subsidebar dengan Garis Vertikal -->
-            <div id="kelolaSuratSub"
-                class="relative ml-8 mt-1 space-y-1 sidebar-text {{ $isSubSidebarOpen ? '' : 'hidden' }}">
-                <!-- Garis Vertikal -->
-                <div
-                    class="absolute -left-2 top-4 bottom-4 w-0.5 bg-gradient-to-b from-emerald-300 via-emerald-400 to-emerald-500 rounded-full">
-                </div>
-
-                @php
-                    $isSktmActive = request()->routeIs('admin.sktm.*');
-                    $isSkpActive = request()->routeIs('admin.skp.*');
-                    $isSkdActive = request()->routeIs('admin.skd.*');
-                    $isSkuActive = request()->routeIs('admin.sku.*');
-                    $isSkmtActive = request()->routeIs('admin.skmt.*');
-                @endphp
-
-                <!-- SKTM -->
-                <a href="{{ route('admin.sktm.index') }}"
-                    class="flex items-center justify-between px-3 py-2 rounded-lg hover:bg-gray-50 transition-colors duration-200 group {{ $isSktmActive ? 'text-emerald-600' : 'text-gray-400' }}">
-                    <div class="flex items-center">
-                        <svg class="w-4 h-4 mr-2 flex-shrink-0 {{ $isSktmActive ? 'text-emerald-600' : 'text-gray-400 group-hover:text-gray-600' }}"
-                            fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z">
-                            </path>
-                        </svg>
-                        <span class="text-xs {{ $isSktmActive ? 'font-semibold' : '' }}">Surat Keterangan Miskin</span>
-                    </div>
-                    @if (isset($pendingSktm) && $pendingSktm > 0)
-                        <span
-                            class="inline-flex items-center justify-center ml-2 w-5 h-5 text-xs font-bold leading-none text-white bg-amber-500 rounded-full">
-                            {{ $pendingSktm }}
-                        </span>
-                    @endif
-                </a>
-
-                <a href="{{ route('admin.skd.index') }}"
-                    class="flex items-center justify-between px-3 py-2 rounded-lg hover:bg-gray-50 transition-colors duration-200 group {{ $isSkdActive ? 'text-emerald-600' : 'text-gray-400' }}">
-                    <div class="flex items-center">
-                        <svg class="w-4 h-4 mr-2 flex-shrink-0 {{ $isSkdActive ? 'text-emerald-600' : 'text-gray-400 group-hover:text-gray-600' }}"
-                            fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z">
-                            </path>
-                        </svg>
-                        <span class="text-xs {{ $isSkdActive ? 'font-semibold' : '' }}">Surat Keterangan
-                            Domisili</span>
-                    </div>
-                    @if (isset($pendingSkd) && $pendingSkd > 0)
-                        <span
-                            class="inline-flex items-center justify-center ml-2 w-5 h-5 text-xs font-bold leading-none text-white bg-amber-500 rounded-full">
-                            {{ $pendingSkd }}
-                        </span>
-                    @endif
-                </a>
-
-                <a href="{{ route('admin.sku.index') }}"
-                    class="flex items-center justify-between px-3 py-2 rounded-lg hover:bg-gray-50 transition-colors duration-200 group {{ $isSkuActive ? 'text-emerald-600' : 'text-gray-400' }}">
-                    <div class="flex items-center">
-                        <svg class="w-4 h-4 mr-2 flex-shrink-0 {{ $isSkuActive ? 'text-emerald-600' : 'text-gray-400 group-hover:text-gray-600' }}"
-                            fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z">
-                            </path>
-                        </svg>
-                        <span class="text-xs {{ $isSkuActive ? 'font-semibold' : '' }}">Surat Keterangan Usaha</span>
-                    </div>
-                    @if (isset($pendingSku) && $pendingSku > 0)
-                        <span
-                            class="inline-flex items-center justify-center ml-2 w-5 h-5 text-xs font-bold leading-none text-white bg-amber-500 rounded-full">
-                            {{ $pendingSku }}
-                        </span>
-                    @endif
-                </a>
-
-                <a href="{{ route('admin.skp.index') }}"
-                    class="flex items-center justify-between px-3 py-2 rounded-lg hover:bg-gray-50 transition-colors duration-200 group {{ $isSkpActive ? 'text-emerald-600' : 'text-gray-400' }}">
-                    <div class="flex items-center">
-                        <svg class="w-4 h-4 mr-2 flex-shrink-0 {{ $isSkpActive ? 'text-emerald-600' : 'text-gray-400 group-hover:text-gray-600' }}"
-                            fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z">
-                            </path>
-                        </svg>
-                        <span class="text-xs {{ $isSkpActive ? 'font-semibold' : '' }}">Surat Keterangan
-                            Penghasilan</span>
-                    </div>
-                    @if (isset($pendingSkp) && $pendingSkp > 0)
-                        <span
-                            class="inline-flex items-center justify-center ml-2 w-5 h-5 text-xs font-bold leading-none text-white bg-amber-500 rounded-full">
-                            {{ $pendingSkp }}
-                        </span>
-                    @endif
-                </a>
-
-                <a href="{{ route('admin.skmt.index') }}"
-                    class="flex items-center justify-between px-3 py-2 rounded-lg hover:bg-gray-50 transition-colors duration-200 group {{ $isSkmtActive ? 'text-emerald-600' : 'text-gray-400' }}">
-                    <div class="flex items-center">
-                        <svg class="w-4 h-4 mr-2 flex-shrink-0 {{ $isSkmtActive ? 'text-emerald-600' : 'text-gray-400 group-hover:text-gray-600' }}"
-                            fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z">
-                            </path>
-                        </svg>
-                        <span class="text-xs {{ $isSkmtActive ? 'font-semibold' : '' }}">Surat Keterangan
-                            Kematian</span>
-                    </div>
-                    @if (isset($pendingSkmt) && $pendingSkmt > 0)
-                        <span
-                            class="inline-flex items-center justify-center ml-2 w-5 h-5 text-xs font-bold leading-none text-white bg-amber-500 rounded-full">
-                            {{ $pendingSkmt }}
-                        </span>
-                    @endif
-                </a>
             </div>
-        </div>
+        @endif
+
 
         @php
             $isArchiveActive =
@@ -203,15 +217,18 @@
                 request()->routeIs('admin.arsip.index') ||
                 request()->routeIs('admin.arsip.show');
         @endphp
+
         <a href="{{ route('admin.arsip.index') }}"
             class="flex items-center px-3 py-2.5 mb-1 rounded-lg hover:bg-gray-50 transition-colors duration-200 group {{ $isArchiveActive ? 'bg-emerald-50 text-emerald-600 font-semibold' : 'text-gray-500' }}">
 
-                                <svg class="w-5 h-5 mr-3 flex-shrink-0 {{ $isArchiveActive ? 'text-emerald-600' : 'text-gray-400 group-hover:text-gray-600' }}" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                            d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2" />
-                    </svg>
+            <svg class="w-5 h-5 mr-3 flex-shrink-0 {{ $isArchiveActive ? 'text-emerald-600' : 'text-gray-400 group-hover:text-gray-600' }}"
+                fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                    d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2" />
+            </svg>
             <span class="text-sm sidebar-text {{ $isArchiveActive ? 'font-semibold' : '' }}">Arsip Data</span>
         </a>
+
 
     </nav>
 

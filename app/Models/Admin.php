@@ -8,8 +8,7 @@ use Illuminate\Notifications\Notifiable;
 
 class Admin extends Authenticatable
 {
-    use HasFactory;
-    use Notifiable;
+    use HasFactory, Notifiable;
 
     protected $table = 'admin';
 
@@ -23,13 +22,19 @@ class Admin extends Authenticatable
         'aktif',
     ];
 
-    protected $hidden = [
-        'password',
-        'remember_token',
-    ];
-
     protected $casts = [
         'aktif' => 'boolean',
-        'last_login' => 'datetime',
     ];
+
+    // helper
+    public function isAdmin()
+    {
+        return $this->role === 'admin';
+    }
+
+    public function isKades()
+    {
+        return $this->role === 'kades';
+    }
 }
+

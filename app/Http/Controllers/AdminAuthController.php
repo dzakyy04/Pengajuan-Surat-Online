@@ -14,26 +14,30 @@ class AdminAuthController extends Controller
         return view('admin.auth.login');
     }
 
-    public function login(Request $request)
-    {
-        $request->validate([
-            'email' => 'required|email',
-            'password' => 'required',
-        ]);
+public function login(Request $request)
+{
+    $request->validate([
+        'email' => 'required|email',
+        'password' => 'required',
+    ]);
 
-        $credentials = [
-            'email' => $request->email,
-            'password' => $request->password,
-        ];
+    $credentials = $request->only('email', 'password');
 
-        if (Auth::guard('admin')->attempt($credentials)) {
-            $request->session()->regenerate();
+    if (Auth::guard('admin')->attempt($credentials)) {
+        $request->session()->regenerate();
 
-            return redirect()->route('admin.dashboard');
+        $user = Auth::guard('admin')->user();
+
+        if ($user->role === 'kades') {
+            return redirect()->route('admin.arsip.index');
         }
 
-        return back()->with('error', 'Email atau password salah');
+        return redirect()->route('admin.dashboard');
     }
+
+    return back()->with('error', 'Email atau password salah');
+}
+
 
     public function logout(Request $request)
     {
