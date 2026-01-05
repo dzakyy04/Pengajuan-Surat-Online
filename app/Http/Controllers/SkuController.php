@@ -14,6 +14,7 @@ use Illuminate\Support\Facades\Storage;
 use PhpOffice\PhpWord\TemplateProcessor;
 use App\Mail\PengajuanDitolakMail;
 use App\Mail\PengajuanSelesaiMail;
+use Carbon\Carbon;
 
 class SkuController extends Controller
 {
@@ -32,13 +33,23 @@ class SkuController extends Controller
                 $q->where('kode', 'SKU');
             });
 
+        $startDate = $request->filled('start_date')
+            ? Carbon::parse($request->start_date)->startOfDay()
+            : Carbon::today()->startOfDay();
+
+        $endDate = $request->filled('end_date')
+            ? Carbon::parse($request->end_date)->endOfDay()
+            : Carbon::today()->endOfDay();
+
+        $query->whereBetween('created_at', [$startDate, $endDate]);
+
         if ($request->filled('search')) {
             $search = $request->search;
             $query->where(function ($q) use ($search) {
                 $q->where('nama_pemohon', 'like', "%{$search}%")
-                    ->orWhere('nomor_pengajuan', 'like', "%{$search}%")
-                    ->orWhere('email_pemohon', 'like', "%{$search}%")
-                    ->orWhere('no_hp_pemohon', 'like', "%{$search}%");
+                  ->orWhere('nomor_pengajuan', 'like', "%{$search}%")
+                  ->orWhere('email_pemohon', 'like', "%{$search}%")
+                  ->orWhere('no_hp_pemohon', 'like', "%{$search}%");
             });
         }
 
@@ -48,28 +59,18 @@ class SkuController extends Controller
 
         $pengajuanList = $query
             ->orderBy('created_at', 'desc')
-            ->paginate(perPage: 10)
+            ->paginate(10)
             ->withQueryString();
 
-        $submittedSku = PengajuanSurat::whereHas('jenisSurat', function ($q) {
+        $baseCount = PengajuanSurat::whereHas('jenisSurat', function ($q) {
             $q->where('kode', 'SKU');
-        })->where('status', 'submitted')->count();
+        })->whereBetween('created_at', [$startDate, $endDate]);
 
-        $verifiedSku = PengajuanSurat::whereHas('jenisSurat', function ($q) {
-            $q->where('kode', 'SKU');
-        })->where('status', 'verified')->count();
-
-        $approvedSku = PengajuanSurat::whereHas('jenisSurat', function ($q) {
-            $q->where('kode', 'SKU');
-        })->where('status', 'approved')->count();
-
-        $notifiedSku = PengajuanSurat::whereHas('jenisSurat', function ($q) {
-            $q->where('kode', 'SKU');
-        })->where('status', 'notified')->count();
-
-        $rejectedSku = PengajuanSurat::whereHas('jenisSurat', function ($q) {
-            $q->where('kode', 'SKU');
-        })->where('status', 'rejected')->count();
+        $submittedSku = (clone $baseCount)->where('status', 'submitted')->count();
+        $verifiedSku  = (clone $baseCount)->where('status', 'verified')->count();
+        $approvedSku  = (clone $baseCount)->where('status', 'approved')->count();
+        $notifiedSku  = (clone $baseCount)->where('status', 'notified')->count();
+        $rejectedSku  = (clone $baseCount)->where('status', 'rejected')->count();
 
         return view('admin.surat.sku.index', compact(
             'pengajuanList',

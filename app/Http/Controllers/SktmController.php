@@ -15,6 +15,7 @@ use PhpOffice\PhpWord\TemplateProcessor;
 use PhpOffice\PhpWord\Element\TextRun;
 use App\Mail\PengajuanDitolakMail;
 use App\Mail\PengajuanSelesaiMail;
+use Carbon\Carbon;
 
 class SktmController extends Controller
 {
@@ -33,13 +34,23 @@ class SktmController extends Controller
                 $q->where('kode', 'SKTM');
             });
 
+        $startDate = $request->filled('start_date')
+            ? Carbon::parse($request->start_date)->startOfDay()
+            : Carbon::today()->startOfDay();
+
+        $endDate = $request->filled('end_date')
+            ? Carbon::parse($request->end_date)->endOfDay()
+            : Carbon::today()->endOfDay();
+
+        $query->whereBetween('created_at', [$startDate, $endDate]);
+
         if ($request->filled('search')) {
             $search = $request->search;
             $query->where(function ($q) use ($search) {
                 $q->where('nama_pemohon', 'like', "%{$search}%")
-                    ->orWhere('nomor_pengajuan', 'like', "%{$search}%")
-                    ->orWhere('email_pemohon', 'like', "%{$search}%")
-                    ->orWhere('no_hp_pemohon', 'like', "%{$search}%");
+                  ->orWhere('nomor_pengajuan', 'like', "%{$search}%")
+                  ->orWhere('email_pemohon', 'like', "%{$search}%")
+                  ->orWhere('no_hp_pemohon', 'like', "%{$search}%");
             });
         }
 
@@ -49,28 +60,18 @@ class SktmController extends Controller
 
         $pengajuanList = $query
             ->orderBy('created_at', 'desc')
-            ->paginate(perPage: 10)
+            ->paginate(10)
             ->withQueryString();
 
-        $submittedSktm = PengajuanSurat::whereHas('jenisSurat', function ($q) {
+        $baseCount = PengajuanSurat::whereHas('jenisSurat', function ($q) {
             $q->where('kode', 'SKTM');
-        })->where('status', 'submitted')->count();
+        })->whereBetween('created_at', [$startDate, $endDate]);
 
-        $verifiedSktm = PengajuanSurat::whereHas('jenisSurat', function ($q) {
-            $q->where('kode', 'SKTM');
-        })->where('status', 'verified')->count();
-
-        $approvedSktm = PengajuanSurat::whereHas('jenisSurat', function ($q) {
-            $q->where('kode', 'SKTM');
-        })->where('status', 'approved')->count();
-
-        $notifiedSktm = PengajuanSurat::whereHas('jenisSurat', function ($q) {
-            $q->where('kode', 'SKTM');
-        })->where('status', 'notified')->count();
-
-        $rejectedSktm = PengajuanSurat::whereHas('jenisSurat', function ($q) {
-            $q->where('kode', 'SKTM');
-        })->where('status', 'rejected')->count();
+        $submittedSktm = (clone $baseCount)->where('status', 'submitted')->count();
+        $verifiedSktm  = (clone $baseCount)->where('status', 'verified')->count();
+        $approvedSktm  = (clone $baseCount)->where('status', 'approved')->count();
+        $notifiedSktm  = (clone $baseCount)->where('status', 'notified')->count();
+        $rejectedSktm  = (clone $baseCount)->where('status', 'rejected')->count();
 
         return view('admin.surat.sktm.index', compact(
             'pengajuanList',

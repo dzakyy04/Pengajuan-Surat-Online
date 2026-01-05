@@ -96,7 +96,90 @@
                     <h1 class="text-3xl font-bold text-gray-800">Kelola Pengajuan Surat</h1>
                     <p class="text-gray-600 mt-2">Surat Keterangan Kematian (SKMT)</p>
                 </div>
-                <div class="flex gap-2 items-center">
+                <div class="flex gap-2 items-center flex-wrap">
+                    <!-- Filter Tanggal -->
+                    <div class="relative" x-data="{ open: false }">
+                        <button @click="open = !open" type="button"
+                            class="inline-flex items-center px-4 py-2 bg-white border border-gray-300 rounded-lg shadow-sm hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-emerald-500 transition">
+                            <svg class="w-5 h-5 mr-2 text-gray-600" fill="none" stroke="currentColor"
+                                viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                    d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
+                            </svg>
+                            <span class="text-sm font-medium text-gray-700">
+                                @if (request()->get('start_date') && request()->get('end_date'))
+                                    {{ \Carbon\Carbon::parse(request()->get('start_date'))->format('d/m/Y') }} -
+                                    {{ \Carbon\Carbon::parse(request()->get('end_date'))->format('d/m/Y') }}
+                                @else
+                                    Hari Ini
+                                @endif
+                            </span>
+                            <svg class="w-4 h-4 ml-2 text-gray-600" fill="none" stroke="currentColor"
+                                viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
+                            </svg>
+                        </button>
+
+                        <!-- Dropdown Menu Tanggal -->
+                        <div x-show="open" @click.away="open = false" x-transition
+                            class="absolute right-0 mt-2 w-80 bg-white rounded-lg shadow-lg border border-gray-200 z-10">
+                            <form method="GET" action="{{ route('admin.skmt.index') }}" class="p-4">
+                                <input type="hidden" name="status" value="{{ request()->get('status') }}">
+                                <input type="hidden" name="search" value="{{ request()->get('search') }}">
+
+                                <div class="space-y-4">
+                                    <div>
+                                        <label class="block text-sm font-medium text-gray-700 mb-1">Tanggal Mulai</label>
+                                        <input type="date" name="start_date"
+                                            value="{{ request()->get('start_date', now()->format('Y-m-d')) }}"
+                                            class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500">
+                                    </div>
+                                    <div>
+                                        <label class="block text-sm font-medium text-gray-700 mb-1">Tanggal Akhir</label>
+                                        <input type="date" name="end_date"
+                                            value="{{ request()->get('end_date', now()->format('Y-m-d')) }}"
+                                            class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500">
+                                    </div>
+
+                                    <!-- Quick Filters -->
+                                    <div>
+                                        <p class="text-xs font-medium text-gray-500 mb-2">Filter Cepat</p>
+                                        <div class="grid grid-cols-2 gap-2">
+                                            <button type="button" onclick="setDateRange('today')"
+                                                class="px-3 py-1.5 text-xs bg-gray-100 hover:bg-gray-200 rounded-lg transition">
+                                                Hari Ini
+                                            </button>
+                                            <button type="button" onclick="setDateRange('yesterday')"
+                                                class="px-3 py-1.5 text-xs bg-gray-100 hover:bg-gray-200 rounded-lg transition">
+                                                Kemarin
+                                            </button>
+                                            <button type="button" onclick="setDateRange('week')"
+                                                class="px-3 py-1.5 text-xs bg-gray-100 hover:bg-gray-200 rounded-lg transition">
+                                                7 Hari Terakhir
+                                            </button>
+                                            <button type="button" onclick="setDateRange('month')"
+                                                class="px-3 py-1.5 text-xs bg-gray-100 hover:bg-gray-200 rounded-lg transition">
+                                                30 Hari Terakhir
+                                            </button>
+                                        </div>
+                                    </div>
+
+                                    <div class="flex gap-2 pt-2">
+                                        <button type="submit"
+                                            class="flex-1 px-4 py-2 bg-emerald-600 hover:bg-emerald-700 text-white text-sm font-medium rounded-lg transition">
+                                            Terapkan
+                                        </button>
+                                        <a href="{{ route('admin.skmt.index', ['status' => request()->get('status')]) }}"
+                                            class="flex-1 px-4 py-2 bg-gray-100 hover:bg-gray-200 text-gray-700 text-sm font-medium rounded-lg transition text-center">
+                                            Reset
+                                        </a>
+                                    </div>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+
+                    <!-- Filter Status -->
                     <div class="relative" x-data="{ open: false }">
                         <button @click="open = !open" type="button"
                             class="inline-flex items-center px-4 py-2 bg-white border border-gray-300 rounded-lg shadow-sm hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-emerald-500 transition">
@@ -113,7 +196,7 @@
                                 @elseif(request()->get('status') == 'approved')
                                     Ditandatangani
                                 @elseif(request()->get('status') == 'notified')
-                                    Dinotifikasi
+                                    Diberitahukan
                                 @elseif(request()->get('status') == 'rejected')
                                     Ditolak
                                 @else
@@ -126,10 +209,11 @@
                             </svg>
                         </button>
 
+                        <!-- Dropdown Menu Status -->
                         <div x-show="open" @click.away="open = false" x-transition
                             class="absolute right-0 mt-2 w-56 bg-white rounded-lg shadow-lg border border-gray-200 z-10">
                             <div class="py-1">
-                                <a href="{{ route('admin.skmt.index') }}"
+                                <a href="{{ route('admin.skmt.index', array_filter(['start_date' => request()->get('start_date'), 'end_date' => request()->get('end_date')])) }}"
                                     class="flex items-center px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 transition {{ request()->get('status') == null ? 'bg-emerald-50 text-emerald-700 font-semibold' : '' }}">
                                     <svg class="w-4 h-4 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
@@ -137,7 +221,7 @@
                                     </svg>
                                     Semua Status
                                 </a>
-                                <a href="{{ route('admin.skmt.index', ['status' => 'submitted']) }}"
+                                <a href="{{ route('admin.skmt.index', array_filter(['status' => 'submitted', 'start_date' => request()->get('start_date'), 'end_date' => request()->get('end_date')])) }}"
                                     class="flex items-center px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 transition {{ request()->get('status') == 'submitted' ? 'bg-yellow-50 text-yellow-700 font-semibold' : '' }}">
                                     <svg class="w-4 h-4 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
@@ -145,7 +229,7 @@
                                     </svg>
                                     Diajukan
                                 </a>
-                                <a href="{{ route('admin.skmt.index', ['status' => 'verified']) }}"
+                                <a href="{{ route('admin.skmt.index', array_filter(['status' => 'verified', 'start_date' => request()->get('start_date'), 'end_date' => request()->get('end_date')])) }}"
                                     class="flex items-center px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 transition {{ request()->get('status') == 'verified' ? 'bg-emerald-50 text-emerald-700 font-semibold' : '' }}">
                                     <svg class="w-4 h-4 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
@@ -153,7 +237,7 @@
                                     </svg>
                                     Diverifikasi
                                 </a>
-                                <a href="{{ route('admin.skmt.index', ['status' => 'approved']) }}"
+                                <a href="{{ route('admin.skmt.index', array_filter(['status' => 'approved', 'start_date' => request()->get('start_date'), 'end_date' => request()->get('end_date')])) }}"
                                     class="flex items-center px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 transition {{ request()->get('status') == 'approved' ? 'bg-purple-50 text-purple-700 font-semibold' : '' }}">
                                     <svg class="w-4 h-4 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
@@ -161,7 +245,7 @@
                                     </svg>
                                     Ditandatangani
                                 </a>
-                                <a href="{{ route('admin.skmt.index', ['status' => 'notified']) }}"
+                                <a href="{{ route('admin.skmt.index', array_filter(['status' => 'notified', 'start_date' => request()->get('start_date'), 'end_date' => request()->get('end_date')])) }}"
                                     class="flex items-center px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 transition {{ request()->get('status') == 'notified' ? 'bg-emerald-50 text-emerald-700 font-semibold' : '' }}">
                                     <svg class="w-4 h-4 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
@@ -169,7 +253,7 @@
                                     </svg>
                                     Dinotifikasi
                                 </a>
-                                <a href="{{ route('admin.skmt.index', ['status' => 'rejected']) }}"
+                                <a href="{{ route('admin.skmt.index', array_filter(['status' => 'rejected', 'start_date' => request()->get('start_date'), 'end_date' => request()->get('end_date')])) }}"
                                     class="flex items-center px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 transition {{ request()->get('status') == 'rejected' ? 'bg-red-50 text-red-700 font-semibold' : '' }}">
                                     <svg class="w-4 h-4 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
@@ -181,6 +265,7 @@
                         </div>
                     </div>
 
+                    <!-- Refresh Button -->
                     <button onclick="window.location.reload()"
                         class="inline-flex items-center px-4 py-2 bg-gray-600 hover:bg-gray-700 text-white rounded-lg shadow-sm transition">
                         <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -947,4 +1032,37 @@
         });
     </script>
     <script src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js" defer></script>
+    <script>
+        function setDateRange(type) {
+            const today = new Date();
+            let startDate, endDate;
+
+            switch (type) {
+                case 'today':
+                    startDate = endDate = today;
+                    break;
+                case 'yesterday':
+                    startDate = endDate = new Date(today.setDate(today.getDate() - 1));
+                    break;
+                case 'week':
+                    endDate = new Date();
+                    startDate = new Date(today.setDate(today.getDate() - 7));
+                    break;
+                case 'month':
+                    endDate = new Date();
+                    startDate = new Date(today.setDate(today.getDate() - 30));
+                    break;
+            }
+
+            document.querySelector('input[name="start_date"]').value = formatDate(startDate);
+            document.querySelector('input[name="end_date"]').value = formatDate(endDate);
+        }
+
+        function formatDate(date) {
+            const year = date.getFullYear();
+            const month = String(date.getMonth() + 1).padStart(2, '0');
+            const day = String(date.getDate()).padStart(2, '0');
+            return `${year}-${month}-${day}`;
+        }
+    </script>
 @endpush

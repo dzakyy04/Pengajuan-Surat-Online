@@ -14,6 +14,7 @@ use Illuminate\Support\Facades\Storage;
 use PhpOffice\PhpWord\TemplateProcessor;
 use App\Mail\PengajuanDitolakMail;
 use App\Mail\PengajuanSelesaiMail;
+use Carbon\Carbon;
 
 class SkpController extends Controller
 {
@@ -25,20 +26,30 @@ class SkpController extends Controller
         $this->middleware('auth:admin');
     }
 
-    public function index(Request $request)
+            public function index(Request $request)
     {
         $query = PengajuanSurat::with(['jenisSurat', 'admin'])
             ->whereHas('jenisSurat', function ($q) {
                 $q->where('kode', 'SKP');
             });
 
+        $startDate = $request->filled('start_date')
+            ? Carbon::parse($request->start_date)->startOfDay()
+            : Carbon::today()->startOfDay();
+
+        $endDate = $request->filled('end_date')
+            ? Carbon::parse($request->end_date)->endOfDay()
+            : Carbon::today()->endOfDay();
+
+        $query->whereBetween('created_at', [$startDate, $endDate]);
+
         if ($request->filled('search')) {
             $search = $request->search;
             $query->where(function ($q) use ($search) {
                 $q->where('nama_pemohon', 'like', "%{$search}%")
-                    ->orWhere('nomor_pengajuan', 'like', "%{$search}%")
-                    ->orWhere('email_pemohon', 'like', "%{$search}%")
-                    ->orWhere('no_hp_pemohon', 'like', "%{$search}%");
+                  ->orWhere('nomor_pengajuan', 'like', "%{$search}%")
+                  ->orWhere('email_pemohon', 'like', "%{$search}%")
+                  ->orWhere('no_hp_pemohon', 'like', "%{$search}%");
             });
         }
 
@@ -48,28 +59,18 @@ class SkpController extends Controller
 
         $pengajuanList = $query
             ->orderBy('created_at', 'desc')
-            ->paginate(perPage: 10)
+            ->paginate(10)
             ->withQueryString();
 
-        $submittedSkp = PengajuanSurat::whereHas('jenisSurat', function ($q) {
+        $baseCount = PengajuanSurat::whereHas('jenisSurat', function ($q) {
             $q->where('kode', 'SKP');
-        })->where('status', 'submitted')->count();
+        })->whereBetween('created_at', [$startDate, $endDate]);
 
-        $verifiedSkp = PengajuanSurat::whereHas('jenisSurat', function ($q) {
-            $q->where('kode', 'SKP');
-        })->where('status', 'verified')->count();
-
-        $approvedSkp = PengajuanSurat::whereHas('jenisSurat', function ($q) {
-            $q->where('kode', 'SKP');
-        })->where('status', 'approved')->count();
-
-        $notifiedSkp = PengajuanSurat::whereHas('jenisSurat', function ($q) {
-            $q->where('kode', 'SKP');
-        })->where('status', 'notified')->count();
-
-        $rejectedSkp = PengajuanSurat::whereHas('jenisSurat', function ($q) {
-            $q->where('kode', 'SKP');
-        })->where('status', 'rejected')->count();
+        $submittedSkp = (clone $baseCount)->where('status', 'submitted')->count();
+        $verifiedSkp  = (clone $baseCount)->where('status', 'verified')->count();
+        $approvedSkp  = (clone $baseCount)->where('status', 'approved')->count();
+        $notifiedSkp  = (clone $baseCount)->where('status', 'notified')->count();
+        $rejectedSkp  = (clone $baseCount)->where('status', 'rejected')->count();
 
         return view('admin.surat.skp.index', compact(
             'pengajuanList',

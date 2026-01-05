@@ -14,6 +14,7 @@ use Illuminate\Support\Facades\Storage;
 use PhpOffice\PhpWord\TemplateProcessor;
 use App\Mail\PengajuanDitolakMail;
 use App\Mail\PengajuanSelesaiMail;
+use Carbon\Carbon;
 
 class SkdController extends Controller
 {
@@ -25,20 +26,30 @@ class SkdController extends Controller
         $this->middleware('auth:admin');
     }
 
-    public function index(Request $request)
+        public function index(Request $request)
     {
         $query = PengajuanSurat::with(['jenisSurat', 'admin'])
             ->whereHas('jenisSurat', function ($q) {
                 $q->where('kode', 'SKD');
             });
 
+        $startDate = $request->filled('start_date')
+            ? Carbon::parse($request->start_date)->startOfDay()
+            : Carbon::today()->startOfDay();
+
+        $endDate = $request->filled('end_date')
+            ? Carbon::parse($request->end_date)->endOfDay()
+            : Carbon::today()->endOfDay();
+
+        $query->whereBetween('created_at', [$startDate, $endDate]);
+
         if ($request->filled('search')) {
             $search = $request->search;
             $query->where(function ($q) use ($search) {
                 $q->where('nama_pemohon', 'like', "%{$search}%")
-                    ->orWhere('nomor_pengajuan', 'like', "%{$search}%")
-                    ->orWhere('email_pemohon', 'like', "%{$search}%")
-                    ->orWhere('no_hp_pemohon', 'like', "%{$search}%");
+                  ->orWhere('nomor_pengajuan', 'like', "%{$search}%")
+                  ->orWhere('email_pemohon', 'like', "%{$search}%")
+                  ->orWhere('no_hp_pemohon', 'like', "%{$search}%");
             });
         }
 
@@ -48,28 +59,18 @@ class SkdController extends Controller
 
         $pengajuanList = $query
             ->orderBy('created_at', 'desc')
-            ->paginate(perPage: 10)
+            ->paginate(10)
             ->withQueryString();
 
-        $submittedSkd = PengajuanSurat::whereHas('jenisSurat', function ($q) {
+        $baseCount = PengajuanSurat::whereHas('jenisSurat', function ($q) {
             $q->where('kode', 'SKD');
-        })->where('status', 'submitted')->count();
+        })->whereBetween('created_at', [$startDate, $endDate]);
 
-        $verifiedSkd = PengajuanSurat::whereHas('jenisSurat', function ($q) {
-            $q->where('kode', 'SKD');
-        })->where('status', 'verified')->count();
-
-        $approvedSkd = PengajuanSurat::whereHas('jenisSurat', function ($q) {
-            $q->where('kode', 'SKD');
-        })->where('status', 'approved')->count();
-
-        $notifiedSkd = PengajuanSurat::whereHas('jenisSurat', function ($q) {
-            $q->where('kode', 'SKD');
-        })->where('status', 'notified')->count();
-
-        $rejectedSkd = PengajuanSurat::whereHas('jenisSurat', function ($q) {
-            $q->where('kode', 'SKD');
-        })->where('status', 'rejected')->count();
+        $submittedSkd = (clone $baseCount)->where('status', 'submitted')->count();
+        $verifiedSkd  = (clone $baseCount)->where('status', 'verified')->count();
+        $approvedSkd  = (clone $baseCount)->where('status', 'approved')->count();
+        $notifiedSkd  = (clone $baseCount)->where('status', 'notified')->count();
+        $rejectedSkd  = (clone $baseCount)->where('status', 'rejected')->count();
 
         return view('admin.surat.skd.index', compact(
             'pengajuanList',

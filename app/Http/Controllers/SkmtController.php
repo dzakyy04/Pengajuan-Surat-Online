@@ -14,6 +14,7 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Storage;
 use PhpOffice\PhpWord\TemplateProcessor;
+use Carbon\Carbon;
 
 class SkmtController extends Controller
 {
@@ -25,20 +26,30 @@ class SkmtController extends Controller
         $this->middleware('auth:admin');
     }
 
-    public function index(Request $request)
+            public function index(Request $request)
     {
         $query = PengajuanSurat::with(['jenisSurat', 'admin'])
             ->whereHas('jenisSurat', function ($q) {
                 $q->where('kode', 'SKMT');
             });
 
+        $startDate = $request->filled('start_date')
+            ? Carbon::parse($request->start_date)->startOfDay()
+            : Carbon::today()->startOfDay();
+
+        $endDate = $request->filled('end_date')
+            ? Carbon::parse($request->end_date)->endOfDay()
+            : Carbon::today()->endOfDay();
+
+        $query->whereBetween('created_at', [$startDate, $endDate]);
+
         if ($request->filled('search')) {
             $search = $request->search;
             $query->where(function ($q) use ($search) {
                 $q->where('nama_pemohon', 'like', "%{$search}%")
-                    ->orWhere('nomor_pengajuan', 'like', "%{$search}%")
-                    ->orWhere('email_pemohon', 'like', "%{$search}%")
-                    ->orWhere('no_hp_pemohon', 'like', "%{$search}%");
+                  ->orWhere('nomor_pengajuan', 'like', "%{$search}%")
+                  ->orWhere('email_pemohon', 'like', "%{$search}%")
+                  ->orWhere('no_hp_pemohon', 'like', "%{$search}%");
             });
         }
 
@@ -51,25 +62,15 @@ class SkmtController extends Controller
             ->paginate(10)
             ->withQueryString();
 
-        $submittedSkmt = PengajuanSurat::whereHas('jenisSurat', function ($q) {
+        $baseCount = PengajuanSurat::whereHas('jenisSurat', function ($q) {
             $q->where('kode', 'SKMT');
-        })->where('status', 'submitted')->count();
+        })->whereBetween('created_at', [$startDate, $endDate]);
 
-        $verifiedSkmt = PengajuanSurat::whereHas('jenisSurat', function ($q) {
-            $q->where('kode', 'SKMT');
-        })->where('status', 'verified')->count();
-
-        $approvedSkmt = PengajuanSurat::whereHas('jenisSurat', function ($q) {
-            $q->where('kode', 'SKMT');
-        })->where('status', 'approved')->count();
-
-        $notifiedSkmt = PengajuanSurat::whereHas('jenisSurat', function ($q) {
-            $q->where('kode', 'SKMT');
-        })->where('status', 'notified')->count();
-
-        $rejectedSkmt = PengajuanSurat::whereHas('jenisSurat', function ($q) {
-            $q->where('kode', 'SKMT');
-        })->where('status', 'rejected')->count();
+        $submittedSkmt = (clone $baseCount)->where('status', 'submitted')->count();
+        $verifiedSkmt  = (clone $baseCount)->where('status', 'verified')->count();
+        $approvedSkmt  = (clone $baseCount)->where('status', 'approved')->count();
+        $notifiedSkmt  = (clone $baseCount)->where('status', 'notified')->count();
+        $rejectedSkmt  = (clone $baseCount)->where('status', 'rejected')->count();
 
         return view('admin.surat.skmt.index', compact(
             'pengajuanList',
