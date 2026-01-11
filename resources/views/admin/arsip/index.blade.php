@@ -122,89 +122,93 @@
         @endif
 
         <!-- Statistics Cards -->
-        <div class="grid grid-cols-1 md:grid-cols-5 gap-3 mb-6">
-            <!-- Total Arsip -->
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-6 gap-4 mb-6">
+            <!-- Total Card -->
             <div
-                class="border border-emerald-200 bg-gradient-to-bl from-emerald-50 to-emerald-200 rounded-2xl shadow-sm p-6 text-emerald-600 card-stats">
-                <div class="flex items-center justify-between">
-                    <div>
-                        <p class="text-emerald-600 text-sm font-semibold">Total Arsip</p>
-                        <h3 class="text-3xl font-bold mt-2">{{ $pengajuan->total() }}</h3>
-                    </div>
-                    <div class="bg-emerald-200 bg-opacity-30 rounded-full p-3">
-                        <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                class="border border-emerald-200 bg-gradient-to-br from-emerald-50 to-emerald-100 rounded-xl shadow-sm p-6 text-emerald-600 hover:shadow-md transition-shadow duration-200">
+                <p class="text-emerald-600 text-sm font-semibold mb-2">Total Arsip</p>
+                <div class="flex items-center gap-3">
+                    <div class="bg-emerald-200 bg-opacity-40 rounded-full p-2 flex-shrink-0">
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                                 d="M5 8h14M5 8a2 2 0 110-4h14a2 2 0 110 4M5 8v10a2 2 0 002 2h10a2 2 0 002-2V8m-9 4h4" />
                         </svg>
                     </div>
+                    <h3 class="text-3xl font-bold">{{ $pengajuan->total() }}</h3>
                 </div>
             </div>
 
             <!-- Submitted -->
             <div
-                class="border border-blue-200 bg-gradient-to-bl from-blue-50 to-blue-200 rounded-2xl shadow-sm p-6 text-blue-600 card-stats">
-                <div class="flex items-center justify-between">
-                    <div>
-                        <p class="text-sm font-semibold">Diajukan</p>
-                        <h3 class="text-3xl font-bold mt-2">{{ $pengajuan->where('status', 'submitted')->count() }}</h3>
-                    </div>
-                    <div class="bg-blue-200 bg-opacity-30 rounded-full p-3">
-                        <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                class="border border-orange-200 bg-gradient-to-br from-orange-50 to-orange-100 rounded-xl shadow-sm p-6 text-orange-600 hover:shadow-md transition-shadow duration-200">
+                <p class="text-sm font-semibold mb-2">Diajukan</p>
+                <div class="flex items-center gap-3">
+                    <div class="bg-orange-200 bg-opacity-40 rounded-full p-2 flex-shrink-0">
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                                 d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
                         </svg>
                     </div>
+                    <h3 class="text-3xl font-bold">{{ $pengajuan->where('status', 'submitted')->count() }}</h3>
                 </div>
             </div>
 
             <!-- Verified -->
             <div
-                class="border border-purple-200 bg-gradient-to-bl from-purple-50 to-purple-200 rounded-2xl shadow-sm p-6 text-purple-600 card-stats">
-                <div class="flex items-center justify-between">
-                    <div>
-                        <p class="text-sm font-semibold">Terverifikasi</p>
-                        <h3 class="text-3xl font-bold mt-2">{{ $pengajuan->where('status', 'verified')->count() }}</h3>
-                    </div>
-                    <div class="bg-purple-200 bg-opacity-30 rounded-full p-3">
-                        <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                class="border border-blue-200 bg-gradient-to-br from-blue-50 to-blue-100 rounded-xl shadow-sm p-6 text-blue-600 hover:shadow-md transition-shadow duration-200">
+                <p class="text-sm font-semibold mb-2">Diverifikasi</p>
+                <div class="flex items-center gap-3">
+                    <div class="bg-blue-200 bg-opacity-40 rounded-full p-2 flex-shrink-0">
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                                 d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
                         </svg>
                     </div>
+                    <h3 class="text-3xl font-bold">{{ $pengajuan->where('status', 'verified')->count() }}</h3>
                 </div>
             </div>
 
             <!-- Approved -->
             <div
-                class="border border-green-200 bg-gradient-to-bl from-green-50 to-green-200 rounded-2xl shadow-sm p-6 text-green-600 card-stats">
-                <div class="flex items-center justify-between">
-                    <div>
-                        <p class="text-sm font-semibold">Disetujui</p>
-                        <h3 class="text-3xl font-bold mt-2">{{ $pengajuan->where('status', 'approved')->count() }}</h3>
-                    </div>
-                    <div class="bg-green-200 bg-opacity-30 rounded-full p-3">
-                        <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+                class="border border-green-200 bg-gradient-to-br from-green-50 to-green-100 rounded-xl shadow-sm p-6 text-green-600 hover:shadow-md transition-shadow duration-200">
+                <p class="text-sm font-semibold mb-2">Ditandatangani</p>
+                <div class="flex items-center gap-3">
+                    <div class="bg-green-200 bg-opacity-40 rounded-full p-2 flex-shrink-0">
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
                         </svg>
                     </div>
+                    <h3 class="text-3xl font-bold">{{ $pengajuan->where('status', 'approved')->count() }}</h3>
+                </div>
+            </div>
+
+            <!-- Notified -->
+            <div
+                class="border border-teal-200 bg-gradient-to-br from-teal-50 to-teal-100 rounded-xl shadow-sm p-6 text-teal-600 hover:shadow-md transition-shadow duration-200">
+                <p class="text-sm font-semibold mb-2">Dinotifikasi</p>
+                <div class="flex items-center gap-3">
+                    <div class="bg-teal-200 bg-opacity-40 rounded-full p-2 flex-shrink-0">
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9" />
+                        </svg>
+                    </div>
+                    <h3 class="text-3xl font-bold">{{ $pengajuan->where('status', 'notified')->count() }}</h3>
                 </div>
             </div>
 
             <!-- Rejected -->
             <div
-                class="border border-rose-200 bg-gradient-to-bl from-rose-50 to-rose-200 rounded-2xl shadow-sm p-6 text-rose-600 card-stats">
-                <div class="flex items-center justify-between">
-                    <div>
-                        <p class="text-sm font-semibold">Ditolak</p>
-                        <h3 class="text-3xl font-bold mt-2">{{ $pengajuan->where('status', 'rejected')->count() }}</h3>
-                    </div>
-                    <div class="bg-red-200 bg-opacity-30 rounded-full p-3">
-                        <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                class="border border-rose-200 bg-gradient-to-br from-rose-50 to-rose-100 rounded-xl shadow-sm p-6 text-rose-600 hover:shadow-md transition-shadow duration-200">
+                <p class="text-sm font-semibold mb-2">Ditolak</p>
+                <div class="flex items-center gap-3">
+                    <div class="bg-rose-200 bg-opacity-40 rounded-full p-2 flex-shrink-0">
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                                 d="M10 14l2-2m0 0l2-2m-2 2l-2-2m2 2l2 2m7-2a9 9 0 11-18 0 9 9 0 0118 0z" />
                         </svg>
                     </div>
+                    <h3 class="text-3xl font-bold">{{ $pengajuan->where('status', 'rejected')->count() }}</h3>
                 </div>
             </div>
         </div>
@@ -252,14 +256,15 @@
                             <select name="status"
                                 class="w-full px-4 py-2.5 rounded-xl border border-emerald-200 focus:ring-2 focus:ring-emerald-200 focus:border-emerald-300 shadow-sm transition text-sm">
                                 <option value="">Semua Status</option>
-                                <option value="submitted" {{ request('status') == 'submitted' ? 'selected' : '' }}>Baru
+                                <option value="submitted" {{ request('status') == 'submitted' ? 'selected' : '' }}>
                                     Diajukan</option>
                                 <option value="verified" {{ request('status') == 'verified' ? 'selected' : '' }}>
-                                    Terverifikasi</option>
-                                <option value="approved" {{ request('status') == 'approved' ? 'selected' : '' }}>Disetujui
+                                    Diverifikasi</option>
+                                <option value="approved" {{ request('status') == 'approved' ? 'selected' : '' }}>
+                                    Ditandatangani
                                 </option>
                                 <option value="notified" {{ request('status') == 'notified' ? 'selected' : '' }}>
-                                    Ternotifikasi</option>
+                                    Dinotifikasi</option>
                                 <option value="rejected" {{ request('status') == 'rejected' ? 'selected' : '' }}>Ditolak
                                 </option>
                             </select>
@@ -268,14 +273,16 @@
                         <!-- Tanggal Dari -->
                         <div>
                             <label class="block text-sm font-semibold text-gray-700 mb-2">Tanggal Dari</label>
-                            <input type="date" name="tanggal_dari" value="{{ request('tanggal_dari') }}"
+                            <input type="date" name="tanggal_dari"
+                                value="{{ request('tanggal_dari', date('Y-m-d')) }}"
                                 class="w-full px-4 py-2.5 rounded-xl border border-emerald-200 focus:ring-2 focus:ring-emerald-200 focus:border-emerald-300 shadow-sm transition text-sm">
                         </div>
 
                         <!-- Tanggal Sampai -->
                         <div>
                             <label class="block text-sm font-semibold text-gray-700 mb-2">Tanggal Sampai</label>
-                            <input type="date" name="tanggal_sampai" value="{{ request('tanggal_sampai') }}"
+                            <input type="date" name="tanggal_sampai"
+                                value="{{ request('tanggal_sampai', date('Y-m-d')) }}"
                                 class="w-full px-4 py-2.5 rounded-xl border border-emerald-200 focus:ring-2 focus:ring-emerald-200 focus:border-emerald-300 shadow-sm transition text-sm">
                         </div>
                     </div>
@@ -572,7 +579,6 @@
                     menu.classList.remove('show');
                 });
             }, true);
-
         </script>
         <script src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js" defer></script>
     @endpush

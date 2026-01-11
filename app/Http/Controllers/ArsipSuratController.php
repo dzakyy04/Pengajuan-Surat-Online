@@ -85,8 +85,6 @@ class ArsipSuratController extends Controller
                 $detailSurat = $pengajuan->suratPenghasilan;
         }
 
-
-
         return view('admin.arsip.show', compact('pengajuan', 'detailSurat'));
     }
 
