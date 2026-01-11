@@ -130,7 +130,7 @@ class MasyarakatController extends Controller
             $result = DB::transaction(function () use ($request, $jenis, $kode) {
 
                 // Nomor pengajuan unik
-                $nomorPengajuan = 'PGJ-' . now()->format('YmdHis') . '-' . Str::upper(Str::random(6));
+                $nomorPengajuan = now()->format('YmdHis');
 
                 // Upload dokumen
                 $baseDir = "pengajuan/{$nomorPengajuan}";

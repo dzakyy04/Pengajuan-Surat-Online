@@ -12,11 +12,40 @@
     <div class="flex flex-col lg:flex-row min-h-screen">
 
         <div class="w-full lg:w-1/2 flex items-center justify-center p-4 sm:p-8 order-2 lg:order-1">
-            <div class="bg-white/10 backdrop-blur-md rounded-3xl shadow-sm border border-slate-50 p-6 sm:p-12 w-full max-w-md">
+            <div
+                class="bg-white/10 backdrop-blur-md rounded-3xl shadow-sm border border-slate-50 p-6 sm:p-12 w-full max-w-md">
                 <div class="mb-6 sm:mb-8">
                     <h2 class="text-2xl sm:text-3xl font-bold text-gray-800 mb-2">Selamat Datang Kembali</h2>
                     <p class="text-gray-500 text-sm">Lanjutkan dengan salah satu opsi berikut</p>
                 </div>
+
+                <!-- Alert Success -->
+                @if (session('status'))
+                    <div class="mb-6 p-4 bg-green-50 border border-green-200 rounded-lg">
+                        <div class="flex items-start">
+                            <svg class="w-5 h-5 text-green-600 mt-0.5 mr-3" fill="currentColor" viewBox="0 0 20 20">
+                                <path fill-rule="evenodd"
+                                    d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z"
+                                    clip-rule="evenodd" />
+                            </svg>
+                            <p class="text-sm text-green-800">{{ session('status') }}</p>
+                        </div>
+                    </div>
+                @endif
+
+                <!-- Alert Error -->
+                @if (session('error'))
+                    <div class="mb-6 p-4 bg-red-50 border border-red-200 rounded-lg">
+                        <div class="flex items-start">
+                            <svg class="w-5 h-5 text-red-600 mt-0.5 mr-3" fill="currentColor" viewBox="0 0 20 20">
+                                <path fill-rule="evenodd"
+                                    d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z"
+                                    clip-rule="evenodd" />
+                            </svg>
+                            <p class="text-sm text-red-800">{{ session('error') }}</p>
+                        </div>
+                    </div>
+                @endif
 
                 <form method="POST" action="{{ route('admin.login') }}">
                     @csrf
@@ -55,12 +84,16 @@
                         </div>
                     </div>
 
-                    <div class="flex items-start mb-5 sm:mb-6">
+                    <div class="flex items-center justify-between mb-5 sm:mb-6">
                         <label class="flex items-start">
                             <input type="checkbox" name="remember"
                                 class="w-4 h-4 text-emerald-600 border-gray-300 rounded focus:ring-emerald-500">
                             <span class="ml-2 text-sm text-gray-600">Ingat saya</span>
                         </label>
+                        <a href="{{ route('admin.password.request') }}"
+                            class="text-sm text-emerald-800 hover:text-emerald-900 font-medium">
+                            Lupa Password?
+                        </a>
                     </div>
 
                     <button type="submit"
@@ -71,25 +104,30 @@
             </div>
         </div>
 
-        <div class="w-full lg:w-1/2 flex items-center justify-center p-4 sm:p-8 lg:p-2 order-1 lg:order-2 min-h-[500px] sm:min-h-[550px] lg:min-h-screen">
+        <div
+            class="w-full lg:w-1/2 flex items-center justify-center p-4 sm:p-8 lg:p-2 order-1 lg:order-2 min-h-[500px] sm:min-h-[550px] lg:min-h-screen">
             <div
                 class="bg-gradient-to-br from-emerald-900 to-emerald-950 backdrop-blur-md border border-slate-200 shadow-sm rounded-xl w-full h-full flex items-center justify-center relative overflow-hidden">
 
                 <div class="orbit-container">
                     <div class="orbit-blob blob-1">
-                        <div class="w-24 h-24 sm:w-36 sm:h-36 bg-emerald-900 rounded-full mix-blend-multiply filter blur-xl opacity-80">
+                        <div
+                            class="w-24 h-24 sm:w-36 sm:h-36 bg-emerald-900 rounded-full mix-blend-multiply filter blur-xl opacity-80">
                         </div>
                     </div>
                     <div class="orbit-blob blob-2">
-                        <div class="w-20 h-20 sm:w-32 sm:h-32 bg-emerald-800 rounded-full mix-blend-multiply filter blur-xl opacity-80">
+                        <div
+                            class="w-20 h-20 sm:w-32 sm:h-32 bg-emerald-800 rounded-full mix-blend-multiply filter blur-xl opacity-80">
                         </div>
                     </div>
                     <div class="orbit-blob blob-3">
-                        <div class="w-16 h-16 sm:w-30 sm:h-20 bg-lime-800 rounded-full mix-blend-multiply filter blur-xl opacity-80">
+                        <div
+                            class="w-16 h-16 sm:w-30 sm:h-20 bg-lime-800 rounded-full mix-blend-multiply filter blur-xl opacity-80">
                         </div>
                     </div>
                     <div class="orbit-blob blob-4">
-                        <div class="w-20 h-20 sm:w-28 sm:h-28 bg-green-800 rounded-full mix-blend-multiply filter blur-xl opacity-80">
+                        <div
+                            class="w-20 h-20 sm:w-28 sm:h-28 bg-green-800 rounded-full mix-blend-multiply filter blur-xl opacity-80">
                         </div>
                     </div>
                 </div>
@@ -144,7 +182,8 @@
                     </div>
                 </div>
 
-                <div class="absolute bottom-2 sm:bottom-4 left-1/2 transform -translate-x-1/2 z-20 flex gap-2 sm:gap-3">
+                <div
+                    class="absolute bottom-2 sm:bottom-4 left-1/2 transform -translate-x-1/2 z-20 flex gap-2 sm:gap-3">
                     <button class="dot active" onclick="goToSlide(0)"></button>
                     <button class="dot" onclick="goToSlide(1)"></button>
                     <button class="dot" onclick="goToSlide(2)"></button>
@@ -187,10 +226,12 @@
         .blob-4 {
             animation: orbit-extra 18s linear infinite reverse;
         }
+
         @keyframes orbit-large {
             0% {
                 transform: translate(-50%, -50%) rotate(0deg) translateX(150px) rotate(0deg);
             }
+
             100% {
                 transform: translate(-50%, -50%) rotate(360deg) translateX(150px) rotate(-360deg);
             }
@@ -200,6 +241,7 @@
             0% {
                 transform: translate(-50%, -50%) rotate(0deg) translateX(120px) rotate(0deg);
             }
+
             100% {
                 transform: translate(-50%, -50%) rotate(360deg) translateX(120px) rotate(-360deg);
             }
@@ -209,6 +251,7 @@
             0% {
                 transform: translate(-50%, -50%) rotate(0deg) translateX(90px) rotate(0deg);
             }
+
             100% {
                 transform: translate(-50%, -50%) rotate(360deg) translateX(90px) rotate(-360deg);
             }
@@ -218,17 +261,18 @@
             0% {
                 transform: translate(-50%, -50%) rotate(0deg) translateX(180px) rotate(0deg);
             }
+
             100% {
                 transform: translate(-50%, -50%) rotate(360deg) translateX(180px) rotate(-360deg);
             }
         }
 
-        /* Larger orbits for desktop */
         @media (min-width: 640px) {
             @keyframes orbit-large {
                 0% {
                     transform: translate(-50%, -50%) rotate(0deg) translateX(280px) rotate(0deg);
                 }
+
                 100% {
                     transform: translate(-50%, -50%) rotate(360deg) translateX(280px) rotate(-360deg);
                 }
@@ -238,6 +282,7 @@
                 0% {
                     transform: translate(-50%, -50%) rotate(0deg) translateX(220px) rotate(0deg);
                 }
+
                 100% {
                     transform: translate(-50%, -50%) rotate(360deg) translateX(220px) rotate(-360deg);
                 }
@@ -247,6 +292,7 @@
                 0% {
                     transform: translate(-50%, -50%) rotate(0deg) translateX(160px) rotate(0deg);
                 }
+
                 100% {
                     transform: translate(-50%, -50%) rotate(360deg) translateX(160px) rotate(-360deg);
                 }
@@ -256,6 +302,7 @@
                 0% {
                     transform: translate(-50%, -50%) rotate(0deg) translateX(320px) rotate(0deg);
                 }
+
                 100% {
                     transform: translate(-50%, -50%) rotate(360deg) translateX(320px) rotate(-360deg);
                 }
@@ -296,7 +343,6 @@
             pointer-events: auto;
         }
 
-        /* Dots Indicator */
         .dot {
             width: 10px;
             height: 10px;
@@ -333,7 +379,6 @@
     </style>
 
     <script>
-        // ========== TOGGLE PASSWORD VISIBILITY ==========
         document.addEventListener('DOMContentLoaded', function() {
             const toggleBtn = document.getElementById('togglePasswordBtn');
             const passwordField = document.getElementById('passwordField');
@@ -355,12 +400,11 @@
             }
         });
 
-        // ========== SPLASH SCREEN CAROUSEL ==========
         let currentSlide = 0;
         let autoSlide;
         const slides = document.querySelectorAll('.splash-slide');
         const dots = document.querySelectorAll('.dot');
-        const slideInterval = 5000; // 5 detik
+        const slideInterval = 5000;
 
         function showSlide(index) {
             slides.forEach(slide => slide.classList.remove('active'));
