@@ -7,7 +7,7 @@ use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 
-class JenisSurat extends Seeder
+class JenisSuratSeeder extends Seeder
 {
     /**
      * Run the database seeds.

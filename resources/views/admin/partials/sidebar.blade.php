@@ -229,6 +229,26 @@
             <span class="text-sm sidebar-text {{ $isArchiveActive ? 'font-semibold' : '' }}">Arsip Data</span>
         </a>
 
+        @php
+            $isManajemenNomorActive = 
+                request()->routeIs('admin.manajemen-nomor.*');
+        @endphp
+
+        @if ($isAdmin)
+            <a href="{{ route('admin.manajemen-nomor.index') }}"
+                class="flex items-center px-3 py-2.5 mb-1 rounded-lg hover:bg-gray-50 transition-colors duration-200 group {{ $isManajemenNomorActive ? 'bg-emerald-50 text-emerald-600 font-semibold' : 'text-gray-500' }}">
+                <svg class="w-5 h-5 mr-3 flex-shrink-0 {{ $isManajemenNomorActive ? 'text-emerald-600' : 'text-gray-400 group-hover:text-gray-600' }}"
+                    fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                        d="M7 21h10a2 2 0 002-2V9.414a1 1 0 00-.293-.707l-5.414-5.414A1 1 0 0012.586 3H7a2 2 0 00-2 2v14a2 2 0 002 2z" />
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                        d="M14 3v4a2 2 0 002 2h4" />
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                        d="M9 13h6M9 17h4" />
+                </svg>
+                <span class="text-sm sidebar-text {{ $isManajemenNomorActive ? 'font-semibold' : '' }}">Manajemen Nomor Surat</span>
+            </a>
+        @endif
 
     </nav>
 

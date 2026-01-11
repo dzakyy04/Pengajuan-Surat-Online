@@ -1,15 +1,16 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\MasyarakatController;
+use App\Http\Controllers\SkdController;
+use App\Http\Controllers\SkpController;
+use App\Http\Controllers\SkuController;
+use App\Http\Controllers\SkmtController;
+use App\Http\Controllers\SktmController;
 use App\Http\Controllers\AdminAuthController;
 use App\Http\Controllers\DashboardController;
-use App\Http\Controllers\SktmController;
-use App\Http\Controllers\SkdController;
-use App\Http\Controllers\SkuController;
-use App\Http\Controllers\SkpController;
-use App\Http\Controllers\SkmtController;
 use App\Http\Controllers\ArsipSuratController;
+use App\Http\Controllers\MasyarakatController;
+use App\Http\Controllers\NomorSuratController;
 use App\Http\Controllers\PengajuanDokumenController;
 
 Route::get('/', [MasyarakatController::class, 'index'])->name('beranda');
@@ -126,6 +127,14 @@ Route::prefix('admin')->name('admin.')->group(function () {
 
             Route::get('/pengajuan/{pengajuan}/dokumen/download', [PengajuanDokumenController::class, 'download'])
                 ->name('pengajuan.dokumen.download');
+
+            // Manajemen Nomor Surat
+            Route::prefix('manajemen-nomor')->name('manajemen-nomor.')->group(function () {
+                Route::get('/', [NomorSuratController::class, 'index'])->name('index');
+                Route::put('/{id}/update', [NomorSuratController::class, 'updateCounter'])->name('update');
+                Route::put('/{id}/update-format', [NomorSuratController::class, 'updateFormat'])->name('update-format');
+                Route::get('/preview', [NomorSuratController::class, 'preview'])->name('preview');
+            });
         });
 
         Route::middleware('role:admin,kades')
