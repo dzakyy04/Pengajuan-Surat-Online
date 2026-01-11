@@ -34,6 +34,13 @@ Route::prefix('admin')->name('admin.')->group(function () {
 
         Route::post('/logout', [AdminAuthController::class, 'logout'])->name('logout');
 
+        Route::get('profile', [AdminAuthController::class, 'showProfile'])
+            ->name('profile');
+        Route::put('profile/update-email', [AdminAuthController::class, 'updateEmail'])
+            ->name('profile.update-email');
+        Route::put('profile/change-password', [AdminAuthController::class, 'changePassword'])
+            ->name('profile.change-password');
+
         Route::middleware('role:admin')->group(function () {
 
             Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');

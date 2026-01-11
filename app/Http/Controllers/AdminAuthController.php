@@ -51,6 +51,7 @@ class AdminAuthController extends Controller
         return redirect()->route('admin.login')->with('status', 'Anda sudah keluar.');
     }
 
+    // Lupa Password
     public function showForgotPasswordForm()
     {
         return view('admin.auth.forgot-password');
@@ -80,7 +81,7 @@ class AdminAuthController extends Controller
         // Kirim email
         $resetLink = route('admin.password.reset', ['token' => $token, 'email' => $request->email]);
 
-        Mail::send('emails.reset-password', ['resetLink' => $resetLink], function ($message) use ($request) {
+        Mail::send('admin.auth.emails.reset-password', ['resetLink' => $resetLink], function ($message) use ($request) {
             $message->to($request->email);
             $message->subject('Reset Password - Layanan Surat Digital');
         });
@@ -130,5 +131,58 @@ class AdminAuthController extends Controller
         DB::table('admin_password_resets')->where('email', $request->email)->delete();
 
         return redirect()->route('admin.login')->with('status', 'Password berhasil direset! Silakan login.');
+    }
+
+    // Profile & Settings
+    public function showProfile()
+    {
+        return view('admin.profile.index');
+    }
+
+    public function updateEmail(Request $request)
+    {
+        $admin = Auth::guard('admin')->user();
+
+        $request->validate([
+            'email' => 'required|email|unique:admin,email,' . $admin->id,
+            'current_password' => 'required',
+        ], [
+            'email.unique' => 'Email sudah digunakan oleh admin lain.',
+            'current_password.required' => 'Password saat ini harus diisi untuk konfirmasi.',
+        ]);
+
+        // Verifikasi password
+        if (!Hash::check($request->current_password, $admin->password)) {
+            return back()->with('error', 'Password saat ini tidak sesuai!');
+        }
+
+        $admin->email = $request->email;
+        $admin->save();
+
+        return back()->with('success', 'Email berhasil diperbarui!');
+    }
+
+    public function changePassword(Request $request)
+    {
+        $admin = Auth::guard('admin')->user();
+
+        $request->validate([
+            'current_password' => 'required',
+            'new_password' => 'required|min:8|confirmed|different:current_password',
+        ], [
+            'new_password.confirmed' => 'Konfirmasi password baru tidak cocok.',
+            'new_password.min' => 'Password baru minimal 8 karakter.',
+            'new_password.different' => 'Password baru harus berbeda dari password lama.',
+        ]);
+
+        // Verifikasi password lama
+        if (!Hash::check($request->current_password, $admin->password)) {
+            return back()->with('error', 'Password saat ini tidak sesuai!');
+        }
+
+        $admin->password = Hash::make($request->new_password);
+        $admin->save();
+
+        return back()->with('success', 'Password berhasil diubah!');
     }
 }
