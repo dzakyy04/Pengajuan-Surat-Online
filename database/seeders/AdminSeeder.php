@@ -22,7 +22,7 @@ class AdminSeeder extends Seeder
             'nama' => 'Administrator',
             'email' => 'admin@gmail.com',
             'no_hp' => '081234567890',
-            'password' => Hash::make('admin123'),
+            'password' => Hash::make('Admin*2026'),
             'role' => 'admin',
         ]);
 
@@ -31,7 +31,7 @@ class AdminSeeder extends Seeder
             'nama' => 'Kepala Desa',
             'email' => 'kades@gmail.com',
             'no_hp' => '081298765432',
-            'password' => Hash::make('kades123'),
+            'password' => Hash::make('Kades*2026'),
             'role' => 'kades',
         ]);
     }

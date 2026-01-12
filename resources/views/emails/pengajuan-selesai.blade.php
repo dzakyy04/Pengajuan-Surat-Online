@@ -172,14 +172,6 @@
             color: #1e3a8a;
         }
 
-        .instruction-list li:before {
-            content: "▸";
-            position: absolute;
-            left: 10px;
-            color: #1e40af;
-            font-weight: bold;
-        }
-
         .highlight {
             background-color: #fef3c7;
             padding: 2px 8px;
@@ -337,24 +329,21 @@
                 </div>
             </div>
 
-            <div class="attachment-notice">
-                <div class="icon">📎</div>
-                <strong>Dokumen Surat Terlampir</strong>
-                <p>Surat resmi yang telah ditandatangani terlampir dalam email ini dalam format PDF dan dapat digunakan
-                    untuk keperluan administrasi digital.</p>
-            </div>
-
             <div class="instruction-section">
                 <div class="section-title">Prosedur Pengambilan Surat Fisik</div>
-                <ul class="instruction-list">
-                    <li>Surat dalam bentuk fisik dapat diambil di <strong>Kantor Desa Sungai Rebo</strong>, Kecamatan
-                        Banyuasin I, Kabupaten Banyuasin.</li>
-                    <li>Waktu pelayanan pengambilan: <span class="highlight">Senin - Jumat, pukul 08:00 - 16:00
-                            WIB</span>.</li>
-                    <li>Pemohon wajib membawa Kartu Tanda Penduduk (KTP) asli sebagai dokumen identitas.</li>
-                    <li>Tunjukkan email ini atau sebutkan nomor pengajuan
+                <ul style="padding-left: 20px; margin: 0;">
+                    <li style="margin-bottom: 8px;">Surat dalam bentuk fisik dapat diambil di <strong>Kantor Desa Sungai
+                            Rebo</strong>, Kecamatan Banyuasin I, Kabupaten Banyuasin.</li>
+                    <li style="margin-bottom: 8px;">Waktu pelayanan pengambilan:
+                        <span style="background-color:#fef3c7; padding:2px 6px; border-radius:3px; font-weight:bold;">
+                            Senin - Jumat, pukul 08:00 - 16:00 WIB
+                        </span>.
+                    </li>
+                    <li style="margin-bottom: 8px;">Pemohon wajib membawa Kartu Tanda Penduduk (KTP) asli sebagai
+                        dokumen identitas.</li>
+                    <li style="margin-bottom: 8px;">Tunjukkan email ini atau sebutkan nomor pengajuan
                         <strong>{{ $pengajuan->nomor_pengajuan }}</strong> kepada petugas.</li>
-                    <li>Surat sudah dapat diambil terhitung mulai hari ini.</li>
+                    <li style="margin-bottom: 8px;">Surat sudah dapat diambil terhitung mulai hari ini.</li>
                 </ul>
             </div>
 

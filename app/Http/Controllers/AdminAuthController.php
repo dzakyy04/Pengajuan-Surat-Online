@@ -81,7 +81,7 @@ class AdminAuthController extends Controller
         // Kirim email
         $resetLink = route('admin.password.reset', ['token' => $token, 'email' => $request->email]);
 
-        Mail::send('admin.auth.emails.reset-password', ['resetLink' => $resetLink], function ($message) use ($request) {
+        Mail::send('emails.reset-password', ['resetLink' => $resetLink], function ($message) use ($request) {
             $message->to($request->email);
             $message->subject('Reset Password - Layanan Surat Digital');
         });

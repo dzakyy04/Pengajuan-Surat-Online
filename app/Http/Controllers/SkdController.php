@@ -237,7 +237,7 @@ class SkdController extends Controller
 
             DB::commit();
 
-            return back()->with('success', 'File surat bertanda tangan berhasil diupload! Status berubah menjadi Approved.');
+            return back()->with('success', 'File surat bertanda tangan berhasil diupload! Status berubah menjadi Diverifikasi.');
         } catch (\Exception $e) {
             DB::rollBack();
             return back()->with('error', 'Gagal upload file: ' . $e->getMessage());
@@ -320,7 +320,7 @@ class SkdController extends Controller
 
             DB::commit();
 
-            return back()->with('success', 'Notifikasi berhasil dikirim ke ' . $pengajuan->email_pemohon . '. Status berubah menjadi Notified.');
+            return back()->with('success', 'Notifikasi berhasil dikirim ke ' . $pengajuan->email_pemohon . '. Status berubah menjadi Dinotifikasi.');
         } catch (\Exception $e) {
             DB::rollBack();
             Log::error('Error send notification SKD: ' . $e->getMessage());

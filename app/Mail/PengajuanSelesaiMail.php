@@ -52,21 +52,22 @@ class PengajuanSelesaiMail extends Mailable
      */
     public function attachments(): array
     {
-        $attachments = [];
+        // $attachments = [];
 
-        if ($this->pengajuan->file_surat_ttd) {
-            // Path yang benar untuk file TTD
-            $path = storage_path('app/surat/ttd/' . $this->pengajuan->file_surat_ttd);
+        // if ($this->pengajuan->file_surat_ttd) {
+        //     // Path yang benar untuk file TTD
+        //     $path = storage_path('app/surat/ttd/' . $this->pengajuan->file_surat_ttd);
 
-            if (file_exists($path)) {
-                $attachments[] = Attachment::fromPath($path)
-                    ->as('Surat_' . $this->pengajuan->nomor_surat . '.' . pathinfo($path, PATHINFO_EXTENSION))
-                    ->withMime(
-                        mime_content_type($path) ?: 'application/octet-stream'
-                    );
-            }
-        }
+        //     if (file_exists($path)) {
+        //         $attachments[] = Attachment::fromPath($path)
+        //             ->as('Surat_' . $this->pengajuan->nomor_surat . '.' . pathinfo($path, PATHINFO_EXTENSION))
+        //             ->withMime(
+        //                 mime_content_type($path) ?: 'application/octet-stream'
+        //             );
+        //     }
+        // }
 
-        return $attachments;
+        // return $attachments;
+        return [];
     }
 }
