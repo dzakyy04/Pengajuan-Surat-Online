@@ -50,9 +50,9 @@ class MasyarakatController extends Controller
             'no_surat_rt'      => ['required', 'max:50'],
             'tanggal_surat_rt' => ['required', 'date'],
 
-            'dokumen_ktp'      => ['required', 'file', 'max:2048', 'mimes:jpg,jpeg,png,pdf'],
-            'dokumen_kk'       => ['required', 'file', 'max:2048', 'mimes:jpg,jpeg,png,pdf'],
-            'dokumen_surat_rt' => ['required', 'file', 'max:2048', 'mimes:jpg,jpeg,png,pdf'],
+            'dokumen_ktp'      => ['required', 'file', 'max:5120', 'mimes:jpg,jpeg,png,pdf'],
+            'dokumen_kk'       => ['required', 'file', 'max:5120', 'mimes:jpg,jpeg,png,pdf'],
+            'dokumen_surat_rt' => ['required', 'file', 'max:5120', 'mimes:jpg,jpeg,png,pdf'],
         ];
 
         // Rules kondisional sesuai kode surat
@@ -334,7 +334,7 @@ class MasyarakatController extends Controller
             if ($request->ajax() || $request->wantsJson()) {
                 return response()->json([
                     'success' => false,
-                    'message' => 'Data yang Anda masukkan tidak valid',
+                    'message' => 'Data yang Anda masukkan tidak valid: ' . $e->getMessage(),
                     'errors' => $e->errors()
                 ], 422);
             }
