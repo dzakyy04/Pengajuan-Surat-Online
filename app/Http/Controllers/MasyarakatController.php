@@ -13,6 +13,7 @@ use App\Models\SuratTidakMampu;
 use App\Mail\PengajuanSuratMail;
 use App\Models\SuratPenghasilan;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Storage;
 
@@ -140,6 +141,7 @@ class MasyarakatController extends Controller
 
                 // Simpan ke pengajuan_surat
                 $pengajuan = PengajuanSurat::create([
+                    'user_id' => auth()->user()->id,
                     'nomor_pengajuan' => $nomorPengajuan,
                     'jenis_surat_id'  => $jenis->id,
                     'nama_pemohon'    => $request->nama,
@@ -309,7 +311,7 @@ class MasyarakatController extends Controller
                 );
             } catch (\Exception $e) {
                 // Log error tapi jangan gagalkan proses
-                \Log::error('Error mengirim email: ' . $e->getMessage());
+                Log::error('Error mengirim email: ' . $e->getMessage());
             }
 
             // Return JSON untuk AJAX request
@@ -341,7 +343,7 @@ class MasyarakatController extends Controller
             throw $e;
         } catch (\Exception $e) {
             // Handle other errors
-            \Log::error('Error saat submit pengajuan: ' . $e->getMessage());
+            Log::error('Error saat submit pengajuan: ' . $e->getMessage());
 
             if ($request->ajax() || $request->wantsJson()) {
                 return response()->json([

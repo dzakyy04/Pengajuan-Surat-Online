@@ -15,13 +15,17 @@ use App\Http\Controllers\MasyarakatAuthController;
 use App\Http\Controllers\PengajuanDokumenController;
 
 Route::get('/', [MasyarakatController::class, 'index'])->name('beranda');
-Route::get('/form-pengajuan', [MasyarakatController::class, 'form'])->name('pengajuan');
-Route::post('/form-pengajuan', [MasyarakatController::class, 'submitForm'])->name('pengajuan.submit');
 Route::middleware('guest')->group(function () {
     Route::get('/masuk', [MasyarakatAuthController::class, 'showLogin'])->name('login');
     Route::post('/masuk', [MasyarakatAuthController::class, 'login'])->name('login.submit');
     Route::get('/daftar', [MasyarakatAuthController::class, 'showRegister'])->name('register');
     Route::post('/daftar', [MasyarakatAuthController::class, 'register'])->name('register.submit');
+});
+
+Route::middleware('auth')->group(function () {
+    Route::post('/keluar', [MasyarakatAuthController::class, 'logout'])->name('logout');
+    Route::get('/form-pengajuan', [MasyarakatController::class, 'form'])->name('pengajuan');
+    Route::post('/form-pengajuan', [MasyarakatController::class, 'submitForm'])->name('pengajuan.submit');
 });
 
 Route::prefix('admin')->name('admin.')->group(function () {

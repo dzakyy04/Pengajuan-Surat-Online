@@ -24,7 +24,7 @@ class MasyarakatAuthController extends Controller
     {
         // Validasi data registrasi
         $validatedData = $request->validate([
-            'name' => 'required|string|max:255',
+            'nama' => 'required|string|max:255',
             'email' => 'required|string|email|max:100|unique:users,email',
             'password' => [
                 'required',
@@ -33,7 +33,7 @@ class MasyarakatAuthController extends Controller
             ],
             'password_confirmation' => 'required'
         ], [
-            'name.required' => 'Nama harus diisi.',
+            'nama.required' => 'Nama harus diisi.',
             'email.required' => 'Email harus diisi.',
             'email.email' => 'Format email tidak valid.',
             'email.unique' => 'Email sudah terdaftar.',
@@ -45,7 +45,7 @@ class MasyarakatAuthController extends Controller
 
         // Buat user baru
         User::create([
-            'name' => $validatedData['name'],
+            'nama' => $validatedData['nama'],
             'email' => $validatedData['email'],
             'password' => Hash::make($validatedData['password']),
         ]);
@@ -72,7 +72,7 @@ class MasyarakatAuthController extends Controller
             $user = Auth::user();
 
             return redirect()->intended(route('dashboard'))
-                ->with('success', 'Selamat datang, ' . $user->name);
+                ->with('success', 'Selamat datang, ' . $user->nama);
         }
 
         return back()->withErrors([

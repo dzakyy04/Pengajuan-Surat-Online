@@ -88,7 +88,7 @@
                                 </label>
                                 <input type="email" name="email_pemohon" id="email_pemohon" required
                                     class="w-full rounded-xl border border-emerald-100 px-3 py-2.5 text-sm focus:ring-2 focus:ring-emerald-500/70 focus:border-emerald-500 outline-none"
-                                    placeholder="Contoh: dedyarsadi@gmail.com">
+                                    placeholder="Contoh: dedyarsadi@gmail.com" value="{{ auth()->user()->email }}">
                                 <p class="text-[11px] text-neutral-500">
                                     Email untuk menerima notifikasi status pengajuan surat
                                 </p>
@@ -127,7 +127,7 @@
                                 </label>
                                 <input type="text" name="nama" id="nama" required
                                     class="w-full rounded-xl border border-emerald-100 px-3 py-2.5 text-sm focus:ring-2 focus:ring-emerald-500/70 focus:border-emerald-500 outline-none"
-                                    placeholder="Nama sesuai KTP">
+                                    placeholder="Nama sesuai KTP" value="{{ auth()->user()->nama }}">
                             </div>
 
                             {{-- NIK (tidak untuk surat kematian almarhum) --}}

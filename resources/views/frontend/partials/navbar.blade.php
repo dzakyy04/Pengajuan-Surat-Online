@@ -3,7 +3,8 @@
     <div class="max-w-6xl mx-auto px-5 md:px-12 py-3 md:py-4 flex items-center justify-between gap-3">
         <!-- Logo & Title -->
         <div class="flex items-center gap-3 md:gap-4" data-aos="fade-down">
-            <div class="w-12 h-12 md:w-14 md:h-14 rounded-2xl bg-white shadow-lg shadow-emerald-900/25 border border-emerald-100 flex items-center justify-center overflow-hidden">
+            <div
+                class="w-12 h-12 md:w-14 md:h-14 rounded-2xl bg-white shadow-lg shadow-emerald-900/25 border border-emerald-100 flex items-center justify-center overflow-hidden">
                 <img src="{{ asset('assets/img/banyuasin.png') }}" alt="Logo Desa Sungai Rebo"
                     class="w-full h-full object-contain p-1.5">
             </div>
@@ -25,30 +26,43 @@
         <div class="flex items-center gap-3">
             <div id="navLinks"
                 class="hidden md:flex md:flex-row flex-col md:items-center md:gap-6 gap-2 text-sm md:text-[15px] font-medium">
-                <a href="{{ Request::routeIs('beranda') ? '#beranda' : route('beranda').'#beranda' }}"
+                <a href="{{ Request::routeIs('beranda') ? '#beranda' : route('beranda') . '#beranda' }}"
                     class="px-4 py-2 rounded-full text-neutral-700 hover:text-emerald-900 hover:bg-emerald-50 transition">
                     Beranda
                 </a>
-                <a href="{{ Request::routeIs('beranda') ? '#layanan' : route('beranda').'#layanan' }}"
+                <a href="{{ Request::routeIs('beranda') ? '#layanan' : route('beranda') . '#layanan' }}"
                     class="px-4 py-2 rounded-full text-neutral-700 hover:text-emerald-900 hover:bg-emerald-50 transition">
                     Layanan
                 </a>
-                <a href="{{ Request::routeIs('beranda') ? '#alur-pengajuan' : route('beranda').'#alur-pengajuan' }}"
+                <a href="{{ Request::routeIs('beranda') ? '#alur-pengajuan' : route('beranda') . '#alur-pengajuan' }}"
                     class="px-4 py-2 rounded-full text-neutral-700 hover:text-emerald-900 hover:bg-emerald-50 transition">
                     Alur
                 </a>
-                <a href="{{ Request::routeIs('beranda') ? '#lokasi' : route('beranda').'#lokasi' }}"
+                <a href="{{ Request::routeIs('beranda') ? '#lokasi' : route('beranda') . '#lokasi' }}"
                     class="px-4 py-2 rounded-full text-neutral-700 hover:text-emerald-900 hover:bg-emerald-50 transition">
                     Lokasi
                 </a>
             </div>
 
             <!-- CTA kecil di navbar desktop -->
-            <a href="{{ route('pengajuan') }}"
-                class="hidden md:inline-flex items-center gap-1.5 px-4 py-2 rounded-full bg-gradient-to-r from-emerald-600 via-emerald-500 to-emerald-400 text-white text-xs font-semibold shadow-md shadow-emerald-900/30 hover:brightness-110 transition scroll-smooth">
-                <i class="fa-solid fa-paper-plane"></i>
-                Ajukan Surat
-            </a>
+            @auth
+                <a href="{{ route('pengajuan') }}"
+                    class="hidden md:inline-flex items-center gap-1.5 px-4 py-2 rounded-full bg-gradient-to-r from-emerald-600 via-emerald-500 to-emerald-400 text-white text-xs font-semibold shadow-md shadow-emerald-900/30 hover:brightness-110 transition scroll-smooth">
+                    <i class="fa-solid fa-paper-plane"></i>
+                    Ajukan Surat
+                </a>
+            @else
+                <a href="{{ route('register') }}"
+                    class="hidden md:inline-flex items-center gap-1.5 px-4 py-2 rounded-full border border-emerald-200 text-emerald-700 text-xs font-semibold hover:bg-emerald-50 transition">
+                    <i class="fa-solid fa-right-to-bracket"></i>
+                    Daftar
+                </a>
+                <a href="{{ route('login') }}"
+                    class="hidden md:inline-flex items-center gap-1.5 px-4 py-2 rounded-full bg-gradient-to-r from-emerald-600 via-emerald-500 to-emerald-400 text-white text-xs font-semibold shadow-md shadow-emerald-900/30 hover:brightness-110 transition">
+                    <i class="fa-solid fa-user-plus"></i>
+                    Masuk
+                </a>
+            @endauth
 
             <!-- Hamburger -->
             <button id="navToggle"
@@ -64,32 +78,50 @@
     <div id="navMobile"
         class="nav-mobile-panel closed md:hidden border-t border-emerald-50 bg-white/95 backdrop-blur-xl">
         <div class="max-w-6xl mx-auto px-5 py-3 flex flex-col gap-1 text-sm">
-            <a href="{{ Request::routeIs('beranda') ? '#beranda' : route('beranda').'#beranda' }}"
+            <a href="{{ Request::routeIs('beranda') ? '#beranda' : route('beranda') . '#beranda' }}"
                 class="px-3 py-2 rounded-lg text-neutral-800 hover:bg-emerald-50 active:bg-emerald-100">
                 Beranda
             </a>
-            <a href="{{ Request::routeIs('beranda') ? '#layanan' : route('beranda').'#layanan' }}"
+            <a href="{{ Request::routeIs('beranda') ? '#layanan' : route('beranda') . '#layanan' }}"
                 class="px-3 py-2 rounded-lg text-neutral-800 hover:bg-emerald-50 active:bg-emerald-100">
                 Layanan
             </a>
-            <a href="{{ Request::routeIs('beranda') ? '#alur-pengajuan' : route('beranda').'#alur-pengajuan' }}"
+            <a href="{{ Request::routeIs('beranda') ? '#alur-pengajuan' : route('beranda') . '#alur-pengajuan' }}"
                 class="px-3 py-2 rounded-lg text-neutral-800 hover:bg-emerald-50 active:bg-emerald-100">
                 Alur
             </a>
-            <a href="{{ Request::routeIs('beranda') ? '#lokasi' : route('beranda').'#lokasi' }}"
+            <a href="{{ Request::routeIs('beranda') ? '#lokasi' : route('beranda') . '#lokasi' }}"
                 class="px-3 py-2 rounded-lg text-neutral-800 hover:bg-emerald-50 active:bg-emerald-100">
                 Lokasi
             </a>
 
             <!-- CTA Ajukan Surat di mobile -->
-            <a href="{{ route('pengajuan') }}"
-                class="mt-2 inline-flex md:hidden items-center justify-center gap-1.5 px-4 py-2 rounded-full
-        bg-gradient-to-r from-emerald-600 via-emerald-500 to-emerald-400
-        text-white text-sm font-semibold shadow-md shadow-emerald-900/30
-        hover:brightness-110 transition">
-                <i class="fa-solid fa-paper-plane"></i>
-                Ajukan Surat
-            </a>
+            @auth
+                <a href="{{ route('pengajuan') }}"
+                    class="mt-2 inline-flex md:hidden items-center justify-center gap-1.5 px-4 py-2 rounded-full
+                    bg-gradient-to-r from-emerald-600 via-emerald-500 to-emerald-400
+                    text-white text-sm font-semibold shadow-md shadow-emerald-900/30
+                    hover:brightness-110 transition">
+                    <i class="fa-solid fa-paper-plane"></i>
+                    Ajukan Surat
+                </a>
+            @else
+                <a href="{{ route('register') }}"
+                    class="inline-flex md:hidden items-center justify-center gap-1.5 px-4 py-2 rounded-full
+                        border border-emerald-200 text-emerald-700 text-sm font-semibold 
+                        hover:bg-emerald-50 transition">
+                    <i class="fa-solid fa-right-to-bracket"></i>
+                    Daftar
+                </a>
+                <a href="{{ route('login') }}"
+                    class="mt-2 inline-flex md:hidden items-center justify-center gap-1.5 px-4 py-2 rounded-full
+                        bg-gradient-to-r from-emerald-600 via-emerald-500 to-emerald-400
+                        text-white text-sm font-semibold shadow-md shadow-emerald-900/30
+                        hover:brightness-110 transition">
+                    <i class="fa-solid fa-user-plus"></i>
+                    Masuk
+                </a>
+            @endauth
         </div>
     </div>
 </nav>

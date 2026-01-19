@@ -12,6 +12,7 @@ return new class extends Migration {
     {
         Schema::create('pengajuan_surat', function (Blueprint $table) {
             $table->id();
+            $table->foreignId('user_id')->constrained('users')->onDelete('cascade');
             $table->string('nomor_pengajuan', 50)->unique();
             $table->foreignId('jenis_surat_id')->constrained('jenis_surat')->onDelete('restrict');
             $table->string('nomor_surat', 100)->unique()->nullable();
