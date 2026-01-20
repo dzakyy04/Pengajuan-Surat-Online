@@ -29,7 +29,7 @@ class MasyarakatAuthController extends Controller
             'password' => [
                 'required',
                 'confirmed',
-                Password::min(8)->mixedCase()->numbers()
+                Password::min(8)->numbers()
             ],
             'password_confirmation' => 'required'
         ], [
@@ -71,7 +71,7 @@ class MasyarakatAuthController extends Controller
 
             $user = Auth::user();
 
-            return redirect()->intended(route('dashboard'))
+            return redirect()->intended(route('pengajuan'))
                 ->with('success', 'Selamat datang, ' . $user->nama);
         }
 

@@ -838,7 +838,7 @@
                             </svg>
                             <span>Informasi pengajuan telah disetujui</span>
                         </li>
-                        {{-- <li class="flex items-start gap-2">
+                        <li class="flex items-start gap-2">
                             <svg class="w-4 h-4 flex-shrink-0 mt-0.5 text-blue-500" fill="currentColor"
                                 viewBox="0 0 20 20">
                                 <path fill-rule="evenodd"
@@ -846,7 +846,7 @@
                                     clip-rule="evenodd" />
                             </svg>
                             <span>File PDF surat (lampiran)</span>
-                        </li> --}}
+                        </li>
                         <li class="flex items-start gap-2">
                             <svg class="w-4 h-4 flex-shrink-0 mt-0.5 text-blue-500" fill="currentColor"
                                 viewBox="0 0 20 20">
